@@ -15,6 +15,10 @@ import { MediaModule } from './modules/media/media.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { AuditModule } from './modules/audit/audit.module';
+import { LayoutModule } from './modules/layout/layout.module';
+import { PromotionsModule } from './modules/promotions/promotions.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { ReportsModule } from './modules/reports/reports.module';
 import { AppExceptionFilter } from './common/filters/app-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
@@ -53,6 +57,10 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     SettingsModule,
     DashboardModule,
     AuditModule,
+    LayoutModule,
+    PromotionsModule,
+    AnalyticsModule,
+    ReportsModule,
   ],
   providers: [
     // Global exception filter
