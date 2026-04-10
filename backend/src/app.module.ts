@@ -1,16 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HealthModule } from './modules/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { AttributesModule } from './modules/attributes/attributes.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { MediaModule } from './modules/media/media.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { AppExceptionFilter } from './common/filters/app-exception.filter';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 @Module({
   imports: [
@@ -39,11 +45,20 @@ import { SettingsModule } from './modules/settings/settings.module';
     UsersModule,
     ProductsModule,
     CategoriesModule,
+    AttributesModule,
     OrdersModule,
     InventoryModule,
     CustomersModule,
     MediaModule,
     SettingsModule,
+    DashboardModule,
+    AuditModule,
+  ],
+  providers: [
+    // Global exception filter
+    { provide: APP_FILTER, useClass: AppExceptionFilter },
+    // Global response wrapper
+    { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
   ],
 })
 export class AppModule {}
