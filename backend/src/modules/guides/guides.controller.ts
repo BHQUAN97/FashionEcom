@@ -2,11 +2,11 @@ import {
   Controller, Get, Post, Put, Param, Body, UseGuards,
 } from '@nestjs/common';
 import { GuidesService } from './guides.service';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/guides')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +20,7 @@ export class GuidesController {
     @CurrentUser('role') role: number,
   ) {
     const data = await this.guidesService.getGuide(screenId, userId, role);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post(':screenId/complete')
@@ -37,7 +37,7 @@ export class GuidesController {
   @Roles(UserRole.SUPER_ADMIN)
   async findAll() {
     const data = await this.guidesService.findAll();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put('manage/:screenId')

@@ -11,9 +11,9 @@ import { ReturnRequestItemEntity } from './entities/return-request-item.entity';
 import { ReturnRequestMediaEntity } from './entities/return-request-media.entity';
 import { OrderEntity } from '../orders/entities/order.entity';
 import { CreateReturnDto, UpdateReturnStatusDto, ReturnQueryDto } from './dto/return-request.dto';
-import { StateMachine } from '../../common/patterns/state-machine';
-import { generateEntityCode } from '../../common/utils/code-generation.util';
-import { BaseService } from '../../common/services/base.service';
+import { StateMachine } from '@/common/patterns/state-machine';
+import { generateEntityCode } from '@/common/utils/code-generation.util';
+import { BaseService } from '@/common/services/base.service';
 
 /**
  * RMA Status: 0=Requested, 1=Reviewing, 2=Approved, 3=Rejected,

@@ -1,5 +1,5 @@
-export { StatusBadge } from './StatusBadge';
-export { AdminTableLayout } from './AdminTableLayout';
-export { EmptyTableRow } from './EmptyTableRow';
-export { ConfirmDialog } from './ConfirmDialog';
-export { AdminFormLayout } from './AdminFormLayout';
+export { StatusBadge } from './status-badge';
+export { AdminTableLayout } from './admin-table-layout';
+export { EmptyTableRow } from './empty-table-row';
+export { ConfirmDialog } from './confirm-dialog';
+export { AdminFormLayout } from './admin-form-layout';

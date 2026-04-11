@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { api } from '@/lib/api/client';
 import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
-import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
-import { StatusBadge } from '@/components/admin/shared/StatusBadge';
-import { EmptyTableRow } from '@/components/admin/shared/EmptyTableRow';
-import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
+import { AdminTableLayout } from '@/components/admin/shared/admin-table-layout';
+import { StatusBadge } from '@/components/admin/shared/status-badge';
+import { EmptyTableRow } from '@/components/admin/shared/empty-table-row';
+import { ConfirmDialog } from '@/components/admin/shared/confirm-dialog';
 
 interface ReturnRequest {
   salReturnRequestId: string;
@@ -47,8 +47,9 @@ export default function ReturnsManagementPage() {
     try {
       await api.put(`/admin/returns/${id}/status`, { status });
       refetch();
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Co loi xay ra';
+      alert(message);
     }
   };
 

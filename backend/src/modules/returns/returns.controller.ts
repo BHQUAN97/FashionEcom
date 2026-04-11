@@ -3,11 +3,11 @@ import {
 } from '@nestjs/common';
 import { ReturnsService } from './returns.service';
 import { CreateReturnDto, UpdateReturnStatusDto, ReturnQueryDto } from './dto/return-request.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 /** Customer endpoints */
 @Controller('returns')
@@ -27,13 +27,13 @@ export class ReturnsController {
   @Get()
   async findByCustomer(@CurrentUser('sub') customerId: string) {
     const data = await this.returnsService.findByCustomer(customerId);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.returnsService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 }
 
@@ -52,7 +52,7 @@ export class AdminReturnsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.returnsService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Patch(':id/status')
@@ -72,6 +72,6 @@ export class AdminReturnsController {
     @CurrentUser('sub') userId: string,
   ) {
     const data = await this.returnsService.addReply(id, content, userId);
-    return { data };
+    return { data, message: 'OK' };
   }
 }

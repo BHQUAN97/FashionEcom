@@ -6,10 +6,10 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ReorderCategoryDto } from './dto/reorder-category.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/categories')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -20,19 +20,19 @@ export class CategoriesController {
   @Get('tree')
   async getTree() {
     const data = await this.categoriesService.getTree();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get()
   async findAll() {
     const data = await this.categoriesService.findAll();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.categoriesService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post()

@@ -18,9 +18,9 @@ import {
   ReceiveGoodsDto,
   SupplierQueryDto,
 } from './dto/supplier.dto';
-import { StateMachine } from '../../common/patterns/state-machine';
-import { generateEntityCode } from '../../common/utils/code-generation.util';
-import { BaseService } from '../../common/services/base.service';
+import { StateMachine } from '@/common/patterns/state-machine';
+import { generateEntityCode } from '@/common/utils/code-generation.util';
+import { BaseService } from '@/common/services/base.service';
 
 /** PO Status state machine — reuse pattern */
 const poMachine = new StateMachine<number>({

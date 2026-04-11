@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable, tap } from 'rxjs';
 import { AUDITABLE_KEY } from '../decorators/auditable.decorator';
-import { AuditService } from '../../modules/audit/audit.service';
+import { AuditService } from '@/modules/audit/audit.service';
 
 /**
  * AuditLogInterceptor — tu dong ghi audit log cho routes co @Auditable decorator

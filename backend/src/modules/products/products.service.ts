@@ -13,8 +13,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { BulkEditProductDto, BulkEditVariantDto } from './dto/bulk-edit.dto';
-import { createSlug } from '../../common/utils/slug.util';
-import { BaseService } from '../../common/services/base.service';
+import { createSlug } from '@/common/utils/slug.util';
+import { BaseService } from '@/common/services/base.service';
 
 @Injectable()
 export class ProductsService extends BaseService<ProductEntity> {

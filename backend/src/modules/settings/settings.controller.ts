@@ -1,9 +1,9 @@
 import { Controller, Get, Put, Body, Param, UseGuards } from '@nestjs/common';
 import { SettingsService } from './settings.service';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/settings')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -14,13 +14,13 @@ export class SettingsController {
   @Get()
   async getAll() {
     const data = await this.settingsService.getAll();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get(':group')
   async getByGroup(@Param('group') group: string) {
     const data = await this.settingsService.getByGroup(group);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put(':group')

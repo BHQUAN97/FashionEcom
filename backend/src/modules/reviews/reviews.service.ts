@@ -7,8 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { ReviewEntity } from './entities/review.entity';
-import { BaseService } from '../../common/services/base.service';
-import { StateMachine } from '../../common/patterns/state-machine';
+import { BaseService } from '@/common/services/base.service';
+import { StateMachine } from '@/common/patterns/state-machine';
 
 /**
  * Review moderation status: 0=Cho duyet, 1=Da duyet, 2=Tu choi
@@ -70,10 +70,7 @@ export class ReviewsService extends BaseService<ReviewEntity> {
 
   /** Danh sach review cua san pham — chi hien approved */
   async findByProduct(productId: string, page = 1, limit = 10) {
-    const total = await this.reviewRepo.count({
-      where: { catProductId: productId, salReviewStatus: 1 },
-    });
-    const data = await this.reviewRepo.find({
+    const [data, total] = await this.reviewRepo.findAndCount({
       where: { catProductId: productId, salReviewStatus: 1 },
       order: { createdDate: 'DESC' },
       skip: (page - 1) * limit,

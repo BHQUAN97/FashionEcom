@@ -13,8 +13,8 @@ import { UserEntity } from '../users/entities/user.entity';
 import { RefreshTokenEntity } from './entities/refresh-token.entity';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { comparePassword, hashPassword } from '../../common/utils/password.util';
-import { PERMISSION_MATRIX } from '../../common/constants/permissions.constant';
+import { comparePassword, hashPassword } from '@/common/utils/password.util';
+import { PERMISSION_MATRIX } from '@/common/constants/permissions.constant';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +62,7 @@ export class AuthService {
     await this.userRepo.update(user.sysUserId, {
       sysUserLastLogin: new Date(),
       sysUserLoginCount: () => 'sys_user_login_count + 1',
-    } as any);
+    } as unknown as Partial<UserEntity>);
 
     // Tao token pair
     const tokens = await this.generateTokens(user);
@@ -87,7 +87,7 @@ export class AuthService {
     let payload: { sub: string; type: string };
     try {
       payload = this.jwtService.verify(refreshToken, {
-        secret: this.config.get('JWT_REFRESH_SECRET', 'dev-refresh-secret'),
+        secret: this.config.getOrThrow<string>('JWT_REFRESH_SECRET'),
       });
     } catch {
       throw new UnauthorizedException('Refresh token khong hop le');
@@ -196,7 +196,7 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(accessPayload);
     const refreshToken = this.jwtService.sign(refreshPayload, {
-      secret: this.config.get('JWT_REFRESH_SECRET', 'dev-refresh-secret'),
+      secret: this.config.getOrThrow<string>('JWT_REFRESH_SECRET'),
       expiresIn: '7d',
     });
 

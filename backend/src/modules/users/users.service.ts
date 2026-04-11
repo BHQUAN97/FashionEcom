@@ -10,10 +10,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { hashPassword } from '../../common/utils/password.util';
-import { UserRole } from '../../common/constants/roles.constant';
-import { PaginationDto } from '../../common/dto/pagination.dto';
-import { BaseService } from '../../common/services/base.service';
+import { hashPassword } from '@/common/utils/password.util';
+import { UserRole } from '@/common/constants/roles.constant';
+import { PaginationDto } from '@/common/dto/pagination.dto';
+import { BaseService } from '@/common/services/base.service';
 
 @Injectable()
 export class UsersService extends BaseService<UserEntity> {

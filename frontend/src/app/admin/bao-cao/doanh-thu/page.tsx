@@ -5,11 +5,11 @@ import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
 } from 'recharts';
-import { ReportCard } from '@/components/admin/reports/ReportCard';
-import { DateRangePicker } from '@/components/admin/reports/DateRangePicker';
-import { ExportButton } from '@/components/admin/reports/ExportButton';
-import { EmptyReport } from '@/components/admin/reports/EmptyReport';
-import { ReportSkeleton } from '@/components/admin/reports/ReportSkeleton';
+import { ReportCard } from '@/components/admin/reports/report-card';
+import { DateRangePicker } from '@/components/admin/reports/date-range-picker';
+import { ExportButton } from '@/components/admin/reports/export-button';
+import { EmptyReport } from '@/components/admin/reports/empty-report';
+import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
 
 /**
  * Trang bao cao doanh thu theo ky — Recharts BarChart + LineChart AOV
@@ -115,7 +115,7 @@ export default function RevenueReportPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="period_label" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-                <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
+                <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
                 <Legend />
                 <Bar dataKey="net_revenue" name="Doanh thu thuan" fill="#1a1a1a" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -133,7 +133,7 @@ export default function RevenueReportPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="period_label" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}K`} />
-                <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
+                <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
                 <Line type="monotone" dataKey="aov" name="AOV" stroke="#D0021B" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>

@@ -7,10 +7,12 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { BulkEditProductDto, BulkEditVariantDto } from './dto/bulk-edit.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { CreateVariantDto } from './dto/create-variant.dto';
+import { UpdateVariantDto } from './dto/update-variant.dto';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/products')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -28,7 +30,7 @@ export class ProductsController {
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.MANAGER, UserRole.CONTENT_EDITOR)
   async findOne(@Param('id') id: string) {
     const data = await this.productsService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post()
@@ -68,18 +70,18 @@ export class ProductsController {
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.MANAGER, UserRole.CONTENT_EDITOR)
   async getVariants(@Param('id') productId: string) {
     const data = await this.productsService.getVariants(productId);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post(':id/variants')
-  async createVariant(@Param('id') productId: string, @Body() body: any) {
-    const data = await this.productsService.createVariant(productId, body);
+  async createVariant(@Param('id') productId: string, @Body() dto: CreateVariantDto) {
+    const data = await this.productsService.createVariant(productId, dto);
     return { data, message: 'Tao variant thanh cong' };
   }
 
   @Put('variants/:variantId')
-  async updateVariant(@Param('variantId') variantId: string, @Body() body: any) {
-    const data = await this.productsService.updateVariant(variantId, body);
+  async updateVariant(@Param('variantId') variantId: string, @Body() dto: UpdateVariantDto) {
+    const data = await this.productsService.updateVariant(variantId, dto);
     return { data, message: 'Cap nhat variant thanh cong' };
   }
 

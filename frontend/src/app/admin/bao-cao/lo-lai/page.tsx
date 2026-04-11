@@ -5,10 +5,10 @@ import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
 } from 'recharts';
-import { DateRangePicker } from '@/components/admin/reports/DateRangePicker';
-import { ExportButton } from '@/components/admin/reports/ExportButton';
-import { EmptyReport } from '@/components/admin/reports/EmptyReport';
-import { ReportSkeleton } from '@/components/admin/reports/ReportSkeleton';
+import { DateRangePicker } from '@/components/admin/reports/date-range-picker';
+import { ExportButton } from '@/components/admin/reports/export-button';
+import { EmptyReport } from '@/components/admin/reports/empty-report';
+import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
 
 /**
  * Bao cao Lo/Lai (P&L) — tree table + stacked bar + trend line
@@ -171,7 +171,7 @@ export default function PnLReportPage() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="label" />
                   <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-                  <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
+                  <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
                   <Legend />
                   <Bar dataKey="cogs" name="Gia von" fill="#EF4444" stackId="a" />
                   <Bar dataKey="shipping" name="Ship" fill="#F59E0B" stackId="a" />
@@ -192,7 +192,7 @@ export default function PnLReportPage() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                   <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-                  <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
+                  <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
                   <Line type="monotone" dataKey="net_profit" name="Lai rong" stroke="#22C55E" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>

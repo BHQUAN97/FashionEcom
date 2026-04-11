@@ -10,7 +10,7 @@ import { CategoryEntity } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ReorderCategoryDto } from './dto/reorder-category.dto';
-import { createSlug } from '../../common/utils/slug.util';
+import { createSlug } from '@/common/utils/slug.util';
 
 @Injectable()
 export class CategoriesService {
@@ -28,8 +28,9 @@ export class CategoriesService {
     });
 
     // Xay dung tree tu flat list
-    const map = new Map<string, any>();
-    const roots: any[] = [];
+    type CategoryNode = CategoryEntity & { children: CategoryNode[] };
+    const map = new Map<string, CategoryNode>();
+    const roots: CategoryNode[] = [];
 
     all.forEach((c) => {
       map.set(c.catCategoryId, { ...c, children: [] });

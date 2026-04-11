@@ -5,10 +5,10 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { ReportCard } from '@/components/admin/reports/ReportCard';
-import { ExportButton } from '@/components/admin/reports/ExportButton';
-import { EmptyReport } from '@/components/admin/reports/EmptyReport';
-import { ReportSkeleton } from '@/components/admin/reports/ReportSkeleton';
+import { ReportCard } from '@/components/admin/reports/report-card';
+import { ExportButton } from '@/components/admin/reports/export-button';
+import { EmptyReport } from '@/components/admin/reports/empty-report';
+import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
 
 /**
  * Bao cao ton kho — 4 tabs: Tong quan / Chi tiet / Dead Stock / Turnover
@@ -209,7 +209,7 @@ export default function InventoryReportPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
                 <YAxis type="category" dataKey="category_name" width={120} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(value: any) => Number(value).toFixed(2)} />
+                <Tooltip formatter={(value) => Number(value).toFixed(2)} />
                 <Bar dataKey="turnover_rate" name="Turnover Rate" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>

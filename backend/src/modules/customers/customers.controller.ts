@@ -4,10 +4,10 @@ import {
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CustomerQueryDto } from './dto/customer-query.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/customers')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -23,7 +23,7 @@ export class CustomersController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.customersService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get(':id/orders')
@@ -42,6 +42,6 @@ export class CustomersController {
   @Get(':id/addresses')
   async getAddresses(@Param('id') id: string) {
     const data = await this.customersService.getAddresses(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 }

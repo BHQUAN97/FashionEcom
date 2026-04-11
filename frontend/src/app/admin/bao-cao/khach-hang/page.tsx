@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
-import { ExportButton } from '@/components/admin/reports/ExportButton';
-import { EmptyReport } from '@/components/admin/reports/EmptyReport';
-import { ReportSkeleton } from '@/components/admin/reports/ReportSkeleton';
+import { ExportButton } from '@/components/admin/reports/export-button';
+import { EmptyReport } from '@/components/admin/reports/empty-report';
+import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
 
 /**
  * Bao cao RFM Segmentation — Treemap + bang thong ke + drill-down
@@ -126,22 +126,25 @@ export default function CustomerRFMPage() {
                 dataKey="size"
                 nameKey="name"
                 stroke="#fff"
-                content={({ x, y, width, height, name, fill }: any) => (
+                content={(props) => {
+                  const p = props as { x: number; y: number; width: number; height: number; name?: string; fill?: string };
+                  return (
                     <g>
-                      {width >= 40 && height >= 30 ? (
+                      {p.width >= 40 && p.height >= 30 ? (
                         <>
-                          <rect x={x} y={y} width={width} height={height} fill={fill} rx={4} />
-                          <text x={x + width / 2} y={y + height / 2} textAnchor="middle" fill="#fff" fontSize={11}>
-                            {name}
+                          <rect x={p.x} y={p.y} width={p.width} height={p.height} fill={p.fill} rx={4} />
+                          <text x={p.x + p.width / 2} y={p.y + p.height / 2} textAnchor="middle" fill="#fff" fontSize={11}>
+                            {p.name}
                           </text>
                         </>
                       ) : (
-                        <rect x={x} y={y} width={width} height={height} fill={fill} rx={4} />
+                        <rect x={p.x} y={p.y} width={p.width} height={p.height} fill={p.fill} rx={4} />
                       )}
                     </g>
-                  )}
+                  );
+                }}
               >
-                <Tooltip formatter={(value: any) => `${Number(value)} khach hang`} />
+                <Tooltip formatter={(value) => `${Number(value)} khach hang`} />
               </Treemap>
             </ResponsiveContainer>
 

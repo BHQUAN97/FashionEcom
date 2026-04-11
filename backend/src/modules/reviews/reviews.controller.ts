@@ -2,11 +2,13 @@ import {
   Controller, Get, Post, Patch, Body, Param, Query, UseGuards,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { CreateReviewDto } from './dto/create-review.dto';
+import { UpdateReviewStatusDto } from './dto/update-review-status.dto';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 /** Customer + Public endpoints */
 @Controller()
@@ -16,17 +18,11 @@ export class ReviewsController {
   @Post('reviews')
   @UseGuards(JwtAuthGuard)
   async create(
-    @Body() body: {
-      productId: string;
-      orderItemId: string;
-      rating: number;
-      content?: string;
-      photos?: string[];
-    },
+    @Body() dto: CreateReviewDto,
     @CurrentUser('sub') customerId: string,
   ) {
     const data = await this.reviewsService.create({
-      ...body,
+      ...dto,
       customerId,
     });
     return { data, message: 'Gui danh gia thanh cong, dang cho duyet' };
@@ -59,8 +55,8 @@ export class AdminReviewsController {
   }
 
   @Patch(':id/status')
-  async updateStatus(@Param('id') id: string, @Body('status') status: number) {
-    const data = await this.reviewsService.updateStatus(id, status);
+  async updateStatus(@Param('id') id: string, @Body() dto: UpdateReviewStatusDto) {
+    const data = await this.reviewsService.updateStatus(id, dto.status);
     return { data, message: 'Cap nhat trang thai review thanh cong' };
   }
 
@@ -77,6 +73,6 @@ export class AdminReviewsController {
   @Get('stats')
   async stats() {
     const data = await this.reviewsService.getStats();
-    return { data };
+    return { data, message: 'OK' };
   }
 }

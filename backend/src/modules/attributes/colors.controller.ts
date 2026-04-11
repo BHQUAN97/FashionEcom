@@ -4,10 +4,10 @@ import {
 } from '@nestjs/common';
 import { AttributesService } from './attributes.service';
 import { CreateColorDto, UpdateColorDto } from './dto/create-color.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/attributes/colors')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -18,7 +18,7 @@ export class ColorsController {
   @Get()
   async findAll() {
     const data = await this.attributesService.findAllColors();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post()

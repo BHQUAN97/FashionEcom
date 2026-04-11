@@ -14,7 +14,7 @@ import {
 } from './gateways/payment-gateway.interface';
 import { OrderEntity } from '../orders/entities/order.entity';
 import { CreatePaymentDto, PaymentQueryDto, RefundPaymentDto } from './dto/create-payment.dto';
-import { BaseService } from '../../common/services/base.service';
+import { BaseService } from '@/common/services/base.service';
 
 /** Phi gateway tinh % — dung cho P&L */
 const GATEWAY_FEE_RATES: Record<number, number> = {

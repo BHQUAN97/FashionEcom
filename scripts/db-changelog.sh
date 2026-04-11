@@ -46,17 +46,17 @@ run_sql_batch() {
 # ── Tao bang schema_changelog neu chua co ───
 run_sql "
 CREATE TABLE IF NOT EXISTS schema_changelog (
-    changelog_id    INT AUTO_INCREMENT PRIMARY KEY,
-    filename        VARCHAR(255) NOT NULL,
-    applied_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    checksum        VARCHAR(64) NULL,
+    schema_changelog_id CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY COMMENT 'UUID PK — MISA convention',
+    filename            VARCHAR(255) NOT NULL,
+    applied_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    checksum            VARCHAR(64) NULL,
     UNIQUE KEY uix_schema_changelog_filename (filename)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
     COMMENT='Theo doi cac file SQL changelog da chay';
 "
 
 # ── Lay danh sach file da apply ─────────────
-APPLIED=$(run_sql "SELECT filename FROM schema_changelog ORDER BY changelog_id;")
+APPLIED=$(run_sql "SELECT filename FROM schema_changelog ORDER BY applied_at;")
 
 # ── Lay danh sach SQL files (sorted) ────────
 if [ ! -d "$CHANGELOG_DIR" ]; then

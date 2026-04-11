@@ -8,10 +8,10 @@ import { CreateBannerDto, UpdateBannerDto, ReorderBannersDto } from './dto/banne
 import { UpdateMenuDto } from './dto/menu.dto';
 import { UpdateThemeConfigDto } from './dto/theme-config.dto';
 import { UpdateEmailTemplateDto } from './dto/email-template.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 // ==================== Admin Layout API ====================
 
@@ -26,7 +26,7 @@ export class LayoutAdminController {
   @Get('sections')
   async getSections(@Query('page') page: string = 'homepage') {
     const data = await this.layoutService.getSections(page);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put('sections/draft')
@@ -58,13 +58,13 @@ export class LayoutAdminController {
   @Get('banners')
   async getBanners() {
     const data = await this.layoutService.getBanners();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('banners/:id')
   async getBanner(@Param('id') id: string) {
     const data = await this.layoutService.getBanner(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post('banners')
@@ -96,13 +96,13 @@ export class LayoutAdminController {
   @Get('menus')
   async getMenus() {
     const data = await this.layoutService.getMenus();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('menus/:type/items')
   async getMenuItems(@Param('type') type: string) {
     const data = await this.layoutService.getMenuItems(type);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put('menus/:type')
@@ -116,7 +116,7 @@ export class LayoutAdminController {
   @Get('theme')
   async getThemeConfig() {
     const data = await this.layoutService.getThemeConfig();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put('theme')
@@ -130,13 +130,13 @@ export class LayoutAdminController {
   @Get('email-templates')
   async getEmailTemplates() {
     const data = await this.layoutService.getEmailTemplates();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('email-templates/:key')
   async getEmailTemplate(@Param('key') key: string) {
     const data = await this.layoutService.getEmailTemplate(key);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put('email-templates/:key')
@@ -158,7 +158,7 @@ export class LayoutPublicController {
   @Get('sections/:page')
   async getPublishedSections(@Param('page') page: string) {
     const data = await this.layoutService.getPublishedSections(page);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /**
@@ -167,7 +167,7 @@ export class LayoutPublicController {
   @Get('menus/:type')
   async getMenuItems(@Param('type') type: string) {
     const data = await this.layoutService.getMenuItems(type);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /**
@@ -176,7 +176,7 @@ export class LayoutPublicController {
   @Get('theme')
   async getThemeConfig() {
     const data = await this.layoutService.getThemeConfig();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /**

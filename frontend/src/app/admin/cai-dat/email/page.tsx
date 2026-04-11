@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import DOMPurify from 'isomorphic-dompurify';
 import { api } from '@/lib/api/client';
 
 interface EmailTemplate {
@@ -125,7 +126,7 @@ export default function EmailTemplatesPage() {
             )}
 
             {showPreview ? (
-              <div className="border rounded-lg p-4 bg-white min-h-[300px]" dangerouslySetInnerHTML={{ __html: form.body }} />
+              <div className="border rounded-lg p-4 bg-white min-h-[300px]" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(form.body) }} />
             ) : (
               <textarea
                 value={form.body}

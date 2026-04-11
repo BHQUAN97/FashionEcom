@@ -2,12 +2,12 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } fro
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
+import { PaginationDto } from '@/common/dto/pagination.dto';
 
 @Controller('admin/users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -23,7 +23,7 @@ export class UsersController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.usersService.findById(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post()

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import DOMPurify from 'isomorphic-dompurify';
 import { type SectionDefinition } from '../../registry/types';
 
 const configSchema = z.object({
@@ -24,8 +25,8 @@ function Editor({ config, onChange }: { config: Record<string, unknown>; onChang
 function Renderer({ config }: { config: Record<string, unknown>; preview?: boolean }) {
   const html = config.html as string || '';
   if (!html) return <div className="py-4 text-center text-gray-400 text-sm">Custom HTML (chua co noi dung)</div>;
-  // Trong thuc te can DOMPurify sanitize
-  return <div className="py-4 px-4" dangerouslySetInnerHTML={{ __html: html }} />;
+  // Sanitize HTML truoc khi render de chong XSS
+  return <div className="py-4 px-4" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} />;
 }
 
 export const customHtmlDefinition: SectionDefinition = {

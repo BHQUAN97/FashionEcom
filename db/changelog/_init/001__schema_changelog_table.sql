@@ -1,6 +1,6 @@
 -- Schema Changelog Tracker — ghi lai cac migration da ap dung
 CREATE TABLE IF NOT EXISTS schema_changelog (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    schema_changelog_id CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY COMMENT 'UUID PK — MISA convention',
     version VARCHAR(20) NOT NULL COMMENT 'Version (VD: 1.0.0)',
     filename VARCHAR(255) NOT NULL COMMENT 'Ten file SQL',
     checksum VARCHAR(64) NULL COMMENT 'SHA256 cua file SQL',

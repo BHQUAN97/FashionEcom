@@ -12,8 +12,8 @@ import { OrderTimelineEntity } from './entities/order-timeline.entity';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
 import { BulkOrderActionDto } from './dto/bulk-action.dto';
-import { StateMachine } from '../../common/patterns/state-machine';
-import { BaseService } from '../../common/services/base.service';
+import { StateMachine } from '@/common/patterns/state-machine';
+import { BaseService } from '@/common/services/base.service';
 
 /**
  * Map trang thai don hang — business rules chuyen trang thai

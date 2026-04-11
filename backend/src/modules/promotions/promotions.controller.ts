@@ -5,10 +5,10 @@ import {
 import { PromotionsService } from './promotions.service';
 import { CreateDiscountDto, UpdateDiscountDto, ApplyDiscountDto, DiscountQueryDto } from './dto/discount.dto';
 import { CreateFlashSaleDto, UpdateFlashSaleDto, FlashSaleQueryDto } from './dto/flash-sale.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 // ==================== Admin Promotions API ====================
 
@@ -28,7 +28,7 @@ export class PromotionsAdminController {
   @Get('discounts/:id')
   async getDiscount(@Param('id') id: string) {
     const data = await this.promotionsService.getDiscount(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post('discounts')
@@ -60,7 +60,7 @@ export class PromotionsAdminController {
   @Get('flash-sales/:id')
   async getFlashSale(@Param('id') id: string) {
     const data = await this.promotionsService.getFlashSale(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post('flash-sales')
@@ -95,7 +95,7 @@ export class PromotionsPublicController {
   @Post('discounts/apply')
   async applyDiscount(@Body() dto: ApplyDiscountDto) {
     const data = await this.promotionsService.applyDiscount(dto);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /**
@@ -104,6 +104,6 @@ export class PromotionsPublicController {
   @Get('flash-sales/active')
   async getActiveFlashSale() {
     const data = await this.promotionsService.getActiveFlashSale();
-    return { data };
+    return { data, message: 'OK' };
   }
 }

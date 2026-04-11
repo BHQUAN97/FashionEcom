@@ -3,11 +3,11 @@ import {
 } from '@nestjs/common';
 import { LoyaltyService } from './loyalty.service';
 import { RedeemPointsDto, AdjustPointsDto, UpdateLoyaltyConfigDto } from './dto/loyalty.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 /** Customer endpoints */
 @Controller('loyalty')
@@ -18,7 +18,7 @@ export class LoyaltyController {
   @UseGuards(JwtAuthGuard)
   async getBalance(@CurrentUser('sub') customerId: string) {
     const data = await this.loyaltyService.getBalance(customerId);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('transactions')
@@ -38,7 +38,7 @@ export class LoyaltyController {
     @CurrentUser('sub') customerId: string,
   ) {
     const data = await this.loyaltyService.redeem(dto, customerId);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('tiers')
@@ -65,7 +65,7 @@ export class AdminLoyaltyController {
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
   async getConfig() {
     const data = await this.loyaltyService.getConfig();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put('config')

@@ -4,10 +4,10 @@ import {
 } from '@nestjs/common';
 import { AttributesService } from './attributes.service';
 import { CreateSizeGroupDto, UpdateSizeGroupDto } from './dto/create-size-group.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/attributes/sizes')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -18,7 +18,7 @@ export class SizesController {
   @Get()
   async findAll() {
     const data = await this.attributesService.findAllSizeGroups();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post()

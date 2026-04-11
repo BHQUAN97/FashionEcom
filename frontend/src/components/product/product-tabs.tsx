@@ -2,6 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Star } from 'lucide-react';
+import DOMPurify from 'isomorphic-dompurify';
 import { cn } from '@/lib/utils';
 import type { Review } from '@/types/product';
 import { formatDate } from '@/lib/utils/format';
@@ -41,7 +42,7 @@ export function ProductTabs({ description, reviews, avgRating, reviewCount }: Pr
       <TabsContent value="description" className="mt-4">
         <div
           className="prose prose-sm max-w-none text-gray-700"
-          dangerouslySetInnerHTML={{ __html: description }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
         />
       </TabsContent>
 

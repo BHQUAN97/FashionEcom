@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
+import { existsSync } from 'fs';
 import { MediaEntity } from './entities/media.entity';
 import { MediaQueryDto } from './dto/media-query.dto';
-import { BaseService } from '../../common/services/base.service';
+import { BaseService } from '@/common/services/base.service';
 
 // Multer file interface (tranh import Express.Multer.File truc tiep)
 interface UploadedFile {
@@ -26,9 +27,9 @@ export class MediaService extends BaseService<MediaEntity> {
     private readonly mediaRepo: Repository<MediaEntity>,
   ) {
     super(mediaRepo, 'sysMediaId', 'Media');
-    // Dam bao thu muc storage ton tai
-    if (!fs.existsSync(this.storagePath)) {
-      fs.mkdirSync(this.storagePath, { recursive: true });
+    // Dam bao thu muc storage ton tai (sync chi chay 1 lan khi khoi tao)
+    if (!existsSync(this.storagePath)) {
+      fs.mkdir(this.storagePath, { recursive: true });
     }
   }
 
@@ -65,17 +66,15 @@ export class MediaService extends BaseService<MediaEntity> {
     const yearMonth = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`;
     const subDir = path.join(this.storagePath, 'uploads', yearMonth);
 
-    if (!fs.existsSync(subDir)) {
-      fs.mkdirSync(subDir, { recursive: true });
-    }
+    await fs.mkdir(subDir, { recursive: true });
 
     // Tao ten file unique
     const ext = path.extname(file.originalname);
     const uniqueName = `${uuidv4()}${ext}`;
     const filePath = path.join(subDir, uniqueName);
 
-    // Ghi file
-    fs.writeFileSync(filePath, file.buffer);
+    // Ghi file (async — khong block event loop)
+    await fs.writeFile(filePath, file.buffer);
 
     // Luu record
     const relativePath = `/uploads/${yearMonth}/${uniqueName}`;
@@ -98,10 +97,12 @@ export class MediaService extends BaseService<MediaEntity> {
   async remove(id: string) {
     const media = await super.findOne(id);
 
-    // Xoa file vat ly
+    // Xoa file vat ly (async)
     const fullPath = path.join(this.storagePath, media.sysMediaPath);
-    if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath);
+    try {
+      await fs.unlink(fullPath);
+    } catch {
+      // File khong ton tai — bo qua
     }
 
     return this.mediaRepo.remove(media);

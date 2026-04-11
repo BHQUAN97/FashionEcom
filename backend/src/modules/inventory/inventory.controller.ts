@@ -7,11 +7,11 @@ import { WarehouseTransferService } from './warehouse-transfer.service';
 import { InventoryQueryDto } from './dto/inventory-query.dto';
 import { AdjustInventoryDto } from './dto/adjust-inventory.dto';
 import { ImportInventoryDto } from './dto/import-inventory.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/inventory')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -27,13 +27,13 @@ export class InventoryController {
   @Get('warehouses')
   async getWarehouses() {
     const data = await this.inventoryService.getWarehouses();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('logs/:variantId')
   async getLogs(@Param('variantId') variantId: string) {
     const data = await this.inventoryService.getLogs(variantId);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Post('adjust')
@@ -86,7 +86,7 @@ export class WarehouseTransferController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.transferService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Patch(':id/status')

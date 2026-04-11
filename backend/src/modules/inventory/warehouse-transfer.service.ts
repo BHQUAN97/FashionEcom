@@ -10,9 +10,9 @@ import { WarehouseTransferEntity } from './entities/warehouse-transfer.entity';
 import { WarehouseTransferItemEntity } from './entities/warehouse-transfer-item.entity';
 import { InventoryLevelEntity } from './entities/inventory-level.entity';
 import { InventoryLogEntity } from './entities/inventory-log.entity';
-import { StateMachine } from '../../common/patterns/state-machine';
-import { generateEntityCode } from '../../common/utils/code-generation.util';
-import { BaseService } from '../../common/services/base.service';
+import { StateMachine } from '@/common/patterns/state-machine';
+import { generateEntityCode } from '@/common/utils/code-generation.util';
+import { BaseService } from '@/common/services/base.service';
 
 /** Warehouse transfer state machine — reuse pattern chung */
 const transferMachine = new StateMachine<number>({

@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { LoyaltyConfigEntity } from './entities/loyalty-config.entity';
 import { LoyaltyTransactionEntity } from './entities/loyalty-transaction.entity';
 import { RedeemPointsDto, AdjustPointsDto, UpdateLoyaltyConfigDto } from './dto/loyalty.dto';
-import { BaseService } from '../../common/services/base.service';
+import { BaseService } from '@/common/services/base.service';
 
 /** Phan hang loyalty */
 export enum LoyaltyTier { MEMBER = 'Member', SILVER = 'Silver', GOLD = 'Gold', PLATINUM = 'Platinum' }

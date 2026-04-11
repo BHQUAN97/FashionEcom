@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { AccessLogEntity, PasswordHistoryEntity } from './entities/access-log.entity';
-import { BaseService } from '../../common/services/base.service';
+import { BaseService } from '@/common/services/base.service';
 
 /**
  * Password policy: min 8 ky tu, 1 hoa, 1 thuong, 1 so, 1 dac biet

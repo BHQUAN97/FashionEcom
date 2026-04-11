@@ -28,6 +28,7 @@ export async function apiFetch<T>(
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },

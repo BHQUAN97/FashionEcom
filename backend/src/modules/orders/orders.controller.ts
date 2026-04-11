@@ -6,11 +6,11 @@ import { OrdersService } from './orders.service';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
 import { BulkOrderActionDto } from './dto/bulk-action.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/orders')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,13 +26,13 @@ export class OrdersController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.ordersService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get(':id/timeline')
   async getTimeline(@Param('id') id: string) {
     const data = await this.ordersService.getTimeline(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put(':id/status')

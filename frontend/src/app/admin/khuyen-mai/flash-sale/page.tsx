@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { api } from '@/lib/api/client';
 import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
-import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
-import { StatusBadge } from '@/components/admin/shared/StatusBadge';
-import { EmptyTableRow } from '@/components/admin/shared/EmptyTableRow';
-import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
+import { AdminTableLayout } from '@/components/admin/shared/admin-table-layout';
+import { StatusBadge } from '@/components/admin/shared/status-badge';
+import { EmptyTableRow } from '@/components/admin/shared/empty-table-row';
+import { ConfirmDialog } from '@/components/admin/shared/confirm-dialog';
 
 interface FlashSaleItem {
   prmFlashSaleItemId: string;

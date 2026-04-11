@@ -5,7 +5,7 @@ import { CustomerEntity } from './entities/customer.entity';
 import { CustomerAddressEntity } from './entities/customer-address.entity';
 import { OrderEntity } from '../orders/entities/order.entity';
 import { CustomerQueryDto } from './dto/customer-query.dto';
-import { BaseService } from '../../common/services/base.service';
+import { BaseService } from '@/common/services/base.service';
 
 @Injectable()
 export class CustomersService extends BaseService<CustomerEntity> {

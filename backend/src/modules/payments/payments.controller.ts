@@ -5,10 +5,10 @@ import {
 import { Request } from 'express';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto, PaymentQueryDto, RefundPaymentDto } from './dto/create-payment.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('payments')
 export class PaymentsController {
@@ -20,7 +20,7 @@ export class PaymentsController {
   async create(@Body() dto: CreatePaymentDto, @Req() req: Request) {
     const ip = (req.headers['x-forwarded-for'] as string) || req.ip || '127.0.0.1';
     const data = await this.paymentsService.createPayment(dto, ip);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /** Return URL callback (GET redirect) tu gateway */
@@ -30,7 +30,7 @@ export class PaymentsController {
     @Query() queryParams: Record<string, unknown>,
   ) {
     const data = await this.paymentsService.handleCallback(gateway, queryParams);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /** Webhook/IPN callback tu gateway (POST) */
@@ -41,7 +41,7 @@ export class PaymentsController {
   ) {
     const signature = String(payload.signature || payload.vnp_SecureHash || payload.mac || '');
     const data = await this.paymentsService.handleWebhook(gateway, payload, signature);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /** Query giao dich — Customer (owner) */
@@ -49,7 +49,7 @@ export class PaymentsController {
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
     const data = await this.paymentsService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   /** Hoan tien — Admin+ */
@@ -77,6 +77,6 @@ export class AdminPaymentsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.paymentsService.findOne(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 }

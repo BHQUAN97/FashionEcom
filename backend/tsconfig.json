@@ -13,13 +13,12 @@
     "incremental": true,
     "skipLibCheck": true,
     "ignoreDeprecations": "6.0",
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "strictBindCallApply": true,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "types": ["node", "jest"]
   }
 }

@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { api } from '@/lib/api/client';
 import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
-import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
-import { StatusBadge } from '@/components/admin/shared/StatusBadge';
-import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
+import { AdminTableLayout } from '@/components/admin/shared/admin-table-layout';
+import { StatusBadge } from '@/components/admin/shared/status-badge';
+import { ConfirmDialog } from '@/components/admin/shared/confirm-dialog';
 
 interface Review {
   salReviewId: string;

@@ -5,10 +5,10 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { DateRangePicker } from '@/components/admin/reports/DateRangePicker';
-import { ReportCard } from '@/components/admin/reports/ReportCard';
-import { EmptyReport } from '@/components/admin/reports/EmptyReport';
-import { ReportSkeleton } from '@/components/admin/reports/ReportSkeleton';
+import { DateRangePicker } from '@/components/admin/reports/date-range-picker';
+import { ReportCard } from '@/components/admin/reports/report-card';
+import { EmptyReport } from '@/components/admin/reports/empty-report';
+import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
 
 /**
  * Trang nang cao — 3 tabs: Funnel / Luot xem SP / Tim kiem

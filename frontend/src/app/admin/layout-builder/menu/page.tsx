@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api/client';
-import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
+import { ConfirmDialog } from '@/components/admin/shared/confirm-dialog';
 
 interface MenuItem {
   cmsMenuItemId: string;

@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { InventoryLevelEntity } from './entities/inventory-level.entity';
 import { InventoryLogEntity } from './entities/inventory-log.entity';
@@ -13,7 +13,7 @@ import { ProductVariantEntity } from '../products/entities/product-variant.entit
 import { InventoryQueryDto } from './dto/inventory-query.dto';
 import { AdjustInventoryDto } from './dto/adjust-inventory.dto';
 import { ImportInventoryDto } from './dto/import-inventory.dto';
-import { BaseService } from '../../common/services/base.service';
+import { BaseService } from '@/common/services/base.service';
 
 @Injectable()
 export class InventoryService extends BaseService<InventoryLevelEntity> {
@@ -26,6 +26,7 @@ export class InventoryService extends BaseService<InventoryLevelEntity> {
     private readonly warehouseRepo: Repository<WarehouseEntity>,
     @InjectRepository(ProductVariantEntity)
     private readonly variantRepo: Repository<ProductVariantEntity>,
+    private readonly dataSource: DataSource,
   ) {
     super(levelRepo, 'invInventoryLevelId', 'Ton kho');
   }
@@ -60,51 +61,63 @@ export class InventoryService extends BaseService<InventoryLevelEntity> {
   }
 
   /**
-   * Dieu chinh ton kho — cap nhat available, ghi log
+   * Dieu chinh ton kho — pessimistic lock tranh race condition
    */
   async adjust(dto: AdjustInventoryDto, userId: string) {
-    // Tim inventory level
-    let level = await this.levelRepo.findOne({
-      where: {
-        catProductVariantId: dto.variantId,
-        invWarehouseId: dto.warehouseId,
-      },
-    });
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    if (!level) {
-      // Tao moi neu chua co
-      level = this.levelRepo.create({
-        invInventoryLevelId: uuidv4(),
-        catProductVariantId: dto.variantId,
-        invWarehouseId: dto.warehouseId,
-        invInventoryLevelAvailable: 0,
-        invInventoryLevelLocked: 0,
+    try {
+      // Pessimistic write lock — dam bao chi 1 request cap nhat tai 1 thoi diem
+      let level = await queryRunner.manager.findOne(InventoryLevelEntity, {
+        where: {
+          catProductVariantId: dto.variantId,
+          invWarehouseId: dto.warehouseId,
+        },
+        lock: { mode: 'pessimistic_write' },
       });
+
+      if (!level) {
+        level = queryRunner.manager.create(InventoryLevelEntity, {
+          invInventoryLevelId: uuidv4(),
+          catProductVariantId: dto.variantId,
+          invWarehouseId: dto.warehouseId,
+          invInventoryLevelAvailable: 0,
+          invInventoryLevelLocked: 0,
+        });
+      }
+
+      // Kiem tra ton kho khong am
+      const newAvailable = Number(level.invInventoryLevelAvailable) + dto.qty;
+      if (newAvailable < 0) {
+        throw new BadRequestException('Ton kho khong du de tru');
+      }
+
+      level.invInventoryLevelAvailable = newAvailable;
+      await queryRunner.manager.save(level);
+
+      // Ghi log trong cung transaction
+      const log = queryRunner.manager.create(InventoryLogEntity, {
+        invInventoryLogId: uuidv4(),
+        catProductVariantId: dto.variantId,
+        invWarehouseId: dto.warehouseId,
+        invInventoryLogQty: dto.qty,
+        invInventoryLogType: 'adjustment',
+        invInventoryLogReason: dto.reason,
+        invInventoryLogNote: dto.note || null,
+        sysUserId: userId,
+      });
+      await queryRunner.manager.save(log);
+
+      await queryRunner.commitTransaction();
+      return level;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
     }
-
-    // Kiem tra ton kho khong am
-    const newAvailable = Number(level.invInventoryLevelAvailable) + dto.qty;
-    if (newAvailable < 0) {
-      throw new BadRequestException('Ton kho khong du de tru');
-    }
-
-    level.invInventoryLevelAvailable = newAvailable;
-    await this.levelRepo.save(level);
-
-    // Ghi log
-    const log = this.logRepo.create({
-      invInventoryLogId: uuidv4(),
-      catProductVariantId: dto.variantId,
-      invWarehouseId: dto.warehouseId,
-      invInventoryLogQty: dto.qty,
-      invInventoryLogType: 'adjustment',
-      invInventoryLogReason: dto.reason,
-      invInventoryLogNote: dto.note || null,
-      sysUserId: userId,
-    });
-    await this.logRepo.save(log);
-
-    return level;
   }
 
   /**
@@ -135,8 +148,9 @@ export class InventoryService extends BaseService<InventoryLevelEntity> {
           userId,
         );
         imported++;
-      } catch (err: any) {
-        errors.push(`SKU ${item.sku}: ${err.message}`);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        errors.push(`SKU ${item.sku}: ${message}`);
       }
     }
 

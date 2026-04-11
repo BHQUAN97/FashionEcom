@@ -2,10 +2,10 @@ import {
   Controller, Get, Post, Put, Query, Body, UseGuards,
 } from '@nestjs/common';
 import { MeilisearchService } from './meilisearch.service';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 /** Public search endpoints */
 @Controller('search')
@@ -26,13 +26,13 @@ export class SearchController {
       page: page || 1,
       limit: limit || 20,
     });
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('suggestions')
   async suggestions(@Query('q') q: string) {
     const data = await this.searchService.suggest(q || '', 5);
-    return { data };
+    return { data, message: 'OK' };
   }
 }
 
@@ -46,7 +46,7 @@ export class AdminSearchController {
   @Get('synonyms')
   async getSynonyms() {
     const data = await this.searchService.getSynonyms();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Put('synonyms')
@@ -58,7 +58,7 @@ export class AdminSearchController {
   @Post('reindex')
   async reindex() {
     const data = await this.searchService.reindex();
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Get('stats')

@@ -3,11 +3,11 @@ import {
 } from '@nestjs/common';
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto, CreatePurchaseOrderDto, ReceiveGoodsDto, SupplierQueryDto } from './dto/supplier.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { UserRole } from '../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('admin/suppliers')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -37,7 +37,7 @@ export class SuppliersController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.suppliersService.getSupplier(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 }
 
@@ -61,7 +61,7 @@ export class PurchaseOrdersController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.suppliersService.getPO(id);
-    return { data };
+    return { data, message: 'OK' };
   }
 
   @Patch(':id/status')

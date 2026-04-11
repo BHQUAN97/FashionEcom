@@ -5,8 +5,8 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
-import { ReportCard } from '@/components/admin/reports/ReportCard';
-import { ReportSkeleton } from '@/components/admin/reports/ReportSkeleton';
+import { ReportCard } from '@/components/admin/reports/report-card';
+import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
 
 /**
  * Admin Dashboard — KPI cards voi % change + 7 charts
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
               <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-              <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
+              <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
               <Line type="monotone" dataKey="revenue" stroke="#1a1a1a" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -147,15 +147,15 @@ export default function AdminDashboard() {
                 cy="50%"
                 outerRadius={90}
                 dataKey="value"
-                label={({ name, percent }: any) =>
-                  `${name}: ${(percent * 100).toFixed(0)}%`
+                label={({ name, percent }) =>
+                  `${name ?? ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
                 }
               >
                 {paymentChart.map((_, i) => (
                   <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
+              <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
               <YAxis type="category" dataKey="product_name" width={120} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(value: any) => Number(value).toLocaleString()} />
+              <Tooltip formatter={(value) => Number(value).toLocaleString()} />
               <Bar dataKey="qty_sold" name="Da ban" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
               <YAxis type="category" dataKey="category_name" width={120} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
+              <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
               <Bar dataKey="revenue" name="Doanh thu" fill="#D0021B" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>

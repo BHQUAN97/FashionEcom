@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
-import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
-import { EmptyTableRow } from '@/components/admin/shared/EmptyTableRow';
+import { AdminTableLayout } from '@/components/admin/shared/admin-table-layout';
+import { EmptyTableRow } from '@/components/admin/shared/empty-table-row';
 
 interface AuditLog {
   logAuditId: string;

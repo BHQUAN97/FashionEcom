@@ -3,10 +3,10 @@ import { Response } from 'express';
 import { InventoryReportService } from '../services/inventory-report.service';
 import { ExportService } from '../services/export.service';
 import { InventoryQueryDto, ExportQueryDto } from '../dto/revenue-query.dto';
-import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../../../common/guards/roles.guard';
-import { Roles } from '../../../common/decorators/roles.decorator';
-import { UserRole } from '../../../common/constants/roles.constant';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@/common/constants/roles.constant';
 
 @Controller('reports/inventory')
 @UseGuards(JwtAuthGuard, RolesGuard)
