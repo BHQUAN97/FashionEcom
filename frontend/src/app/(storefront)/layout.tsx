@@ -1,4 +1,15 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+
+export const metadata: Metadata = {
+  title: { template: '%s | Fashion Ecom', default: 'Fashion Ecom — Thoi trang nam cao cap' },
+  description: 'Mua sam thoi trang nam chinh hang, giao hang toan quoc',
+  openGraph: {
+    type: 'website',
+    locale: 'vi_VN',
+    siteName: 'Fashion Ecom',
+  },
+};
 
 /**
  * Storefront layout — header, footer, bottom tab bar (mobile)

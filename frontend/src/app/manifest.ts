@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Fashion Ecom — Thoi trang nam cao cap',
-    short_name: 'Fashion',
+    short_name: 'FashionEcom',
     description: 'Mua sam thoi trang nam chinh hang, giao hang toan quoc',
     start_url: '/',
     display: 'standalone',
@@ -11,12 +11,12 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#1a1a1a',
     icons: [
       {
-        src: '/icons/icon-192.png',
+        src: '/icon-192.png',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: '/icons/icon-512.png',
+        src: '/icon-512.png',
         sizes: '512x512',
         type: 'image/png',
       },
