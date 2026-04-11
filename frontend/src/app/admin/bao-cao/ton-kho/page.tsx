@@ -209,7 +209,7 @@ export default function InventoryReportPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
                 <YAxis type="category" dataKey="category_name" width={120} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(value: number) => value.toFixed(2)} />
+                <Tooltip formatter={(value: any) => Number(value).toFixed(2)} />
                 <Bar dataKey="turnover_rate" name="Turnover Rate" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>

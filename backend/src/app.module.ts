@@ -19,6 +19,16 @@ import { LayoutModule } from './modules/layout/layout.module';
 import { PromotionsModule } from './modules/promotions/promotions.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { ReportsModule } from './modules/reports/reports.module';
+// Phase 5 — Advanced Features
+import { PaymentsModule } from './modules/payments/payments.module';
+import { ReturnsModule } from './modules/returns/returns.module';
+import { LoyaltyModule } from './modules/loyalty/loyalty.module';
+import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { SearchModule } from './modules/search/search.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { SecurityModule } from './modules/security/security.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
+import { GuidesModule } from './modules/guides/guides.module';
 import { AppExceptionFilter } from './common/filters/app-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
@@ -43,7 +53,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
       }),
     }),
 
-    // Modules
+    // Core Modules (Phase 1-4)
     HealthModule,
     AuthModule,
     UsersModule,
@@ -61,6 +71,17 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     PromotionsModule,
     AnalyticsModule,
     ReportsModule,
+
+    // Phase 5 — Advanced Features
+    PaymentsModule,
+    ReturnsModule,
+    LoyaltyModule,
+    SuppliersModule,
+    SearchModule,
+    NotificationsModule,
+    SecurityModule,
+    ReviewsModule,
+    GuidesModule,
   ],
   providers: [
     // Global exception filter

@@ -128,7 +128,7 @@ export default function AdminDashboard() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
               <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-              <Tooltip formatter={(value: number) => value.toLocaleString('vi-VN') + 'd'} />
+              <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
               <Line type="monotone" dataKey="revenue" stroke="#1a1a1a" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
                 cy="50%"
                 outerRadius={90}
                 dataKey="value"
-                label={({ name, percent }: { name: string; percent: number }) =>
+                label={({ name, percent }: any) =>
                   `${name}: ${(percent * 100).toFixed(0)}%`
                 }
               >
@@ -155,7 +155,7 @@ export default function AdminDashboard() {
                   <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value: number) => value.toLocaleString('vi-VN') + 'd'} />
+              <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
               <YAxis type="category" dataKey="product_name" width={120} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(value: number) => value.toLocaleString()} />
+              <Tooltip formatter={(value: any) => Number(value).toLocaleString()} />
               <Bar dataKey="qty_sold" name="Da ban" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
               <YAxis type="category" dataKey="category_name" width={120} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(value: number) => value.toLocaleString('vi-VN') + 'd'} />
+              <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
               <Bar dataKey="revenue" name="Doanh thu" fill="#D0021B" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>

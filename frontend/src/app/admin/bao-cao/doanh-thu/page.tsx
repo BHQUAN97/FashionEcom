@@ -115,7 +115,7 @@ export default function RevenueReportPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="period_label" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-                <Tooltip formatter={(value: number) => value.toLocaleString('vi-VN') + 'd'} />
+                <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
                 <Legend />
                 <Bar dataKey="net_revenue" name="Doanh thu thuan" fill="#1a1a1a" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -133,7 +133,7 @@ export default function RevenueReportPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="period_label" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}K`} />
-                <Tooltip formatter={(value: number) => value.toLocaleString('vi-VN') + 'd'} />
+                <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
                 <Line type="monotone" dataKey="aov" name="AOV" stroke="#D0021B" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>

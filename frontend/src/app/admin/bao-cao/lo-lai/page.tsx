@@ -127,8 +127,8 @@ export default function PnLReportPage() {
                   { label: 'Ty le lai gop (%)', key: 'gross_margin', percent: true },
                   { label: 'Ty le lai rong (%)', key: 'net_margin', percent: true },
                 ].map((row) => {
-                  const curVal = Number((current as Record<string, unknown>)[row.key] || 0);
-                  const prevVal = prev ? Number((prev as Record<string, unknown>)[row.key] || 0) : 0;
+                  const curVal = Number((current as unknown as Record<string, unknown>)[row.key] || 0);
+                  const prevVal = prev ? Number((prev as unknown as Record<string, unknown>)[row.key] || 0) : 0;
                   const change = prevVal !== 0 ? ((curVal - prevVal) / Math.abs(prevVal)) * 100 : 0;
 
                   return (
@@ -171,7 +171,7 @@ export default function PnLReportPage() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="label" />
                   <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-                  <Tooltip formatter={(value: number) => value.toLocaleString('vi-VN') + 'd'} />
+                  <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
                   <Legend />
                   <Bar dataKey="cogs" name="Gia von" fill="#EF4444" stackId="a" />
                   <Bar dataKey="shipping" name="Ship" fill="#F59E0B" stackId="a" />
@@ -192,7 +192,7 @@ export default function PnLReportPage() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                   <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
-                  <Tooltip formatter={(value: number) => value.toLocaleString('vi-VN') + 'd'} />
+                  <Tooltip formatter={(value: any) => Number(value).toLocaleString('vi-VN') + 'd'} />
                   <Line type="monotone" dataKey="net_profit" name="Lai rong" stroke="#22C55E" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>

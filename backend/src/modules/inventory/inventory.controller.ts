@@ -1,8 +1,9 @@
 import {
-  Controller, Get, Post, Put,
+  Controller, Get, Post, Put, Patch,
   Body, Param, Query, UseGuards,
 } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
+import { WarehouseTransferService } from './warehouse-transfer.service';
 import { InventoryQueryDto } from './dto/inventory-query.dto';
 import { AdjustInventoryDto } from './dto/adjust-inventory.dto';
 import { ImportInventoryDto } from './dto/import-inventory.dto';
@@ -53,5 +54,48 @@ export class InventoryController {
   ) {
     const data = await this.inventoryService.bulkImport(dto, userId);
     return { data, message: 'Nhap kho thanh cong' };
+  }
+}
+
+/** Warehouse Transfer endpoints */
+@Controller('admin/warehouse-transfers')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.MANAGER, UserRole.WAREHOUSE)
+export class WarehouseTransferController {
+  constructor(private readonly transferService: WarehouseTransferService) {}
+
+  @Get()
+  async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
+    return this.transferService.findAll(page, limit);
+  }
+
+  @Post()
+  async create(
+    @Body() body: {
+      fromWarehouseId: string;
+      toWarehouseId: string;
+      reason?: string;
+      items: { variantId: string; qty: number }[];
+    },
+    @CurrentUser('sub') userId: string,
+  ) {
+    const data = await this.transferService.create(body, userId);
+    return { data, message: 'Tao phieu dieu chuyen thanh cong' };
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const data = await this.transferService.findOne(id);
+    return { data };
+  }
+
+  @Patch(':id/status')
+  async updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: number,
+    @CurrentUser('sub') userId: string,
+  ) {
+    const data = await this.transferService.updateStatus(id, status, userId);
+    return { data, message: 'Cap nhat trang thai dieu chuyen thanh cong' };
   }
 }

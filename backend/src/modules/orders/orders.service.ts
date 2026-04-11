@@ -12,6 +12,7 @@ import { OrderTimelineEntity } from './entities/order-timeline.entity';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
 import { BulkOrderActionDto } from './dto/bulk-action.dto';
+import { StateMachine } from '../../common/patterns/state-machine';
 
 /**
  * Map trang thai don hang — business rules chuyen trang thai
@@ -27,16 +28,17 @@ const STATUS_LABELS: Record<number, string> = {
   6: 'Doi tra',
 };
 
-// Chuyen trang thai hop le
-const VALID_TRANSITIONS: Record<number, number[]> = {
-  0: [1, 5],     // ChoXacNhan -> DaXacNhan hoac DaHuy
-  1: [2, 5],     // DaXacNhan -> DangDongGoi hoac DaHuy
-  2: [3, 5],     // DangDongGoi -> DangGiao hoac DaHuy
-  3: [4, 6],     // DangGiao -> HoanThanh hoac DoiTra
-  4: [6],        // HoanThanh -> DoiTra
-  5: [],         // DaHuy — final state
-  6: [],         // DoiTra — final state
-};
+// State machine cho don hang — reuse pattern chung
+const orderMachine = new StateMachine<number>({
+  labels: STATUS_LABELS,
+  transitions: [
+    { from: 0, to: 1 }, { from: 0, to: 5 },   // ChoXacNhan -> DaXacNhan hoac DaHuy
+    { from: 1, to: 2 }, { from: 1, to: 5 },   // DaXacNhan -> DangDongGoi hoac DaHuy
+    { from: 2, to: 3 }, { from: 2, to: 5 },   // DangDongGoi -> DangGiao hoac DaHuy
+    { from: 3, to: 4 }, { from: 3, to: 6 },   // DangGiao -> HoanThanh hoac DoiTra
+    { from: 4, to: 6 },                         // HoanThanh -> DoiTra
+  ],
+});
 
 @Injectable()
 export class OrdersService {
@@ -130,9 +132,8 @@ export class OrdersService {
     const order = await this.orderRepo.findOne({ where: { salOrderId: id } });
     if (!order) throw new NotFoundException('Don hang khong ton tai');
 
-    // Kiem tra transition hop le
-    const allowed = VALID_TRANSITIONS[order.salOrderStatus] || [];
-    if (!allowed.includes(dto.status)) {
+    // Kiem tra transition hop le bang state machine
+    if (!orderMachine.canTransition(order.salOrderStatus, dto.status)) {
       throw new BadRequestException(
         `Khong the chuyen tu "${STATUS_LABELS[order.salOrderStatus]}" sang "${STATUS_LABELS[dto.status]}"`,
       );

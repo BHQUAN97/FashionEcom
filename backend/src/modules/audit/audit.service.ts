@@ -15,7 +15,13 @@ export class AuditService {
   /**
    * Danh sach audit logs + filter + pagination
    */
-  async findAll(query: PaginationDto & { entityType?: string; userId?: string }) {
+  async findAll(query: PaginationDto & {
+    entityType?: string;
+    userId?: string;
+    action?: string;
+    dateFrom?: string;
+    dateTo?: string;
+  }) {
     const page = query.page || 1;
     const limit = Math.min(query.limit || 20, 100);
 
@@ -27,8 +33,17 @@ export class AuditService {
     if (query.userId) {
       qb.andWhere('a.sysUserId = :uid', { uid: query.userId });
     }
+    if (query.action) {
+      qb.andWhere('a.logAuditAction = :act', { act: query.action });
+    }
+    if (query.dateFrom) {
+      qb.andWhere('a.createdDate >= :df', { df: query.dateFrom });
+    }
+    if (query.dateTo) {
+      qb.andWhere('a.createdDate <= :dt', { dt: query.dateTo });
+    }
     if (query.search) {
-      qb.andWhere('a.logAuditEntityId LIKE :s', { s: `%${query.search}%` });
+      qb.andWhere('(a.logAuditEntityId LIKE :s OR a.logAuditEntityName LIKE :s)', { s: `%${query.search}%` });
     }
 
     qb.orderBy('a.createdDate', 'DESC');
@@ -40,6 +55,13 @@ export class AuditService {
       data,
       pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
     };
+  }
+
+  /**
+   * Chi tiet 1 audit log entry
+   */
+  async findOne(id: string) {
+    return this.auditRepo.findOne({ where: { logAuditId: id } });
   }
 
   /**

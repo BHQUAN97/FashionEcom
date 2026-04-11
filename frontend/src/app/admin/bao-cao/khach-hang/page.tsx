@@ -126,21 +126,22 @@ export default function CustomerRFMPage() {
                 dataKey="size"
                 nameKey="name"
                 stroke="#fff"
-                content={({ x, y, width, height, name, fill }: {
-                  x: number; y: number; width: number; height: number; name: string; fill: string;
-                }) => {
-                  if (width < 40 || height < 30) return null;
-                  return (
+                content={({ x, y, width, height, name, fill }: any) => (
                     <g>
-                      <rect x={x} y={y} width={width} height={height} fill={fill} rx={4} />
-                      <text x={x + width / 2} y={y + height / 2} textAnchor="middle" fill="#fff" fontSize={11}>
-                        {name}
-                      </text>
+                      {width >= 40 && height >= 30 ? (
+                        <>
+                          <rect x={x} y={y} width={width} height={height} fill={fill} rx={4} />
+                          <text x={x + width / 2} y={y + height / 2} textAnchor="middle" fill="#fff" fontSize={11}>
+                            {name}
+                          </text>
+                        </>
+                      ) : (
+                        <rect x={x} y={y} width={width} height={height} fill={fill} rx={4} />
+                      )}
                     </g>
-                  );
-                }}
+                  )}
               >
-                <Tooltip formatter={(value: number) => `${value} khach hang`} />
+                <Tooltip formatter={(value: any) => `${Number(value)} khach hang`} />
               </Treemap>
             </ResponsiveContainer>
 
