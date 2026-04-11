@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  # ── MySQL 8.0 ─────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: fashionecom-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_0900_as_ci
+      --default-authentication-plugin=caching_sha2_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fashionecom-net
+
+  # ── Redis 7 ───────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: fashionecom-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fashionecom-net
+
+  # ── Backend (NestJS) ──────────────────────
+  backend:
+    image: fashionecom-backend:latest
+    container_name: fashionecom-backend
+    restart: unless-stopped
+    ports:
+      - "4300:4000"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fashionecom-net
+
+  # ── Frontend (Next.js) ────────────────────
+  frontend:
+    image: fashionecom-frontend:latest
+    container_name: fashionecom-frontend
+    restart: unless-stopped
+    ports:
+      - "3300:3000"
+    env_file:
+      - .env
+    environment:
+      NEXT_PUBLIC_API_URL: /api
+    depends_on:
+      - backend
+    networks:
+      - fashionecom-net
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  fashionecom-net:
+    driver: bridge
