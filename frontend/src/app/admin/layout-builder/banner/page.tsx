@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api/client';
+import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
 
 interface Banner {
   cmsBannerId: string;
@@ -26,6 +27,7 @@ const STATUS_COLORS: Record<number, string> = { 0: 'bg-gray-100 text-gray-600', 
 export default function BannerManagerPage() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({
@@ -83,9 +85,12 @@ export default function BannerManagerPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (id: string) => {
-    await api.delete(`/admin/layout/banners/${id}`);
-    loadBanners();
+  const handleConfirmDelete = async () => {
+    if (confirmState.id) {
+      await api.delete(`/admin/layout/banners/${confirmState.id}`);
+      loadBanners();
+    }
+    setConfirmState({ open: false, id: null });
   };
 
   const getCTR = (b: Banner) => {
@@ -136,7 +141,7 @@ export default function BannerManagerPage() {
                 <td className="px-4 py-3">{b.cmsBannerAbVariant || '-'}</td>
                 <td className="px-4 py-3 text-right">
                   <button onClick={() => handleEdit(b)} className="text-blue-600 hover:underline text-xs mr-2">Sua</button>
-                  <button onClick={() => handleDelete(b.cmsBannerId)} className="text-red-600 hover:underline text-xs">Xoa</button>
+                  <button onClick={() => setConfirmState({ open: true, id: b.cmsBannerId })} className="text-red-600 hover:underline text-xs">Xoa</button>
                 </td>
               </tr>
             ))}
@@ -172,6 +177,15 @@ export default function BannerManagerPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog
+        open={confirmState.open}
+        title="Xac nhan xoa"
+        message="Ban co chac chan muon xoa banner nay? Hanh dong nay khong the hoan tac."
+        variant="danger"
+        confirmLabel="Xoa"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmState({ open: false, id: null })}
+      />
     </div>
   );
 }

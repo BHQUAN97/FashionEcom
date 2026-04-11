@@ -1,7 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '@/lib/api/client';
+import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
+import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
+import { StatusBadge } from '@/components/admin/shared/StatusBadge';
+import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
 
 interface Review {
   salReviewId: string;
@@ -15,7 +19,7 @@ interface Review {
 }
 
 const STATUS_LABELS: Record<number, string> = { 0: 'Cho duyet', 1: 'Da duyet', 2: 'Tu choi', 3: 'An' };
-const STATUS_COLORS: Record<number, string> = {
+const STATUS_BADGE_COLORS: Record<number, string> = {
   0: 'bg-yellow-100 text-yellow-700', 1: 'bg-green-100 text-green-700',
   2: 'bg-red-100 text-red-700', 3: 'bg-gray-100 text-gray-600',
 };
@@ -24,42 +28,39 @@ const STATUS_COLORS: Record<number, string> = {
  * Admin Reviews — moderation queue, duyet/tu choi, reply
  */
 export default function ReviewsPage() {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [statusFilter, setStatusFilter] = useState(0);
   const [replyId, setReplyId] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
 
-  const loadReviews = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get<{ data: Review[] }>(`/admin/reviews?status=${statusFilter}`);
-      setReviews(res.data.data || (res.data as unknown as Review[]));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadReviews(); }, [statusFilter]);
+  const { data, loading, refetch } = useAdminFetch<{ data: Review[] }>({ url: `/admin/reviews?status=${statusFilter}` });
+  const reviews = data?.data || [];
 
   const updateStatus = async (id: string, status: number) => {
     await api.put(`/admin/reviews/${id}/status`, { status });
-    loadReviews();
+    refetch();
+  };
+
+  const handleConfirmReject = async () => {
+    if (confirmState.id) {
+      await updateStatus(confirmState.id, 2);
+    }
+    setConfirmState({ open: false, id: null });
   };
 
   const sendReply = async (id: string) => {
     await api.post(`/admin/reviews/${id}/reply`, { content: replyContent });
     setReplyId(null);
     setReplyContent('');
-    loadReviews();
+    refetch();
   };
 
   const renderStars = (rating: number) => '★'.repeat(rating) + '☆'.repeat(5 - rating);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Quan ly Danh gia</h1>
+    <AdminTableLayout
+      title="Quan ly Danh gia"
+      filters={
         <div className="flex gap-2">
           {[0, 1, 2, 3].map((s) => (
             <button
@@ -71,17 +72,16 @@ export default function ReviewsPage() {
             </button>
           ))}
         </div>
-      </div>
-
+      }
+      loading={loading}
+    >
       <div className="space-y-4">
         {reviews.map((r) => (
           <div key={r.salReviewId} className="bg-white border rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-3">
                 <span className="text-yellow-500 font-mono">{renderStars(r.salReviewRating)}</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs ${STATUS_COLORS[r.salReviewStatus]}`}>
-                  {STATUS_LABELS[r.salReviewStatus]}
-                </span>
+                <StatusBadge status={r.salReviewStatus} label={STATUS_LABELS[r.salReviewStatus]} colors={STATUS_BADGE_COLORS} />
               </div>
               <span className="text-xs text-gray-400">{new Date(r.createdDate).toLocaleDateString('vi-VN')}</span>
             </div>
@@ -98,7 +98,7 @@ export default function ReviewsPage() {
               {r.salReviewStatus === 0 && (
                 <>
                   <button onClick={() => updateStatus(r.salReviewId, 1)} className="px-3 py-1 bg-green-100 text-green-700 rounded text-xs hover:bg-green-200">Duyet</button>
-                  <button onClick={() => updateStatus(r.salReviewId, 2)} className="px-3 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200">Tu choi</button>
+                  <button onClick={() => setConfirmState({ open: true, id: r.salReviewId })} className="px-3 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200">Tu choi</button>
                 </>
               )}
               {!r.salReviewAdminReply && (
@@ -119,10 +119,19 @@ export default function ReviewsPage() {
             )}
           </div>
         ))}
-        {!loading && reviews.length === 0 && (
+        {reviews.length === 0 && (
           <div className="text-center py-8 text-gray-400">Khong co danh gia nao</div>
         )}
       </div>
-    </div>
+      <ConfirmDialog
+        open={confirmState.open}
+        title="Xac nhan tu choi"
+        message="Ban co chac chan muon tu choi danh gia nay? Hanh dong nay khong the hoan tac."
+        variant="danger"
+        confirmLabel="Tu choi"
+        onConfirm={handleConfirmReject}
+        onCancel={() => setConfirmState({ open: false, id: null })}
+      />
+    </AdminTableLayout>
   );
 }

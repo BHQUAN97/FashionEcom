@@ -12,6 +12,7 @@ import { InventoryLevelEntity } from './entities/inventory-level.entity';
 import { InventoryLogEntity } from './entities/inventory-log.entity';
 import { StateMachine } from '../../common/patterns/state-machine';
 import { generateEntityCode } from '../../common/utils/code-generation.util';
+import { BaseService } from '../../common/services/base.service';
 
 /** Warehouse transfer state machine — reuse pattern chung */
 const transferMachine = new StateMachine<number>({
@@ -30,7 +31,7 @@ const transferMachine = new StateMachine<number>({
 });
 
 @Injectable()
-export class WarehouseTransferService {
+export class WarehouseTransferService extends BaseService<WarehouseTransferEntity> {
   constructor(
     @InjectRepository(WarehouseTransferEntity)
     private readonly transferRepo: Repository<WarehouseTransferEntity>,
@@ -40,7 +41,9 @@ export class WarehouseTransferService {
     private readonly levelRepo: Repository<InventoryLevelEntity>,
     @InjectRepository(InventoryLogEntity)
     private readonly logRepo: Repository<InventoryLogEntity>,
-  ) {}
+  ) {
+    super(transferRepo, 'invWarehouseTransferId', 'Dieu chuyen kho');
+  }
 
   /**
    * Tao phieu dieu chuyen kho — tru ton kho xuat ngay
@@ -166,15 +169,10 @@ export class WarehouseTransferService {
       skip: (page - 1) * limit,
       take: limit,
     });
-    return { data, pagination: { page, limit, total, total_pages: Math.ceil(total / limit) } };
+    return this.paginate(data, total, page, limit);
   }
 
   async findOne(id: string) {
-    const transfer = await this.transferRepo.findOne({
-      where: { invWarehouseTransferId: id },
-      relations: ['items'],
-    });
-    if (!transfer) throw new NotFoundException('Phieu dieu chuyen khong ton tai');
-    return transfer;
+    return super.findOne(id, ['items']);
   }
 }

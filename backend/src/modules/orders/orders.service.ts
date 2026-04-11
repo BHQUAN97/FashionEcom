@@ -13,6 +13,7 @@ import { OrderQueryDto } from './dto/order-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
 import { BulkOrderActionDto } from './dto/bulk-action.dto';
 import { StateMachine } from '../../common/patterns/state-machine';
+import { BaseService } from '../../common/services/base.service';
 
 /**
  * Map trang thai don hang — business rules chuyen trang thai
@@ -41,7 +42,7 @@ const orderMachine = new StateMachine<number>({
 });
 
 @Injectable()
-export class OrdersService {
+export class OrdersService extends BaseService<OrderEntity> {
   constructor(
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
@@ -49,7 +50,9 @@ export class OrdersService {
     private readonly itemRepo: Repository<OrderItemEntity>,
     @InjectRepository(OrderTimelineEntity)
     private readonly timelineRepo: Repository<OrderTimelineEntity>,
-  ) {}
+  ) {
+    super(orderRepo, 'salOrderId', 'Don hang');
+  }
 
   /**
    * Danh sach don hang + filter + pagination
@@ -99,8 +102,7 @@ export class OrdersService {
     );
 
     return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
+      ...this.paginate(data, total, page, limit),
       stats,
     };
   }
@@ -108,12 +110,8 @@ export class OrdersService {
   /**
    * Chi tiet don hang + items + timeline
    */
-  async findOne(id: string) {
-    const order = await this.orderRepo.findOne({
-      where: { salOrderId: id },
-      relations: ['items', 'timeline'],
-    });
-    if (!order) throw new NotFoundException('Don hang khong ton tai');
+  override async findOne(id: string) {
+    const order = await super.findOne(id, ['items', 'timeline']);
 
     // Sort timeline theo created_date desc
     if (order.timeline) {
@@ -129,8 +127,7 @@ export class OrdersService {
    * Cap nhat trang thai don hang — kiem tra business rules + ghi timeline
    */
   async updateStatus(id: string, dto: UpdateOrderStatusDto, actor: string) {
-    const order = await this.orderRepo.findOne({ where: { salOrderId: id } });
-    if (!order) throw new NotFoundException('Don hang khong ton tai');
+    const order = await super.findOne(id);
 
     // Kiem tra transition hop le bang state machine
     if (!orderMachine.canTransition(order.salOrderStatus, dto.status)) {

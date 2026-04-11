@@ -26,9 +26,10 @@ export abstract class BaseService<T extends ObjectLiteral> {
   ) {}
 
   /**
-   * Danh sach co phan trang — override buildQuery() de them filter
+   * Danh sach co phan trang (simple) — dung cho module don gian
+   * Module phuc tap nen tu dinh nghia findAll voi QueryBuilder + this.paginate()
    */
-  async findAll(
+  async findAllBase(
     page = 1,
     limit = 20,
     options?: { where?: FindOptionsWhere<T>; relations?: string[]; order?: Record<string, 'ASC' | 'DESC'> },

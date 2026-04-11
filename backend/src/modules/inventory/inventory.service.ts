@@ -13,9 +13,10 @@ import { ProductVariantEntity } from '../products/entities/product-variant.entit
 import { InventoryQueryDto } from './dto/inventory-query.dto';
 import { AdjustInventoryDto } from './dto/adjust-inventory.dto';
 import { ImportInventoryDto } from './dto/import-inventory.dto';
+import { BaseService } from '../../common/services/base.service';
 
 @Injectable()
-export class InventoryService {
+export class InventoryService extends BaseService<InventoryLevelEntity> {
   constructor(
     @InjectRepository(InventoryLevelEntity)
     private readonly levelRepo: Repository<InventoryLevelEntity>,
@@ -25,7 +26,9 @@ export class InventoryService {
     private readonly warehouseRepo: Repository<WarehouseEntity>,
     @InjectRepository(ProductVariantEntity)
     private readonly variantRepo: Repository<ProductVariantEntity>,
-  ) {}
+  ) {
+    super(levelRepo, 'invInventoryLevelId', 'Ton kho');
+  }
 
   /**
    * Danh sach ton kho — join variant + product + warehouse
@@ -53,10 +56,7 @@ export class InventoryService {
       .take(limit)
       .getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return this.paginate(data, total, page, limit);
   }
 
   /**

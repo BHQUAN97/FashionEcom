@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '@/lib/api/client';
+import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
 
 interface LoyaltyConfig {
   prmLoyaltyConfigEarnRate: number;
@@ -19,30 +20,38 @@ interface LoyaltyConfig {
  * Admin Loyalty Config — cau hinh chuong trinh tich diem
  */
 export default function LoyaltyConfigPage() {
+  const { data, loading } = useAdminFetch<{ data: LoyaltyConfig } | LoyaltyConfig>({ url: '/admin/loyalty/config' });
+  const initialConfig = data ? ((data as any).data || data) as LoyaltyConfig : null;
+
+  // Local editable state — khoi tao tu fetched data
   const [config, setConfig] = useState<LoyaltyConfig | null>(null);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    api.get<LoyaltyConfig>('/admin/loyalty/config')
-      .then((res) => setConfig((res.data as any).data || res.data))
-      .finally(() => setLoading(false));
-  }, []);
+  // Sync fetched data vao local state khi load xong
+  const activeConfig = config || initialConfig;
+
+  if (loading || !activeConfig) return <div className="p-8 text-center text-gray-500">Dang tai...</div>;
+
+  // Ensure local state is initialized
+  if (!config && initialConfig) {
+    setConfig(initialConfig);
+    return <div className="p-8 text-center text-gray-500">Dang tai...</div>;
+  }
 
   const handleSave = async () => {
-    if (!config) return;
+    if (!activeConfig) return;
     setSaving(true);
     try {
       await api.put('/admin/loyalty/config', {
-        earnRate: config.prmLoyaltyConfigEarnRate,
-        redeemRate: config.prmLoyaltyConfigRedeemRate,
-        maxRedeemPercent: config.prmLoyaltyConfigMaxRedeemPercent,
-        minRedeemPoints: config.prmLoyaltyConfigMinRedeemPoints,
-        expiryMonths: config.prmLoyaltyConfigExpiryMonths,
-        pendingDays: config.prmLoyaltyConfigPendingDays,
-        silverThreshold: config.prmLoyaltyConfigSilverThreshold,
-        goldThreshold: config.prmLoyaltyConfigGoldThreshold,
-        platinumThreshold: config.prmLoyaltyConfigPlatinumThreshold,
+        earnRate: activeConfig.prmLoyaltyConfigEarnRate,
+        redeemRate: activeConfig.prmLoyaltyConfigRedeemRate,
+        maxRedeemPercent: activeConfig.prmLoyaltyConfigMaxRedeemPercent,
+        minRedeemPoints: activeConfig.prmLoyaltyConfigMinRedeemPoints,
+        expiryMonths: activeConfig.prmLoyaltyConfigExpiryMonths,
+        pendingDays: activeConfig.prmLoyaltyConfigPendingDays,
+        silverThreshold: activeConfig.prmLoyaltyConfigSilverThreshold,
+        goldThreshold: activeConfig.prmLoyaltyConfigGoldThreshold,
+        platinumThreshold: activeConfig.prmLoyaltyConfigPlatinumThreshold,
       });
       alert('Luu thanh cong!');
     } finally {
@@ -50,16 +59,14 @@ export default function LoyaltyConfigPage() {
     }
   };
 
-  if (loading || !config) return <div className="p-8 text-center text-gray-500">Dang tai...</div>;
-
   const Field = ({ label, field, suffix }: { label: string; field: keyof LoyaltyConfig; suffix?: string }) => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
       <div className="flex items-center gap-2">
         <input
           type="number"
-          value={Number(config[field])}
-          onChange={(e) => setConfig({ ...config, [field]: Number(e.target.value) })}
+          value={Number(activeConfig[field])}
+          onChange={(e) => setConfig({ ...activeConfig, [field]: Number(e.target.value) })}
           className="w-full border rounded-lg px-3 py-2 text-sm"
         />
         {suffix && <span className="text-sm text-gray-500 whitespace-nowrap">{suffix}</span>}

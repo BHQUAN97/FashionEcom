@@ -14,6 +14,7 @@ import {
 } from './gateways/payment-gateway.interface';
 import { OrderEntity } from '../orders/entities/order.entity';
 import { CreatePaymentDto, PaymentQueryDto, RefundPaymentDto } from './dto/create-payment.dto';
+import { BaseService } from '../../common/services/base.service';
 
 /** Phi gateway tinh % — dung cho P&L */
 const GATEWAY_FEE_RATES: Record<number, number> = {
@@ -24,14 +25,16 @@ const GATEWAY_FEE_RATES: Record<number, number> = {
 };
 
 @Injectable()
-export class PaymentsService {
+export class PaymentsService extends BaseService<PaymentEntity> {
   constructor(
     @InjectRepository(PaymentEntity)
     private readonly paymentRepo: Repository<PaymentEntity>,
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
     private readonly gatewayFactory: PaymentGatewayFactory,
-  ) {}
+  ) {
+    super(paymentRepo, 'salPaymentId', 'Thanh toan');
+  }
 
   /**
    * Tao giao dich thanh toan — goi gateway de lay redirect URL
@@ -154,10 +157,7 @@ export class PaymentsService {
    * Hoan tien giao dich
    */
   async refund(paymentId: string, dto: RefundPaymentDto) {
-    const payment = await this.paymentRepo.findOne({
-      where: { salPaymentId: paymentId },
-    });
-    if (!payment) throw new NotFoundException('Giao dich khong ton tai');
+    const payment = await super.findOne(paymentId);
 
     if (payment.salPaymentStatus !== PaymentStatus.SUCCESS) {
       throw new BadRequestException('Chi co the hoan tien giao dich thanh cong');
@@ -218,10 +218,7 @@ export class PaymentsService {
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return this.paginate(data, total, page, limit);
   }
 
   /**
@@ -250,10 +247,6 @@ export class PaymentsService {
    * Query 1 giao dich
    */
   async findOne(id: string) {
-    const payment = await this.paymentRepo.findOne({
-      where: { salPaymentId: id },
-    });
-    if (!payment) throw new NotFoundException('Giao dich khong ton tai');
-    return payment;
+    return super.findOne(id);
   }
 }

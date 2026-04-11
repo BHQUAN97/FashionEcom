@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { MediaEntity } from './entities/media.entity';
 import { MediaQueryDto } from './dto/media-query.dto';
+import { BaseService } from '../../common/services/base.service';
 
 // Multer file interface (tranh import Express.Multer.File truc tiep)
 interface UploadedFile {
@@ -16,7 +17,7 @@ interface UploadedFile {
 }
 
 @Injectable()
-export class MediaService {
+export class MediaService extends BaseService<MediaEntity> {
   // Thu muc luu tru goc
   private readonly storagePath = path.resolve(process.cwd(), 'storage');
 
@@ -24,6 +25,7 @@ export class MediaService {
     @InjectRepository(MediaEntity)
     private readonly mediaRepo: Repository<MediaEntity>,
   ) {
+    super(mediaRepo, 'sysMediaId', 'Media');
     // Dam bao thu muc storage ton tai
     if (!fs.existsSync(this.storagePath)) {
       fs.mkdirSync(this.storagePath, { recursive: true });
@@ -51,10 +53,7 @@ export class MediaService {
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return this.paginate(data, total, page, limit);
   }
 
   /**
@@ -97,8 +96,7 @@ export class MediaService {
    * Xoa media — xoa file vat ly + record DB
    */
   async remove(id: string) {
-    const media = await this.mediaRepo.findOne({ where: { sysMediaId: id } });
-    if (!media) throw new NotFoundException('Media khong ton tai');
+    const media = await super.findOne(id);
 
     // Xoa file vat ly
     const fullPath = path.join(this.storagePath, media.sysMediaPath);

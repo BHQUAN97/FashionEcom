@@ -4,13 +4,16 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { AuditLogEntity } from './entities/audit-log.entity';
 import { PaginationDto } from '../../common/dto/pagination.dto';
+import { BaseService } from '../../common/services/base.service';
 
 @Injectable()
-export class AuditService {
+export class AuditService extends BaseService<AuditLogEntity> {
   constructor(
     @InjectRepository(AuditLogEntity)
     private readonly auditRepo: Repository<AuditLogEntity>,
-  ) {}
+  ) {
+    super(auditRepo, 'logAuditId', 'Audit log');
+  }
 
   /**
    * Danh sach audit logs + filter + pagination
@@ -51,18 +54,10 @@ export class AuditService {
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return this.paginate(data, total, page, limit);
   }
 
-  /**
-   * Chi tiet 1 audit log entry
-   */
-  async findOne(id: string) {
-    return this.auditRepo.findOne({ where: { logAuditId: id } });
-  }
+  // findOne(id) — ke thua tu BaseService, khong can override
 
   /**
    * Ghi audit log — duoc goi tu interceptor hoac service

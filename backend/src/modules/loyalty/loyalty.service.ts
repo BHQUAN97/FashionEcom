@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { LoyaltyConfigEntity } from './entities/loyalty-config.entity';
 import { LoyaltyTransactionEntity } from './entities/loyalty-transaction.entity';
 import { RedeemPointsDto, AdjustPointsDto, UpdateLoyaltyConfigDto } from './dto/loyalty.dto';
+import { BaseService } from '../../common/services/base.service';
 
 /** Phan hang loyalty */
 export enum LoyaltyTier { MEMBER = 'Member', SILVER = 'Silver', GOLD = 'Gold', PLATINUM = 'Platinum' }
@@ -17,13 +18,15 @@ const TIER_MULTIPLIERS: Record<string, number> = {
 };
 
 @Injectable()
-export class LoyaltyService {
+export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
   constructor(
     @InjectRepository(LoyaltyConfigEntity)
     private readonly configRepo: Repository<LoyaltyConfigEntity>,
     @InjectRepository(LoyaltyTransactionEntity)
     private readonly transRepo: Repository<LoyaltyTransactionEntity>,
-  ) {}
+  ) {
+    super(transRepo, 'prmLoyaltyTransactionId', 'Diem thuong');
+  }
 
   /** Lay config hien tai */
   async getConfig(): Promise<LoyaltyConfigEntity> {
@@ -202,7 +205,7 @@ export class LoyaltyService {
       skip: (page - 1) * limit,
       take: limit,
     });
-    return { data, pagination: { page, limit, total, total_pages: Math.ceil(total / limit) } };
+    return this.paginate(data, total, page, limit);
   }
 
   /** Admin: list all transactions */
@@ -213,7 +216,7 @@ export class LoyaltyService {
       skip: (page - 1) * limit,
       take: limit,
     });
-    return { data, pagination: { page, limit, total, total_pages: Math.ceil(total / limit) } };
+    return this.paginate(data, total, page, limit);
   }
 
   /** Cron: xoa diem het han */

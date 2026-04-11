@@ -13,6 +13,7 @@ import { OrderEntity } from '../orders/entities/order.entity';
 import { CreateReturnDto, UpdateReturnStatusDto, ReturnQueryDto } from './dto/return-request.dto';
 import { StateMachine } from '../../common/patterns/state-machine';
 import { generateEntityCode } from '../../common/utils/code-generation.util';
+import { BaseService } from '../../common/services/base.service';
 
 /**
  * RMA Status: 0=Requested, 1=Reviewing, 2=Approved, 3=Rejected,
@@ -39,7 +40,7 @@ const rmaMachine = new StateMachine<number>({
 });
 
 @Injectable()
-export class ReturnsService {
+export class ReturnsService extends BaseService<ReturnRequestEntity> {
   constructor(
     @InjectRepository(ReturnRequestEntity)
     private readonly returnRepo: Repository<ReturnRequestEntity>,
@@ -49,7 +50,9 @@ export class ReturnsService {
     private readonly mediaRepo: Repository<ReturnRequestMediaEntity>,
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
-  ) {}
+  ) {
+    super(returnRepo, 'salReturnRequestId', 'Yeu cau doi tra');
+  }
 
   /**
    * Tao yeu cau doi tra — chi cho don hang da giao thanh cong (status=4)
@@ -107,10 +110,7 @@ export class ReturnsService {
    * Chuyen trang thai RMA — su dung state machine pattern
    */
   async updateStatus(id: string, dto: UpdateReturnStatusDto, userId: string) {
-    const rma = await this.returnRepo.findOne({
-      where: { salReturnRequestId: id },
-    });
-    if (!rma) throw new NotFoundException('Yeu cau doi tra khong ton tai');
+    const rma = await super.findOne(id);
 
     // Validate transition bang state machine
     if (!rmaMachine.canTransition(rma.salReturnRequestStatus, dto.status)) {
@@ -158,22 +158,14 @@ export class ReturnsService {
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return this.paginate(data, total, page, limit);
   }
 
   /**
    * Chi tiet RMA + items + media
    */
   async findOne(id: string) {
-    const rma = await this.returnRepo.findOne({
-      where: { salReturnRequestId: id },
-      relations: ['items', 'media'],
-    });
-    if (!rma) throw new NotFoundException('Yeu cau doi tra khong ton tai');
-    return rma;
+    return super.findOne(id, ['items', 'media']);
   }
 
   /**
@@ -190,10 +182,7 @@ export class ReturnsService {
    * Them ghi chu noi bo
    */
   async addReply(id: string, staffNotes: string, userId: string) {
-    const rma = await this.returnRepo.findOne({
-      where: { salReturnRequestId: id },
-    });
-    if (!rma) throw new NotFoundException('Yeu cau doi tra khong ton tai');
+    const rma = await super.findOne(id);
 
     // Append ghi chu moi
     const timestamp = new Date().toISOString();

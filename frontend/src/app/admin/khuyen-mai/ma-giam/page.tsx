@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '@/lib/api/client';
+import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
+import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
+import { StatusBadge } from '@/components/admin/shared/StatusBadge';
+import { EmptyTableRow } from '@/components/admin/shared/EmptyTableRow';
+import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
 
 interface DiscountCode {
   prmDiscountId: string;
@@ -19,14 +24,15 @@ interface DiscountCode {
 
 const TYPE_LABELS: Record<number, string> = { 1: '%', 2: 'VND' };
 const STATUS_LABELS: Record<number, string> = { 0: 'Vo hieu', 1: 'Hoat dong' };
-const STATUS_COLORS: Record<number, string> = { 0: 'bg-gray-100 text-gray-600', 1: 'bg-green-100 text-green-700' };
 
 /**
  * Admin Discount Codes — CRUD, conditions, validation
  */
 export default function DiscountCodesPage() {
-  const [discounts, setDiscounts] = useState<DiscountCode[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading, refetch } = useAdminFetch<{ data: DiscountCode[]; pagination: unknown }>({ url: '/admin/promotions/discounts' });
+  const discounts = data?.data || [];
+
+  const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({
@@ -34,17 +40,6 @@ export default function DiscountCodesPage() {
     maxPerCustomer: '', startDate: '', endDate: '', status: 1, stackable: 0,
     conditionsJson: '{}',
   });
-
-  const loadDiscounts = async () => {
-    try {
-      const res = await api.get<{ data: DiscountCode[]; pagination: unknown }>('/admin/promotions/discounts');
-      setDiscounts(res.data.data || (res.data as unknown as DiscountCode[]));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadDiscounts(); }, []);
 
   const generateCode = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -82,12 +77,15 @@ export default function DiscountCodesPage() {
     }
     setShowForm(false);
     setEditId(null);
-    loadDiscounts();
+    refetch();
   };
 
-  const handleDelete = async (id: string) => {
-    await api.delete(`/admin/promotions/discounts/${id}`);
-    loadDiscounts();
+  const handleConfirmDelete = async () => {
+    if (confirmState.id) {
+      await api.delete(`/admin/promotions/discounts/${confirmState.id}`);
+      refetch();
+    }
+    setConfirmState({ open: false, id: null });
   };
 
   const formatValue = (d: DiscountCode) => {
@@ -96,14 +94,15 @@ export default function DiscountCodesPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Ma giam gia</h1>
+    <AdminTableLayout
+      title="Ma giam gia"
+      actions={
         <button onClick={() => { setShowForm(true); setEditId(null); generateCode(); }} className="px-4 py-2 bg-black text-white text-sm rounded">
           + Tao ma
         </button>
-      </div>
-
+      }
+      loading={loading}
+    >
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
@@ -130,16 +129,15 @@ export default function DiscountCodesPage() {
                   {d.prmDiscountEndDate ? new Date(d.prmDiscountEndDate).toLocaleDateString('vi') : '∞'}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[d.prmDiscountStatus]}`}>
-                    {STATUS_LABELS[d.prmDiscountStatus]}
-                  </span>
+                  <StatusBadge status={d.prmDiscountStatus} label={STATUS_LABELS[d.prmDiscountStatus]} />
                 </td>
                 <td className="px-4 py-3 text-right">
                   <button onClick={() => { setEditId(d.prmDiscountId); setForm({ code: d.prmDiscountCode, type: d.prmDiscountType, value: d.prmDiscountValue, maxAmount: d.prmDiscountMaxAmount, maxUsage: d.prmDiscountMaxUsage?.toString() || '', maxPerCustomer: '', startDate: d.prmDiscountStartDate || '', endDate: d.prmDiscountEndDate || '', status: d.prmDiscountStatus, stackable: d.prmDiscountStackable, conditionsJson: '{}' }); setShowForm(true); }} className="text-blue-600 hover:underline text-xs mr-2">Sua</button>
-                  <button onClick={() => handleDelete(d.prmDiscountId)} className="text-red-600 hover:underline text-xs">Xoa</button>
+                  <button onClick={() => setConfirmState({ open: true, id: d.prmDiscountId })} className="text-red-600 hover:underline text-xs">Xoa</button>
                 </td>
               </tr>
             ))}
+            {discounts.length === 0 && <EmptyTableRow colSpan={6} />}
           </tbody>
         </table>
       </div>
@@ -215,6 +213,15 @@ export default function DiscountCodesPage() {
           </div>
         </div>
       )}
-    </div>
+      <ConfirmDialog
+        open={confirmState.open}
+        title="Xac nhan xoa"
+        message="Ban co chac chan muon xoa ma giam gia nay? Hanh dong nay khong the hoan tac."
+        variant="danger"
+        confirmLabel="Xoa"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmState({ open: false, id: null })}
+      />
+    </AdminTableLayout>
   );
 }

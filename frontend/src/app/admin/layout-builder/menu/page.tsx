@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api/client';
+import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
 
 interface MenuItem {
   cmsMenuItemId: string;
@@ -18,6 +19,7 @@ interface MenuItem {
  * Admin Menu Builder — header nav, footer menu, drag-drop tree
  */
 export default function MenuBuilderPage() {
+  const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [menuType, setMenuType] = useState('header');
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +66,13 @@ export default function MenuBuilderPage() {
       ...item,
       children: item.children?.filter(c => c.cmsMenuItemId !== id),
     })));
+  };
+
+  const handleConfirmRemove = () => {
+    if (confirmState.id) {
+      removeItem(confirmState.id);
+    }
+    setConfirmState({ open: false, id: null });
   };
 
   const addChild = (parentId: string) => {
@@ -163,7 +172,7 @@ export default function MenuBuilderPage() {
               {menuType === 'header' && (
                 <button onClick={() => addChild(item.cmsMenuItemId)} className="text-xs text-blue-600 hover:underline">+ Sub</button>
               )}
-              <button onClick={() => removeItem(item.cmsMenuItemId)} className="text-xs text-red-600 hover:underline">Xoa</button>
+              <button onClick={() => setConfirmState({ open: true, id: item.cmsMenuItemId })} className="text-xs text-red-600 hover:underline">Xoa</button>
             </div>
 
             {/* Children (cap 2) */}
@@ -183,7 +192,7 @@ export default function MenuBuilderPage() {
                       placeholder="URL"
                       className="w-40 text-sm border rounded px-2 py-1"
                     />
-                    <button onClick={() => removeItem(child.cmsMenuItemId)} className="text-xs text-red-600">Xoa</button>
+                    <button onClick={() => setConfirmState({ open: true, id: child.cmsMenuItemId })} className="text-xs text-red-600">Xoa</button>
                   </div>
                 ))}
               </div>
@@ -195,6 +204,15 @@ export default function MenuBuilderPage() {
           + Them menu item
         </button>
       </div>
+      <ConfirmDialog
+        open={confirmState.open}
+        title="Xac nhan xoa"
+        message="Ban co chac chan muon xoa menu item nay? Hanh dong nay khong the hoan tac."
+        variant="danger"
+        confirmLabel="Xoa"
+        onConfirm={handleConfirmRemove}
+        onCancel={() => setConfirmState({ open: false, id: null })}
+      />
     </div>
   );
 }

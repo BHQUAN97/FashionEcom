@@ -13,13 +13,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { hashPassword } from '../../common/utils/password.util';
 import { UserRole } from '../../common/constants/roles.constant';
 import { PaginationDto } from '../../common/dto/pagination.dto';
+import { BaseService } from '../../common/services/base.service';
 
 @Injectable()
-export class UsersService {
+export class UsersService extends BaseService<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-  ) {}
+  ) {
+    super(userRepo, 'sysUserId', 'Nguoi dung');
+  }
 
   /**
    * Danh sach admin users (loai bo customer role)
@@ -44,10 +47,7 @@ export class UsersService {
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return this.paginate(data, total, page, limit);
   }
 
   /**
@@ -113,11 +113,9 @@ export class UsersService {
   }
 
   /**
-   * Tim user theo ID
+   * Tim user theo ID — ke thua tu BaseService
    */
   async findById(id: string) {
-    const user = await this.userRepo.findOne({ where: { sysUserId: id } });
-    if (!user) throw new NotFoundException('User khong ton tai');
-    return user;
+    return super.findOne(id);
   }
 }

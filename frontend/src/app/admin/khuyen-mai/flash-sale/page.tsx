@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '@/lib/api/client';
+import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
+import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
+import { StatusBadge } from '@/components/admin/shared/StatusBadge';
+import { EmptyTableRow } from '@/components/admin/shared/EmptyTableRow';
+import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
 
 interface FlashSaleItem {
   prmFlashSaleItemId: string;
@@ -21,36 +26,27 @@ interface FlashSale {
 }
 
 const STATUS_LABELS: Record<number, string> = { 0: 'Draft', 1: 'Scheduled', 2: 'Active', 3: 'Ended' };
-const STATUS_COLORS: Record<number, string> = {
+const FLASH_SALE_STATUS_COLORS: Record<number, string> = {
   0: 'bg-gray-100 text-gray-600',
   1: 'bg-blue-100 text-blue-700',
   2: 'bg-green-100 text-green-700',
-  3: 'bg-red-100 text-red-600',
+  3: 'bg-red-100 text-red-700',
 };
 
 /**
  * Admin Flash Sale Manager — CRUD, product selection, stock tracking
  */
 export default function FlashSalePage() {
-  const [flashSales, setFlashSales] = useState<FlashSale[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading, refetch } = useAdminFetch<{ data: FlashSale[]; pagination: unknown }>({ url: '/admin/promotions/flash-sales' });
+  const flashSales = data?.data || [];
+
+  const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: '', startDate: '', endDate: '', status: 0,
     items: [{ productId: '', discountPct: 10, maxQty: 100 }] as Array<{ productId: string; discountPct: number; maxQty: number }>,
   });
-
-  const loadFlashSales = async () => {
-    try {
-      const res = await api.get<{ data: FlashSale[]; pagination: unknown }>('/admin/promotions/flash-sales');
-      setFlashSales(res.data.data || (res.data as unknown as FlashSale[]));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadFlashSales(); }, []);
 
   const addItem = () => {
     setForm({ ...form, items: [...form.items, { productId: '', discountPct: 10, maxQty: 100 }] });
@@ -82,12 +78,15 @@ export default function FlashSalePage() {
     }
     setShowForm(false);
     setEditId(null);
-    loadFlashSales();
+    refetch();
   };
 
-  const handleDelete = async (id: string) => {
-    await api.delete(`/admin/promotions/flash-sales/${id}`);
-    loadFlashSales();
+  const handleConfirmDelete = async () => {
+    if (confirmState.id) {
+      await api.delete(`/admin/promotions/flash-sales/${confirmState.id}`);
+      refetch();
+    }
+    setConfirmState({ open: false, id: null });
   };
 
   const getTotalProgress = (fs: FlashSale) => {
@@ -98,14 +97,15 @@ export default function FlashSalePage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Flash Sale</h1>
+    <AdminTableLayout
+      title="Flash Sale"
+      actions={
         <button onClick={() => { setShowForm(true); setEditId(null); setForm({ title: '', startDate: '', endDate: '', status: 0, items: [{ productId: '', discountPct: 10, maxQty: 100 }] }); }} className="px-4 py-2 bg-black text-white text-sm rounded">
           + Tao Flash Sale
         </button>
-      </div>
-
+      }
+      loading={loading}
+    >
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
@@ -126,9 +126,11 @@ export default function FlashSalePage() {
                   {new Date(fs.prmFlashSaleStartDate).toLocaleString('vi')} → {new Date(fs.prmFlashSaleEndDate).toLocaleString('vi')}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[fs.prmFlashSaleStatus]}`}>
-                    {STATUS_LABELS[fs.prmFlashSaleStatus]}
-                  </span>
+                  <StatusBadge
+                    status={fs.prmFlashSaleStatus}
+                    label={STATUS_LABELS[fs.prmFlashSaleStatus]}
+                    colors={FLASH_SALE_STATUS_COLORS}
+                  />
                 </td>
                 <td className="px-4 py-3 text-gray-500">{fs.items?.length || 0} SP</td>
                 <td className="px-4 py-3">
@@ -141,10 +143,11 @@ export default function FlashSalePage() {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <button onClick={() => { setEditId(fs.prmFlashSaleId); setForm({ title: fs.prmFlashSaleTitle, startDate: fs.prmFlashSaleStartDate.slice(0, 16), endDate: fs.prmFlashSaleEndDate.slice(0, 16), status: fs.prmFlashSaleStatus, items: fs.items.map(i => ({ productId: i.catProductId, discountPct: Number(i.prmFlashSaleItemDiscountPct), maxQty: i.prmFlashSaleItemMaxQty })) }); setShowForm(true); }} className="text-blue-600 hover:underline text-xs mr-2">Sua</button>
-                  <button onClick={() => handleDelete(fs.prmFlashSaleId)} className="text-red-600 hover:underline text-xs">Xoa</button>
+                  <button onClick={() => setConfirmState({ open: true, id: fs.prmFlashSaleId })} className="text-red-600 hover:underline text-xs">Xoa</button>
                 </td>
               </tr>
             ))}
+            {flashSales.length === 0 && <EmptyTableRow colSpan={6} />}
           </tbody>
         </table>
       </div>
@@ -198,6 +201,15 @@ export default function FlashSalePage() {
           </div>
         </div>
       )}
-    </div>
+      <ConfirmDialog
+        open={confirmState.open}
+        title="Xac nhan xoa"
+        message="Ban co chac chan muon xoa flash sale nay? Hanh dong nay khong the hoan tac."
+        variant="danger"
+        confirmLabel="Xoa"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmState({ open: false, id: null })}
+      />
+    </AdminTableLayout>
   );
 }

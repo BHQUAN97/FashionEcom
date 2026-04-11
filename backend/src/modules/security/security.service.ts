@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { AccessLogEntity, PasswordHistoryEntity } from './entities/access-log.entity';
+import { BaseService } from '../../common/services/base.service';
 
 /**
  * Password policy: min 8 ky tu, 1 hoa, 1 thuong, 1 so, 1 dac biet
@@ -11,13 +12,15 @@ import { AccessLogEntity, PasswordHistoryEntity } from './entities/access-log.en
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;':",.<>?/`~]).{8,}$/;
 
 @Injectable()
-export class SecurityService {
+export class SecurityService extends BaseService<AccessLogEntity> {
   constructor(
     @InjectRepository(AccessLogEntity)
     private readonly accessLogRepo: Repository<AccessLogEntity>,
     @InjectRepository(PasswordHistoryEntity)
     private readonly pwHistoryRepo: Repository<PasswordHistoryEntity>,
-  ) {}
+  ) {
+    super(accessLogRepo, 'logAccessId', 'Nhat ky truy cap');
+  }
 
   /**
    * Validate password theo policy
@@ -117,7 +120,7 @@ export class SecurityService {
     qb.orderBy('l.createdDate', 'DESC');
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
-    return { data, pagination: { page, limit, total, total_pages: Math.ceil(total / limit) } };
+    return this.paginate(data, total, page, limit);
   }
 
   /**

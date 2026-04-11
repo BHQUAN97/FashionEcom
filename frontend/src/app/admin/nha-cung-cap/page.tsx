@@ -1,7 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '@/lib/api/client';
+import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
+import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
+import { StatusBadge } from '@/components/admin/shared/StatusBadge';
+import { EmptyTableRow } from '@/components/admin/shared/EmptyTableRow';
 
 interface Supplier {
   invSupplierId: string;
@@ -12,45 +16,39 @@ interface Supplier {
   invSupplierStatus: number;
 }
 
+const STATUS_LABELS: Record<number, string> = { 0: 'Ngung', 1: 'Dang hop tac' };
+
 /**
  * Admin Suppliers — CRUD nha cung cap
  */
 export default function SuppliersPage() {
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ code: '', name: '', phone: '', email: '', address: '' });
 
-  useEffect(() => {
-    api.get<{ data: Supplier[] }>('/admin/suppliers')
-      .then((res) => setSuppliers(res.data.data || (res.data as unknown as Supplier[])))
-      .finally(() => setLoading(false));
-  }, []);
+  const { data, loading, refetch } = useAdminFetch<{ data: Supplier[] }>({ url: '/admin/suppliers' });
+  const suppliers = data?.data || [];
 
   const handleCreate = async () => {
     try {
       await api.post('/admin/suppliers', form);
       setShowForm(false);
       setForm({ code: '', name: '', phone: '', email: '', address: '' });
-      // Reload
-      const res = await api.get<{ data: Supplier[] }>('/admin/suppliers');
-      setSuppliers(res.data.data || (res.data as unknown as Supplier[]));
+      refetch();
     } catch (err: any) {
       alert(err.message);
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Dang tai...</div>;
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Nha cung cap</h1>
+    <AdminTableLayout
+      title="Nha cung cap"
+      actions={
         <button onClick={() => setShowForm(!showForm)} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
           {showForm ? 'Dong' : 'Them NCC'}
         </button>
-      </div>
-
+      }
+      loading={loading}
+    >
       {showForm && (
         <div className="bg-white border rounded-lg p-6 grid grid-cols-2 gap-4">
           <input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} placeholder="Ma NCC (VD: NCC-001)" className="border rounded px-3 py-2 text-sm" />
@@ -81,18 +79,16 @@ export default function SuppliersPage() {
                 <td className="px-4 py-3 text-gray-500">{s.invSupplierPhone || '-'}</td>
                 <td className="px-4 py-3 text-gray-500">{s.invSupplierEmail || '-'}</td>
                 <td className="px-4 py-3">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${s.invSupplierStatus === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                    {s.invSupplierStatus === 1 ? 'Dang hop tac' : 'Ngung'}
-                  </span>
+                  <StatusBadge status={s.invSupplierStatus} label={STATUS_LABELS[s.invSupplierStatus]} />
                 </td>
               </tr>
             ))}
             {suppliers.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Chua co NCC nao</td></tr>
+              <EmptyTableRow colSpan={5} message="Chua co NCC nao" />
             )}
           </tbody>
         </table>
       </div>
-    </div>
+    </AdminTableLayout>
   );
 }

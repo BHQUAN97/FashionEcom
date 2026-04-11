@@ -20,6 +20,7 @@ import {
 } from './dto/supplier.dto';
 import { StateMachine } from '../../common/patterns/state-machine';
 import { generateEntityCode } from '../../common/utils/code-generation.util';
+import { BaseService } from '../../common/services/base.service';
 
 /** PO Status state machine — reuse pattern */
 const poMachine = new StateMachine<number>({
@@ -37,7 +38,7 @@ const poMachine = new StateMachine<number>({
 });
 
 @Injectable()
-export class SuppliersService {
+export class SuppliersService extends BaseService<SupplierEntity> {
   constructor(
     @InjectRepository(SupplierEntity)
     private readonly supplierRepo: Repository<SupplierEntity>,
@@ -53,7 +54,9 @@ export class SuppliersService {
     private readonly invLevelRepo: Repository<InventoryLevelEntity>,
     @InjectRepository(InventoryLogEntity)
     private readonly invLogRepo: Repository<InventoryLogEntity>,
-  ) {}
+  ) {
+    super(supplierRepo, 'invSupplierId', 'Nha cung cap');
+  }
 
   // ==================== Suppliers CRUD ====================
 
@@ -66,7 +69,7 @@ export class SuppliersService {
     qb.orderBy('s.createdDate', 'DESC');
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
-    return { data, pagination: { page, limit, total, total_pages: Math.ceil(total / limit) } };
+    return this.paginate(data, total, page, limit);
   }
 
   async createSupplier(dto: CreateSupplierDto) {
@@ -85,8 +88,7 @@ export class SuppliersService {
   }
 
   async updateSupplier(id: string, dto: Partial<CreateSupplierDto>) {
-    const supplier = await this.supplierRepo.findOne({ where: { invSupplierId: id } });
-    if (!supplier) throw new NotFoundException('NCC khong ton tai');
+    const supplier = await super.findOne(id);
     if (dto.name) supplier.invSupplierName = dto.name;
     if (dto.phone) supplier.invSupplierPhone = dto.phone;
     if (dto.email) supplier.invSupplierEmail = dto.email;
@@ -97,9 +99,7 @@ export class SuppliersService {
   }
 
   async getSupplier(id: string) {
-    const supplier = await this.supplierRepo.findOne({ where: { invSupplierId: id } });
-    if (!supplier) throw new NotFoundException('NCC khong ton tai');
-    return supplier;
+    return super.findOne(id);
   }
 
   // ==================== Purchase Orders ====================
@@ -146,7 +146,7 @@ export class SuppliersService {
     qb.orderBy('po.createdDate', 'DESC');
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
-    return { data, pagination: { page, limit, total, total_pages: Math.ceil(total / limit) } };
+    return this.paginate(data as any, total, page, limit);
   }
 
   async getPO(id: string) {

@@ -14,9 +14,10 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { BulkEditProductDto, BulkEditVariantDto } from './dto/bulk-edit.dto';
 import { createSlug } from '../../common/utils/slug.util';
+import { BaseService } from '../../common/services/base.service';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService extends BaseService<ProductEntity> {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepo: Repository<ProductEntity>,
@@ -24,7 +25,9 @@ export class ProductsService {
     private readonly variantRepo: Repository<ProductVariantEntity>,
     @InjectRepository(ProductMediaEntity)
     private readonly mediaRepo: Repository<ProductMediaEntity>,
-  ) {}
+  ) {
+    super(productRepo, 'catProductId', 'San pham');
+  }
 
   /**
    * Danh sach san pham voi filter, search, pagination
@@ -74,27 +77,14 @@ export class ProductsService {
       },
     }));
 
-    return {
-      data,
-      pagination: {
-        page,
-        limit,
-        total: rawCount,
-        total_pages: Math.ceil(rawCount / limit),
-      },
-    };
+    return this.paginate(data, rawCount, page, limit);
   }
 
   /**
-   * Chi tiet san pham + variants + media
+   * Chi tiet san pham + variants + media — ke thua tu BaseService
    */
-  async findOne(id: string) {
-    const product = await this.productRepo.findOne({
-      where: { catProductId: id },
-      relations: ['category', 'variants', 'media'],
-    });
-    if (!product) throw new NotFoundException('San pham khong ton tai');
-    return product;
+  override async findOne(id: string) {
+    return super.findOne(id, ['category', 'variants', 'media']);
   }
 
   /**
@@ -130,8 +120,7 @@ export class ProductsService {
    * Cap nhat san pham
    */
   async update(id: string, dto: UpdateProductDto) {
-    const product = await this.productRepo.findOne({ where: { catProductId: id } });
-    if (!product) throw new NotFoundException('San pham khong ton tai');
+    const product = await super.findOne(id);
 
     if (dto.name !== undefined) {
       product.catProductName = dto.name;
@@ -155,10 +144,9 @@ export class ProductsService {
    * Xoa san pham (soft delete — set status = 2)
    */
   async remove(id: string) {
-    const product = await this.productRepo.findOne({ where: { catProductId: id } });
-    if (!product) throw new NotFoundException('San pham khong ton tai');
+    const product = await super.findOne(id);
     product.catProductStatus = 2;
-    return this.productRepo.save(product);
+    return this.repo.save(product);
   }
 
   /**

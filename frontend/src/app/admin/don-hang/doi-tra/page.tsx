@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '@/lib/api/client';
+import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
+import { AdminTableLayout } from '@/components/admin/shared/AdminTableLayout';
+import { StatusBadge } from '@/components/admin/shared/StatusBadge';
+import { EmptyTableRow } from '@/components/admin/shared/EmptyTableRow';
+import { ConfirmDialog } from '@/components/admin/shared/ConfirmDialog';
 
 interface ReturnRequest {
   salReturnRequestId: string;
@@ -20,7 +25,7 @@ const STATUS_LABELS: Record<number, string> = {
   0: 'Yeu cau', 1: 'Dang xem xet', 2: 'Da duyet', 3: 'Tu choi',
   4: 'Dang hoan tien', 5: 'Da hoan tien', 6: 'Dang doi hang', 7: 'Da doi hang',
 };
-const STATUS_COLORS: Record<number, string> = {
+const STATUS_BADGE_COLORS: Record<number, string> = {
   0: 'bg-yellow-100 text-yellow-700', 1: 'bg-blue-100 text-blue-700',
   2: 'bg-green-100 text-green-700', 3: 'bg-red-100 text-red-700',
   4: 'bg-orange-100 text-orange-700', 5: 'bg-green-100 text-green-700',
@@ -31,37 +36,33 @@ const STATUS_COLORS: Record<number, string> = {
  * Admin RMA Management — danh sach yeu cau doi tra, thay doi trang thai
  */
 export default function ReturnsManagementPage() {
-  const [returns, setReturns] = useState<ReturnRequest[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [statusFilter, setStatusFilter] = useState<number | ''>('');
 
-  const loadReturns = async () => {
-    try {
-      const params = statusFilter !== '' ? `?status=${statusFilter}` : '';
-      const res = await api.get<{ data: ReturnRequest[] }>(`/admin/returns${params}`);
-      setReturns(res.data.data || (res.data as unknown as ReturnRequest[]));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadReturns(); }, [statusFilter]);
+  const params = statusFilter !== '' ? `?status=${statusFilter}` : '';
+  const { data, loading, refetch } = useAdminFetch<{ data: ReturnRequest[] }>({ url: `/admin/returns${params}` });
+  const returns = data?.data || [];
 
   const updateStatus = async (id: string, status: number) => {
     try {
       await api.put(`/admin/returns/${id}/status`, { status });
-      loadReturns();
+      refetch();
     } catch (err: any) {
       alert(err.message);
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Dang tai...</div>;
+  const handleConfirmReject = async () => {
+    if (confirmState.id) {
+      await updateStatus(confirmState.id, 3);
+    }
+    setConfirmState({ open: false, id: null });
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Quan ly Doi tra (RMA)</h1>
+    <AdminTableLayout
+      title="Quan ly Doi tra (RMA)"
+      filters={
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value === '' ? '' : Number(e.target.value))}
@@ -72,8 +73,9 @@ export default function ReturnsManagementPage() {
             <option key={k} value={k}>{v}</option>
           ))}
         </select>
-      </div>
-
+      }
+      loading={loading}
+    >
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
@@ -94,9 +96,7 @@ export default function ReturnsManagementPage() {
                 <td className="px-4 py-3">{TYPE_LABELS[r.salReturnRequestType]}</td>
                 <td className="px-4 py-3">{REASON_LABELS[r.salReturnRequestReason]}</td>
                 <td className="px-4 py-3">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[r.salReturnRequestStatus]}`}>
-                    {STATUS_LABELS[r.salReturnRequestStatus]}
-                  </span>
+                  <StatusBadge status={r.salReturnRequestStatus} label={STATUS_LABELS[r.salReturnRequestStatus]} colors={STATUS_BADGE_COLORS} />
                 </td>
                 <td className="px-4 py-3">
                   {r.salReturnRequestRefundAmount > 0
@@ -111,18 +111,27 @@ export default function ReturnsManagementPage() {
                   {r.salReturnRequestStatus === 1 && (
                     <>
                       <button onClick={() => updateStatus(r.salReturnRequestId, 2)} className="text-green-600 hover:underline text-xs">Duyet</button>
-                      <button onClick={() => updateStatus(r.salReturnRequestId, 3)} className="text-red-600 hover:underline text-xs">Tu choi</button>
+                      <button onClick={() => setConfirmState({ open: true, id: r.salReturnRequestId })} className="text-red-600 hover:underline text-xs">Tu choi</button>
                     </>
                   )}
                 </td>
               </tr>
             ))}
             {returns.length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Khong co yeu cau doi tra nao</td></tr>
+              <EmptyTableRow colSpan={7} message="Khong co yeu cau doi tra nao" />
             )}
           </tbody>
         </table>
       </div>
-    </div>
+      <ConfirmDialog
+        open={confirmState.open}
+        title="Xac nhan tu choi"
+        message="Ban co chac chan muon tu choi yeu cau doi tra nay? Hanh dong nay khong the hoan tac."
+        variant="danger"
+        confirmLabel="Tu choi"
+        onConfirm={handleConfirmReject}
+        onCancel={() => setConfirmState({ open: false, id: null })}
+      />
+    </AdminTableLayout>
   );
 }

@@ -5,9 +5,10 @@ import { CustomerEntity } from './entities/customer.entity';
 import { CustomerAddressEntity } from './entities/customer-address.entity';
 import { OrderEntity } from '../orders/entities/order.entity';
 import { CustomerQueryDto } from './dto/customer-query.dto';
+import { BaseService } from '../../common/services/base.service';
 
 @Injectable()
-export class CustomersService {
+export class CustomersService extends BaseService<CustomerEntity> {
   constructor(
     @InjectRepository(CustomerEntity)
     private readonly customerRepo: Repository<CustomerEntity>,
@@ -15,7 +16,9 @@ export class CustomersService {
     private readonly addressRepo: Repository<CustomerAddressEntity>,
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
-  ) {}
+  ) {
+    super(customerRepo, 'sysCustomerId', 'Khach hang');
+  }
 
   /**
    * Danh sach khach hang + filter + pagination
@@ -44,21 +47,14 @@ export class CustomersService {
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return this.paginate(data, total, page, limit);
   }
 
   /**
-   * Chi tiet khach hang + stats
+   * Chi tiet khach hang + stats — override de them order aggregation
    */
-  async findOne(id: string) {
-    const customer = await this.customerRepo.findOne({
-      where: { sysCustomerId: id },
-      relations: ['user'],
-    });
-    if (!customer) throw new NotFoundException('Khach hang khong ton tai');
+  override async findOne(id: string) {
+    const customer = await super.findOne(id, ['user']);
 
     // Thong ke don hang
     const stats = await this.orderRepo
@@ -93,10 +89,7 @@ export class CustomersService {
     const total = await qb.getCount();
     const data = await qb.skip((page - 1) * limit).take(limit).getMany();
 
-    return {
-      data,
-      pagination: { page, limit, total, total_pages: Math.ceil(total / limit) },
-    };
+    return { data, pagination: { page, limit, total, total_pages: Math.ceil(total / limit) } };
   }
 
   /**
