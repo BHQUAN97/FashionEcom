@@ -22,16 +22,14 @@ export default function MenuBuilderPage() {
   const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [menuType, setMenuType] = useState('header');
   const [items, setItems] = useState<MenuItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const loadMenuItems = async (type: string) => {
-    setLoading(true);
     try {
       const res = await api.get<{ menu: unknown; items: MenuItem[] }>(`/admin/layout/menus/${type}/items`);
       setItems(res.data.items || []);
-    } finally {
-      setLoading(false);
+    } catch {
+      // fetch error
     }
   };
 
@@ -145,7 +143,7 @@ export default function MenuBuilderPage() {
 
       {/* Menu items tree */}
       <div className="bg-white border rounded-lg p-4 space-y-2">
-        {items.map((item, i) => (
+        {items.map((item) => (
           <div key={item.cmsMenuItemId} className="border rounded-lg p-3">
             <div className="flex items-center gap-2">
               <span className="text-gray-400 cursor-grab">⋮⋮</span>

@@ -48,6 +48,11 @@ Design/
 # Winston logs
 logs/
 
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+
 # Misc
 *.tgz
 coverage/

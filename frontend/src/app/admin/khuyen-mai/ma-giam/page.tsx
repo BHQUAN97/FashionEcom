@@ -22,7 +22,6 @@ interface DiscountCode {
   prmDiscountStackable: number;
 }
 
-const TYPE_LABELS: Record<number, string> = { 1: '%', 2: 'VND' };
 const STATUS_LABELS: Record<number, string> = { 0: 'Vo hieu', 1: 'Hoat dong' };
 
 /**
@@ -44,7 +43,7 @@ export default function DiscountCodesPage() {
   const generateCode = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code = '';
-    for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    for (let idx = 0; idx < 8; idx++) code += chars[Math.floor(Math.random() * chars.length)];
     setForm({ ...form, code });
   };
 

@@ -20,8 +20,8 @@ interface LoyaltyConfig {
  * Admin Loyalty Config — cau hinh chuong trinh tich diem
  */
 export default function LoyaltyConfigPage() {
-  const { data, loading } = useAdminFetch<{ data: LoyaltyConfig } | LoyaltyConfig>({ url: '/admin/loyalty/config' });
-  const initialConfig = data ? ((data as any).data || data) as LoyaltyConfig : null;
+  const { data } = useAdminFetch<{ data: LoyaltyConfig } | LoyaltyConfig>({ url: '/admin/loyalty/config' });
+  const initialConfig = data ? ((data as { data: LoyaltyConfig }).data || data) as LoyaltyConfig : null;
 
   // Local editable state — khoi tao tu fetched data
   const [config, setConfig] = useState<LoyaltyConfig | null>(null);
@@ -30,7 +30,7 @@ export default function LoyaltyConfigPage() {
   // Sync fetched data vao local state khi load xong
   const activeConfig = config || initialConfig;
 
-  if (loading || !activeConfig) return <div className="p-8 text-center text-gray-500">Dang tai...</div>;
+  if (!activeConfig) return <div className="p-8 text-center text-gray-500">Dang tai...</div>;
 
   // Ensure local state is initialized
   if (!config && initialConfig) {

@@ -26,7 +26,7 @@ export default function InventoryPage() {
   const [selectedWarehouse, setSelectedWarehouse] = useState('');
 
   const { data: whData } = useAdminFetch<Warehouse[] | { data: Warehouse[] }>({ url: '/admin/inventory/warehouses' });
-  const warehouses = Array.isArray(whData) ? whData : (whData as any)?.data || [];
+  const warehouses = Array.isArray(whData) ? whData : (whData as { data: Warehouse[] } | null)?.data || [];
 
   const params = selectedWarehouse ? `?warehouseId=${selectedWarehouse}` : '';
   const { data: itemData, loading } = useAdminFetch<{ data: InventoryItem[] }>({ url: `/admin/inventory${params}` });

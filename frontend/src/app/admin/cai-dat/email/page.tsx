@@ -28,7 +28,6 @@ const TEMPLATE_LABELS: Record<string, string> = {
  */
 export default function EmailTemplatesPage() {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
-  const [loading, setLoading] = useState(true);
   const [editKey, setEditKey] = useState<string | null>(null);
   const [form, setForm] = useState({ subject: '', body: '' });
   const [saving, setSaving] = useState(false);
@@ -37,7 +36,7 @@ export default function EmailTemplatesPage() {
   useEffect(() => {
     api.get<EmailTemplate[]>('/admin/layout/email-templates')
       .then(res => setTemplates(res.data))
-      .finally(() => setLoading(false));
+      .catch(() => {/* fetch error */});
   }, []);
 
   const handleEdit = (tmpl: EmailTemplate) => {

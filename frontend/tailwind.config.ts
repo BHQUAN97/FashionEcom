@@ -12,6 +12,36 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        primary: {
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
+        },
+        secondary: {
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
+        },
+        destructive: {
+          DEFAULT: "var(--destructive)",
+        },
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
+        },
+        accent: {
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
+        },
+        card: {
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
+        },
+        popover: {
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
+        },
         // Design system — Torano style
         fashion: {
           black: "#1a1a1a",
@@ -20,6 +50,12 @@ const config: Config = {
           text: "#333333",
           muted: "#6B7280",
         },
+      },
+      borderColor: {
+        DEFAULT: "var(--border)",
+      },
+      outlineColor: {
+        DEFAULT: "var(--ring)",
       },
       screens: {
         // Mobile-first breakpoints

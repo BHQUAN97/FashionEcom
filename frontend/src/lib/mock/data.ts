@@ -8,7 +8,7 @@ import type { Address } from '@/types/address';
 
 // Placeholder image URL (gray square)
 const IMG = (w: number, h: number, text = '') =>
-  `https://placehold.co/${w}x${h}/e5e7eb/9ca3af?text=${encodeURIComponent(text || `${w}x${h}`)}`;
+  `https://placehold.co/${w}x${h}/e5e7eb/9ca3af.png?text=${encodeURIComponent(text || `${w}x${h}`)}`;
 
 export const MOCK_CATEGORIES: Category[] = [
   { id: '1', name: 'Ao Polo', slug: 'ao-polo', description: '', image: IMG(400, 400, 'Ao Polo'), parent_id: null, children: [], product_count: 45, sort_order: 1 },

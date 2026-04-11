@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { formatVND } from '@/lib/utils/format';
 import { ROUTES } from '@/lib/constants/routes';
 import { QuantityStepper } from '@/components/product/quantity-stepper';
@@ -11,7 +10,7 @@ import type { CartItem as CartItemType } from '@/lib/stores/cart.store';
 
 interface CartItemProps {
   item: CartItemType;
-  onUpdateQty: (qty: number) => void;
+  onUpdateQty: (value: number) => void;
   onRemove: () => void;
 }
 

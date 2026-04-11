@@ -25,13 +25,11 @@ const GROUP_LABELS: Record<string, string> = {
  */
 export default function ThemeSettingsPage() {
   const [entries, setEntries] = useState<ThemeEntry[]>([]);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     api.get<ThemeEntry[]>('/admin/layout/theme')
-      .then(res => setEntries(res.data))
-      .finally(() => setLoading(false));
+      .then(res => setEntries(res.data));
   }, []);
 
   const updateValue = (key: string, value: string) => {

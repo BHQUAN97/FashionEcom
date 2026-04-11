@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { ReportCard } from '@/components/admin/reports/report-card';
 import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
     try {
-      const r = (url: string) => fetch(url).then((res) => res.json()).catch(() => ({ data: null }));
+      const r = (url: string): Promise<{ data: unknown }> => fetch(url).then((res) => res.json() as Promise<{ data: unknown }>).catch(() => ({ data: null }));
       const [kpiRes, revRes, payRes, prodRes, catRes, heatRes, custRes] = await Promise.all([
         r('/api/admin/dashboard/kpis'),
         r(`/api/admin/dashboard/charts/revenue?range=${range}`),
@@ -58,13 +58,13 @@ export default function AdminDashboard() {
         r(`/api/admin/dashboard/charts/new-customers?range=${range}`),
       ]);
 
-      if (kpiRes.data) setKpis(kpiRes.data);
-      if (revRes.data) setRevenueChart(revRes.data);
-      if (payRes.data) setPaymentChart(payRes.data);
-      if (prodRes.data) setTopProducts(prodRes.data);
-      if (catRes.data) setTopCategories(catRes.data);
-      if (heatRes.data) setHeatmap(heatRes.data);
-      if (custRes.data) setNewCustomersChart(custRes.data);
+      if (kpiRes.data) setKpis(kpiRes.data as KpiData);
+      if (revRes.data) setRevenueChart(revRes.data as typeof revenueChart);
+      if (payRes.data) setPaymentChart(payRes.data as typeof paymentChart);
+      if (prodRes.data) setTopProducts(prodRes.data as typeof topProducts);
+      if (catRes.data) setTopCategories(catRes.data as typeof topCategories);
+      if (heatRes.data) setHeatmap(heatRes.data as HeatmapCell[]);
+      if (custRes.data) setNewCustomersChart(custRes.data as typeof newCustomersChart);
     } catch {
       // Fallback
     } finally {
@@ -222,9 +222,6 @@ export default function AdminDashboard() {
                   <div className="w-8 text-[10px] text-gray-500 flex items-center">{DAY_LABELS[dayIdx]}</div>
                   {row.map((val, hour) => {
                     const intensity = val / maxHeatVal;
-                    const r = Math.round(208 + (208 - 208) * intensity); // D0 = 208
-                    const g = Math.round(2 + (2 - 2) * intensity);
-                    const b = Math.round(27 + (27 - 27) * intensity);
                     return (
                       <div
                         key={hour}

@@ -21,7 +21,7 @@ interface UseAdminFetchResult<T> {
  * Hook chung cho admin pages — fetch data voi loading/error state
  * Su dung apiFetch co san (auto JWT, error handling)
  */
-export function useAdminFetch<T = any>({ url, immediate = true }: UseAdminFetchOptions): UseAdminFetchResult<T> {
+export function useAdminFetch<T = unknown>({ url, immediate = true }: UseAdminFetchOptions): UseAdminFetchResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(immediate);
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +32,8 @@ export function useAdminFetch<T = any>({ url, immediate = true }: UseAdminFetchO
     try {
       const res = await apiFetch<T>(url);
       setData(res.data);
-    } catch (err: any) {
-      setError(err.message || 'Loi tai du lieu');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Loi tai du lieu');
     } finally {
       setLoading(false);
     }
