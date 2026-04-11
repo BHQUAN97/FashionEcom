@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { WinstonModule } from 'nest-winston';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { winstonConfig } from './common/logger/winston.config';
 import { HealthModule } from './modules/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
@@ -36,6 +39,12 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
   imports: [
     // Cau hinh tu .env
     ConfigModule.forRoot({ isGlobal: true }),
+
+    // Rate limiting — 100 requests / 60s
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
+
+    // Structured logging
+    WinstonModule.forRoot(winstonConfig),
 
     // MySQL connection
     TypeOrmModule.forRootAsync({
@@ -88,6 +97,8 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     { provide: APP_FILTER, useClass: AppExceptionFilter },
     // Global response wrapper
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
+    // Global rate-limiting guard
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
 export class AppModule {}

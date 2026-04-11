@@ -45,6 +45,9 @@ storage/system/
 # Design mockups (too large for git)
 Design/
 
+# Winston logs
+logs/
+
 # Misc
 *.tgz
 coverage/
