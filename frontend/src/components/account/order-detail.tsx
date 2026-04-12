@@ -16,19 +16,19 @@ export function OrderDetail({ order }: OrderDetailProps) {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-bold">Don hang {order.code}</h2>
-        <p className="text-sm text-gray-500 mt-1">Dat ngay {formatDate(order.created_at)}</p>
+        <h2 className="text-lg font-bold">Đơn hàng {order.code}</h2>
+        <p className="text-sm text-gray-500 mt-1">Đặt ngày {formatDate(order.created_at)}</p>
       </div>
 
       {/* Timeline */}
       <div>
-        <h3 className="font-semibold text-sm mb-3">Trang thai don hang</h3>
+        <h3 className="font-semibold text-sm mb-3">Trạng thái đơn hàng</h3>
         <OrderTimeline timeline={order.timeline} />
       </div>
 
       {/* Items */}
       <div>
-        <h3 className="font-semibold text-sm mb-3">San pham</h3>
+        <h3 className="font-semibold text-sm mb-3">Sản phẩm</h3>
         <div className="space-y-3">
           {order.items.map((item) => (
             <div key={item.id} className="flex gap-3">
@@ -47,7 +47,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
 
       {/* Shipping info */}
       <div>
-        <h3 className="font-semibold text-sm mb-2">Dia chi giao hang</h3>
+        <h3 className="font-semibold text-sm mb-2">Địa chỉ giao hàng</h3>
         <div className="text-sm text-gray-700 space-y-0.5">
           <p className="font-medium">{order.shipping_name} - {order.shipping_phone}</p>
           <p>{order.shipping_address}, {order.shipping_ward}, {order.shipping_district}, {order.shipping_province}</p>
@@ -56,24 +56,24 @@ export function OrderDetail({ order }: OrderDetailProps) {
 
       {/* Payment */}
       <div>
-        <h3 className="font-semibold text-sm mb-2">Thanh toan</h3>
+        <h3 className="font-semibold text-sm mb-2">Thanh toán</h3>
         <div className="text-sm space-y-1">
           <div className="flex justify-between">
-            <span className="text-gray-500">Tam tinh</span>
+            <span className="text-gray-500">Tạm tính</span>
             <span>{formatVND(order.subtotal)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-500">Phi van chuyen</span>
-            <span>{order.shipping_fee === 0 ? 'Mien phi' : formatVND(order.shipping_fee)}</span>
+            <span className="text-gray-500">Phí vận chuyển</span>
+            <span>{order.shipping_fee === 0 ? 'Miễn phí' : formatVND(order.shipping_fee)}</span>
           </div>
           {order.discount > 0 && (
             <div className="flex justify-between text-green-600">
-              <span>Giam gia</span>
+              <span>Giảm giá</span>
               <span>-{formatVND(order.discount)}</span>
             </div>
           )}
           <div className="flex justify-between font-bold pt-2 border-t">
-            <span>Tong cong</span>
+            <span>Tổng cộng</span>
             <span className="text-red-600">{formatVND(order.total)}</span>
           </div>
         </div>

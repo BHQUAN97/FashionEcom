@@ -1,7 +1,9 @@
 'use client';
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useState } from 'react';
+import { Minus, Plus, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatVND } from '@/lib/utils/format';
 
 export interface FilterState {
   categories: string[];
@@ -17,144 +19,199 @@ interface FilterSidebarProps {
 }
 
 const MOCK_FILTER_CATEGORIES = [
-  { id: 'ao-polo', name: 'Ao Polo', count: 45 },
-  { id: 'ao-so-mi', name: 'Ao So Mi', count: 32 },
-  { id: 'quan-tay', name: 'Quan Tay', count: 28 },
-  { id: 'quan-jeans', name: 'Quan Jeans', count: 36 },
+  { id: 'san-pham-moi', name: 'Sản phẩm mới', href: '/danh-muc/san-pham-moi' },
+  { id: 'sale', name: 'Danh mục sale', href: '/danh-muc/sale' },
+  { id: 'ao-nam', name: 'Áo nam', href: '/danh-muc/ao-nam', hasChildren: true },
+  { id: 'quan-nam', name: 'Quần nam', href: '/danh-muc/quan-nam', hasChildren: true },
+  { id: 'phu-kien', name: 'Phụ kiện', href: '/danh-muc/phu-kien', hasChildren: true },
 ];
 
 const MOCK_FILTER_COLORS = [
-  { id: 'den', name: 'Den', hex: '#1a1a1a' },
-  { id: 'trang', name: 'Trang', hex: '#ffffff' },
+  { id: 'den', name: 'Đen', hex: '#1a1a1a' },
+  { id: 'trang', name: 'Trắng', hex: '#ffffff' },
   { id: 'xanh', name: 'Xanh Navy', hex: '#1e3a5f' },
-  { id: 'nau', name: 'Nau', hex: '#8b4513' },
-  { id: 'xam', name: 'Xam', hex: '#6b7280' },
+  { id: 'nau', name: 'Nâu', hex: '#8b4513' },
+  { id: 'xam', name: 'Xám', hex: '#6b7280' },
+  { id: 'be', name: 'Be', hex: '#d2b48c' },
 ];
 
-const MOCK_FILTER_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+const MOCK_FILTER_SIZES = ['S', 'M', 'L', 'XL', 'XXL', '36', '37', '38', '39'];
 
-const PRICE_RANGES: { label: string; value: [number, number] }[] = [
-  { label: 'Duoi 300.000d', value: [0, 300000] },
-  { label: '300.000 - 500.000d', value: [300000, 500000] },
-  { label: '500.000 - 1.000.000d', value: [500000, 1000000] },
-  { label: 'Tren 1.000.000d', value: [1000000, 99999999] },
-];
+const PRICE_MIN = 0;
+const PRICE_MAX = 3000000;
+const PRICE_STEP = 50000;
 
-/** Filter sidebar — desktop co dinh ben trai */
+/** Collapsible filter section voi icon minus/plus */
+function FilterSection({
+  title,
+  defaultOpen = true,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b border-gray-100 py-4">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full text-sm font-semibold"
+      >
+        {title}
+        {open ? <Minus className="w-4 h-4 text-gray-400" /> : <Plus className="w-4 h-4 text-gray-400" />}
+      </button>
+      {open && <div className="mt-3">{children}</div>}
+    </div>
+  );
+}
+
+/** Filter sidebar — Torano style: link categories, price slider, clean sections */
 export function FilterSidebar({ filters, onChange, className }: FilterSidebarProps) {
   const toggleArray = (arr: string[], val: string) =>
     arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val];
 
+  // Local state cho price slider
+  const [priceMin, setPriceMin] = useState(filters.priceRange?.[0] ?? PRICE_MIN);
+  const [priceMax, setPriceMax] = useState(filters.priceRange?.[1] ?? PRICE_MAX);
+
+  const handlePriceChange = (min: number, max: number) => {
+    setPriceMin(min);
+    setPriceMax(max);
+    onChange({ ...filters, priceRange: [min, max] });
+  };
+
   return (
     <aside className={cn('w-full', className)}>
-      <h3 className="font-bold text-sm mb-3">BO LOC</h3>
+      <h3 className="font-bold text-base mb-1">Bộ lọc</h3>
 
-      <Accordion multiple defaultValue={[0, 1, 2, 3]}>
-        {/* Danh muc */}
-        <AccordionItem value="category">
-          <AccordionTrigger className="text-sm font-semibold py-3">Danh muc</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2">
-              {MOCK_FILTER_CATEGORIES.map((cat) => (
-                <label key={cat.id} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={filters.categories.includes(cat.id)}
-                    onChange={() =>
-                      onChange({ ...filters, categories: toggleArray(filters.categories, cat.id) })
-                    }
-                    className="rounded border-gray-300"
-                  />
-                  <span className="text-sm">{cat.name}</span>
-                  <span className="text-xs text-gray-400 ml-auto">({cat.count})</span>
-                </label>
-              ))}
+      {/* Danh muc san pham — links voi chevron */}
+      <FilterSection title="Danh mục sản phẩm">
+        <div className="space-y-0">
+          {MOCK_FILTER_CATEGORIES.map((cat) => (
+            <a
+              key={cat.id}
+              href={cat.href}
+              className="flex items-center justify-between py-1.5 text-sm text-gray-700 hover:text-black transition"
+            >
+              <span>{cat.name}</span>
+              {cat.hasChildren && <span className="text-xs text-gray-400">›</span>}
+            </a>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Khoang gia — slider doi + input fields */}
+      <FilterSection title="Khoảng giá">
+        <div className="space-y-3">
+          {/* Dual range indicator */}
+          <div className="relative h-1 bg-gray-200 rounded-full">
+            <div
+              className="absolute h-full bg-black rounded-full"
+              style={{
+                left: `${(priceMin / PRICE_MAX) * 100}%`,
+                right: `${100 - (priceMax / PRICE_MAX) * 100}%`,
+              }}
+            />
+          </div>
+
+          {/* Min slider */}
+          <input
+            type="range"
+            min={PRICE_MIN}
+            max={PRICE_MAX}
+            step={PRICE_STEP}
+            value={priceMin}
+            onChange={(e) => {
+              const v = Math.min(Number(e.target.value), priceMax - PRICE_STEP);
+              handlePriceChange(v, priceMax);
+            }}
+            className="w-full absolute opacity-0 cursor-pointer h-6 -mt-4"
+          />
+          {/* Max slider */}
+          <input
+            type="range"
+            min={PRICE_MIN}
+            max={PRICE_MAX}
+            step={PRICE_STEP}
+            value={priceMax}
+            onChange={(e) => {
+              const v = Math.max(Number(e.target.value), priceMin + PRICE_STEP);
+              handlePriceChange(priceMin, v);
+            }}
+            className="w-full absolute opacity-0 cursor-pointer h-6 -mt-4"
+          />
+
+          {/* Input fields */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <input
+                type="text"
+                value={formatVND(priceMin)}
+                readOnly
+                className="w-full border border-gray-200 rounded px-2 py-1.5 text-xs text-center bg-gray-50"
+              />
             </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* Mau sac */}
-        <AccordionItem value="color">
-          <AccordionTrigger className="text-sm font-semibold py-3">Mau sac</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-wrap gap-2">
-              {MOCK_FILTER_COLORS.map((color) => (
-                <button
-                  key={color.id}
-                  onClick={() =>
-                    onChange({ ...filters, colors: toggleArray(filters.colors, color.id) })
-                  }
-                  className={cn(
-                    'w-7 h-7 rounded-full border-2 transition',
-                    filters.colors.includes(color.id) ? 'border-black scale-110' : 'border-gray-300',
-                  )}
-                  style={{ backgroundColor: color.hex }}
-                  title={color.name}
-                />
-              ))}
+            <span className="text-gray-300">—</span>
+            <div className="flex-1">
+              <input
+                type="text"
+                value={formatVND(priceMax)}
+                readOnly
+                className="w-full border border-gray-200 rounded px-2 py-1.5 text-xs text-center bg-gray-50"
+              />
             </div>
-          </AccordionContent>
-        </AccordionItem>
+          </div>
+        </div>
+      </FilterSection>
 
-        {/* Size */}
-        <AccordionItem value="size">
-          <AccordionTrigger className="text-sm font-semibold py-3">Kich thuoc</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-wrap gap-2">
-              {MOCK_FILTER_SIZES.map((size) => (
-                <button
-                  key={size}
-                  onClick={() =>
-                    onChange({ ...filters, sizes: toggleArray(filters.sizes, size) })
-                  }
-                  className={cn(
-                    'min-w-[40px] h-9 px-2 border text-sm rounded transition',
-                    filters.sizes.includes(size)
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-300 hover:border-black',
-                  )}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+      {/* Mau sac */}
+      <FilterSection title="Màu sắc" defaultOpen={false}>
+        <div className="flex flex-wrap gap-2">
+          {MOCK_FILTER_COLORS.map((color) => {
+            const isSelected = filters.colors.includes(color.id);
+            return (
+              <button
+                key={color.id}
+                onClick={() => onChange({ ...filters, colors: toggleArray(filters.colors, color.id) })}
+                className={cn(
+                  'w-8 h-8 rounded-full border-2 transition relative',
+                  isSelected ? 'border-black scale-110' : 'border-gray-200 hover:border-gray-400',
+                )}
+                style={{ backgroundColor: color.hex }}
+                title={color.name}
+              >
+                {isSelected && (
+                  <Check className={cn(
+                    'w-3.5 h-3.5 absolute inset-0 m-auto',
+                    color.hex === '#ffffff' || color.hex === '#d2b48c' ? 'text-black' : 'text-white',
+                  )} />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </FilterSection>
 
-        {/* Gia */}
-        <AccordionItem value="price">
-          <AccordionTrigger className="text-sm font-semibold py-3">Khoang gia</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2">
-              {PRICE_RANGES.map((range) => {
-                const isSelected =
-                  filters.priceRange?.[0] === range.value[0] &&
-                  filters.priceRange?.[1] === range.value[1];
-                return (
-                  <label key={range.label} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="price"
-                      checked={isSelected}
-                      onChange={() => onChange({ ...filters, priceRange: range.value })}
-                      className="border-gray-300"
-                    />
-                    <span className="text-sm">{range.label}</span>
-                  </label>
-                );
-              })}
-              {filters.priceRange && (
-                <button
-                  onClick={() => onChange({ ...filters, priceRange: null })}
-                  className="text-xs text-red-600 hover:underline"
-                >
-                  Xoa khoang gia
-                </button>
+      {/* Size */}
+      <FilterSection title="Size">
+        <div className="flex flex-wrap gap-2">
+          {MOCK_FILTER_SIZES.map((size) => (
+            <button
+              key={size}
+              onClick={() => onChange({ ...filters, sizes: toggleArray(filters.sizes, size) })}
+              className={cn(
+                'min-w-[40px] h-9 px-3 border text-sm rounded transition',
+                filters.sizes.includes(size)
+                  ? 'border-black bg-black text-white'
+                  : 'border-gray-200 hover:border-black',
               )}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+      </FilterSection>
     </aside>
   );
 }

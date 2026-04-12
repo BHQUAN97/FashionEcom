@@ -44,10 +44,43 @@ export const MOCK_PRODUCTS: ProductListItem[] = Array.from({ length: 24 }, (_, i
   is_bestseller: i % 5 === 0,
   stock_status: i === 7 ? 'out_of_stock' : 'in_stock',
   colors: [
-    { id: 'c1', hex: '#1a1a1a' },
-    { id: 'c2', hex: '#1e3a5f' },
-    { id: 'c3', hex: '#8b4513' },
+    { id: 'c1', name: 'Den', hex: '#1a1a1a' },
+    { id: 'c2', name: 'Xanh dam', hex: '#1e3a5f' },
+    { id: 'c3', name: 'Nau', hex: '#8b4513' },
   ].slice(0, (i % 3) + 1),
+  sizes: [
+    { id: 's1', name: 'S' },
+    { id: 's2', name: 'M' },
+    { id: 's3', name: 'L' },
+    { id: 's4', name: 'XL' },
+  ].slice(0, 3 + (i % 2)),
+  variants: (() => {
+    const cols = [
+      { id: 'c1', name: 'Den', hex: '#1a1a1a' },
+      { id: 'c2', name: 'Xanh dam', hex: '#1e3a5f' },
+      { id: 'c3', name: 'Nau', hex: '#8b4513' },
+    ].slice(0, (i % 3) + 1);
+    const szs = [
+      { id: 's1', name: 'S' },
+      { id: 's2', name: 'M' },
+      { id: 's3', name: 'L' },
+      { id: 's4', name: 'XL' },
+    ].slice(0, 3 + (i % 2));
+    const price = [590000, 450000, 890000, 650000, 1290000, 350000, 490000, 2490000][i % 8];
+    const cmp = [750000, 590000, 1190000, 790000, 1590000, 450000, 650000, 2990000][i % 8];
+    return cols.flatMap((c) =>
+      szs.map((s, si) => ({
+        id: `v-${i + 1}-${c.id}-${s.id}`,
+        sku: `SKU-${i + 1}-${c.id}-${s.id}`,
+        color_id: c.id,
+        size_id: s.id,
+        price,
+        compare_at_price: cmp,
+        // Mo phong het hang 1 so size
+        stock_qty: i === 7 ? 0 : (si === 0 && i % 4 === 0) ? 0 : 5 + (si * 3),
+      })),
+    );
+  })(),
 }));
 
 /** Chi tiet san pham day du */
@@ -120,22 +153,22 @@ export const MOCK_REVIEWS: Review[] = [
 ];
 
 export const MOCK_HERO_SLIDES: HeroBannerSlide[] = [
-  { id: 's1', image: IMG(1440, 560, 'BST+Moi+2026'), image_mobile: IMG(750, 1000, 'BST+Moi'), title: 'Bo Suu Tap Moi 2026', subtitle: 'Phong cach - Lich lam - Dang cap', cta_text: 'KHAM PHA NGAY', cta_link: '/san-pham' },
-  { id: 's2', image: IMG(1440, 560, 'Sale+50%25'), image_mobile: IMG(750, 1000, 'Sale'), title: 'Sale Len Den 50%', subtitle: 'Uu dai co han — chi trong tuan nay', cta_text: 'MUA NGAY', cta_link: '/danh-muc/sale' },
-  { id: 's3', image: IMG(1440, 560, 'Ao+Polo'), image_mobile: IMG(750, 1000, 'Polo'), title: 'Ao Polo Premium', subtitle: 'Cotton 100% — thoang mat — form dep', cta_text: 'XEM BST', cta_link: '/danh-muc/ao-polo' },
+  { id: 's1', image: IMG(1440, 560, 'BST+Moi+2026'), image_mobile: IMG(750, 1000, 'BST+Moi'), title: 'Bộ Sưu Tập Mới 2026', subtitle: 'Phong cách - Lịch lãm - Đẳng cấp', cta_text: 'KHÁM PHÁ NGAY', cta_link: '/san-pham' },
+  { id: 's2', image: IMG(1440, 560, 'Sale+50%25'), image_mobile: IMG(750, 1000, 'Sale'), title: 'Sale Lên Đến 50%', subtitle: 'Ưu đãi có hạn — chỉ trong tuần này', cta_text: 'MUA NGAY', cta_link: '/danh-muc/sale' },
+  { id: 's3', image: IMG(1440, 560, 'Ao+Polo'), image_mobile: IMG(750, 1000, 'Polo'), title: 'Áo Polo Premium', subtitle: 'Cotton 100% — thoáng mát — form đẹp', cta_text: 'XEM BST', cta_link: '/danh-muc/ao-polo' },
 ];
 
 export const MOCK_TRUST_BAR: TrustBarItem[] = [
-  { icon: 'truck', line1: 'Mien phi giao hang', line2: 'Don tu 500.000d' },
-  { icon: 'shield', line1: 'Hang chinh hang', line2: '100% authentic' },
-  { icon: 'refresh', line1: 'Doi tra 7 ngay', line2: 'Mien phi doi tra' },
-  { icon: 'headphones', line1: 'Ho tro 24/7', line2: 'Hotline: 1900-xxxx' },
+  { icon: 'truck', line1: 'Miễn phí giao hàng', line2: 'Đơn từ 500.000đ' },
+  { icon: 'shield', line1: 'Hàng chính hãng', line2: '100% authentic' },
+  { icon: 'refresh', line1: 'Đổi trả 7 ngày', line2: 'Miễn phí đổi trả' },
+  { icon: 'headphones', line1: 'Hỗ trợ 24/7', line2: 'Hotline: 1900-xxxx' },
 ];
 
 export const MOCK_FLASH_SALE: FlashSaleData = {
   id: 'fs1',
   title: 'Flash Sale',
-  end_time: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
+  end_time: new Date(Date.now() + 4 * 3600_000).toISOString(),
   products: MOCK_PRODUCTS.slice(0, 6),
 };
 

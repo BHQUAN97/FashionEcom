@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { ProductEntity } from './entities/product.entity';
 import { ProductVariantEntity } from './entities/product-variant.entity';
 import { ProductMediaEntity } from './entities/product-media.entity';
@@ -98,7 +98,7 @@ export class ProductsService extends BaseService<ProductEntity> {
     if (exists) throw new ConflictException('Ma san pham da ton tai');
 
     const product = this.productRepo.create({
-      catProductId: uuidv4(),
+      catProductId: randomUUID(),
       catCategoryId: dto.categoryId,
       catProductCode: dto.code,
       catProductName: dto.name,
@@ -154,7 +154,7 @@ export class ProductsService extends BaseService<ProductEntity> {
    */
   async duplicate(id: string) {
     const source = await this.findOne(id);
-    const newId = uuidv4();
+    const newId = randomUUID();
     const newCode = `${source.catProductCode}-COPY`;
 
     const product = this.productRepo.create({
@@ -176,7 +176,7 @@ export class ProductsService extends BaseService<ProductEntity> {
       const newVariants = source.variants.map((v) =>
         this.variantRepo.create({
           ...v,
-          catProductVariantId: uuidv4(),
+          catProductVariantId: randomUUID(),
           catProductId: newId,
           catProductVariantSku: `${v.catProductVariantSku}-COPY`,
           product: undefined as any,
@@ -218,7 +218,7 @@ export class ProductsService extends BaseService<ProductEntity> {
    */
   async createVariant(productId: string, data: Partial<ProductVariantEntity>) {
     const variant = this.variantRepo.create({
-      catProductVariantId: uuidv4(),
+      catProductVariantId: randomUUID(),
       catProductId: productId,
       ...data,
     });

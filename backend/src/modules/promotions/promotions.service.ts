@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -6,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThanOrEqual, MoreThanOrEqual, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { DiscountCodeEntity } from './entities/discount-code.entity';
 import { DiscountUsageEntity } from './entities/discount-usage.entity';
 import { FlashSaleEntity } from './entities/flash-sale.entity';
@@ -68,7 +68,7 @@ export class PromotionsService {
     if (existing) throw new ConflictException('Ma giam gia da ton tai');
 
     const entity = new DiscountCodeEntity();
-    entity.prmDiscountId = uuidv4();
+    entity.prmDiscountId = randomUUID();
     entity.prmDiscountCode = dto.code.toUpperCase();
     entity.prmDiscountType = dto.type;
     entity.prmDiscountValue = dto.value;
@@ -256,7 +256,7 @@ export class PromotionsService {
 
   async createFlashSale(dto: CreateFlashSaleDto) {
     const entity = new FlashSaleEntity();
-    entity.prmFlashSaleId = uuidv4();
+    entity.prmFlashSaleId = randomUUID();
     entity.prmFlashSaleTitle = dto.title;
     entity.prmFlashSaleStartDate = new Date(dto.startDate);
     entity.prmFlashSaleEndDate = new Date(dto.endDate);
@@ -268,7 +268,7 @@ export class PromotionsService {
     if (dto.items?.length) {
       const items = dto.items.map(item => {
         const itemEntity = new FlashSaleItemEntity();
-        itemEntity.prmFlashSaleItemId = uuidv4();
+        itemEntity.prmFlashSaleItemId = randomUUID();
         itemEntity.prmFlashSaleId = savedFlashSale.prmFlashSaleId;
         itemEntity.catProductId = item.productId;
         itemEntity.prmFlashSaleItemDiscountPct = item.discountPct;
@@ -297,7 +297,7 @@ export class PromotionsService {
     if (dto.items?.length) {
       const items = dto.items.map(item => {
         const itemEntity = new FlashSaleItemEntity();
-        itemEntity.prmFlashSaleItemId = uuidv4();
+        itemEntity.prmFlashSaleItemId = randomUUID();
         itemEntity.prmFlashSaleId = id;
         itemEntity.catProductId = item.productId;
         itemEntity.prmFlashSaleItemDiscountPct = item.discountPct;

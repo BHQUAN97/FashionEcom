@@ -19,7 +19,7 @@ export function SearchInput({
   onChange,
   onSubmit,
   autoFocus = false,
-  placeholder = 'Tim kiem san pham...',
+  placeholder = 'Tìm kiếm sản phẩm...',
   className,
 }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);

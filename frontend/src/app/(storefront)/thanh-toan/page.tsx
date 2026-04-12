@@ -24,7 +24,7 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 text-center">
-        <p className="text-gray-500">Gio hang trong. Vui long them san pham truoc khi thanh toan.</p>
+        <p className="text-gray-500">Giỏ hàng trống. Vui lòng thêm sản phẩm trước khi thanh toán.</p>
       </div>
     );
   }
@@ -52,14 +52,14 @@ export default function CheckoutPage() {
     shipping.name && shipping.phone && shipping.province_code && shipping.district_code && shipping.address_line;
 
   const getNextLabel = () => {
-    if (step === 'review') return 'TIEP TUC';
-    if (step === 'shipping') return 'CHON THANH TOAN';
-    return 'DAT HANG';
+    if (step === 'review') return 'TIẾP TỤC';
+    if (step === 'shipping') return 'CHỌN THANH TOÁN';
+    return 'ĐẶT HÀNG';
   };
 
   return (
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-4">
-      <h1 className="text-lg md:text-2xl font-bold mb-4">Thanh toan</h1>
+      <h1 className="text-lg md:text-2xl font-bold mb-4">Thanh toán</h1>
 
       <CheckoutStepIndicator currentStep={step} className="mb-6" />
 
@@ -77,7 +77,7 @@ export default function CheckoutPage() {
                 onClick={handleBack}
                 className="flex-1 py-3 border border-gray-300 text-sm font-semibold rounded-lg hover:bg-gray-50 transition"
               >
-                QUAY LAI
+                QUAY LẠI
               </button>
             )}
             <button

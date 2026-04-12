@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { GuideTourEntity, GuideTourCompletionEntity } from './entities/guide-tour.entity';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class GuidesService {
     if (existing) return existing;
 
     const completion = this.completionRepo.create({
-      sysGuideTourCompletionId: uuidv4(),
+      sysGuideTourCompletionId: randomUUID(),
       sysUserId: userId,
       sysGuideTourScreenId: screenId,
     });
@@ -65,7 +65,7 @@ export class GuidesService {
 
     if (!guide) {
       guide = this.guideRepo.create({
-        sysGuideTourId: uuidv4(),
+        sysGuideTourId: randomUUID(),
         sysGuideTourScreenId: screenId,
         sysGuideTourTitle: data.title || screenId,
         sysGuideTourRoles: data.roles || [1, 2, 3, 4, 5, 6],

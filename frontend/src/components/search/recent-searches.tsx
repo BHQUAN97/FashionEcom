@@ -16,7 +16,7 @@ export function RecentSearches({ onSelect }: RecentSearchesProps) {
   return (
     <div className="mt-4">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold">Tim kiem gan day</h3>
+        <h3 className="text-sm font-semibold">Tìm kiếm gần đây</h3>
         <button onClick={clearRecent} className="text-xs text-gray-400 hover:text-red-600">
           Xoa tat ca
         </button>

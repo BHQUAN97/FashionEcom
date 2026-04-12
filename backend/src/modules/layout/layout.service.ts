@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { LayoutSectionEntity } from './entities/layout-section.entity';
 import { BannerEntity } from './entities/banner.entity';
 import { MenuEntity } from './entities/menu.entity';
@@ -72,7 +72,7 @@ export class LayoutService {
     // Insert sections moi voi version=draft
     const entities = dto.sections.map((s, i) => {
       const entity = new LayoutSectionEntity();
-      entity.cmsLayoutSectionId = s.id || uuidv4();
+      entity.cmsLayoutSectionId = s.id || randomUUID();
       entity.cmsLayoutSectionPage = dto.page;
       entity.cmsLayoutSectionType = s.type;
       entity.cmsLayoutSectionConfig = s.config;
@@ -104,7 +104,7 @@ export class LayoutService {
     // Clone sang published
     const published = drafts.map(d => {
       const entity = new LayoutSectionEntity();
-      entity.cmsLayoutSectionId = uuidv4();
+      entity.cmsLayoutSectionId = randomUUID();
       entity.cmsLayoutSectionPage = d.cmsLayoutSectionPage;
       entity.cmsLayoutSectionType = d.cmsLayoutSectionType;
       entity.cmsLayoutSectionConfig = d.cmsLayoutSectionConfig;
@@ -136,7 +136,7 @@ export class LayoutService {
     // Clone sang scheduled
     const scheduled = drafts.map(d => {
       const entity = new LayoutSectionEntity();
-      entity.cmsLayoutSectionId = uuidv4();
+      entity.cmsLayoutSectionId = randomUUID();
       entity.cmsLayoutSectionPage = d.cmsLayoutSectionPage;
       entity.cmsLayoutSectionType = d.cmsLayoutSectionType;
       entity.cmsLayoutSectionConfig = d.cmsLayoutSectionConfig;
@@ -166,7 +166,7 @@ export class LayoutService {
 
     const newDrafts = published.map(p => {
       const entity = new LayoutSectionEntity();
-      entity.cmsLayoutSectionId = uuidv4();
+      entity.cmsLayoutSectionId = randomUUID();
       entity.cmsLayoutSectionPage = p.cmsLayoutSectionPage;
       entity.cmsLayoutSectionType = p.cmsLayoutSectionType;
       entity.cmsLayoutSectionConfig = p.cmsLayoutSectionConfig;
@@ -194,7 +194,7 @@ export class LayoutService {
 
   async createBanner(dto: CreateBannerDto) {
     const entity = new BannerEntity();
-    entity.cmsBannerId = uuidv4();
+    entity.cmsBannerId = randomUUID();
     entity.cmsBannerTitle = dto.title;
     entity.cmsBannerImageDesktop = dto.imageDesktop;
     entity.cmsBannerImageMobile = dto.imageMobile;
@@ -326,7 +326,7 @@ export class LayoutService {
 
   private createMenuItemEntity(dto: MenuItemDto, menuId: string, parentId: string | null): MenuItemEntity {
     const entity = new MenuItemEntity();
-    entity.cmsMenuItemId = dto.id || uuidv4();
+    entity.cmsMenuItemId = dto.id || randomUUID();
     entity.cmsMenuId = menuId;
     entity.cmsMenuItemParentId = parentId;
     entity.cmsMenuItemLabel = dto.label;

@@ -19,7 +19,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
       <ol className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
         <li>
           <Link href="/" className="hover:text-black transition whitespace-nowrap">
-            Trang chu
+            Trang chủ
           </Link>
         </li>
         {items.map((item, i) => (

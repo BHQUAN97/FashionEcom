@@ -128,9 +128,9 @@ export default function InventoryReportPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b bg-gray-50">
-                <th className="text-left px-4 py-3 font-medium">San pham</th>
+                <th className="text-left px-4 py-3 font-medium">Sản phẩm</th>
                 <th className="text-left px-4 py-3 font-medium">SKU</th>
-                <th className="text-left px-4 py-3 font-medium">Mau/Size</th>
+                <th className="text-left px-4 py-3 font-medium">Màu/Size</th>
                 <th className="text-right px-4 py-3 font-medium">Ton</th>
                 <th className="text-right px-4 py-3 font-medium">Khoa</th>
                 <th className="text-right px-4 py-3 font-medium">Da ban (30d)</th>
@@ -164,14 +164,14 @@ export default function InventoryReportPage() {
       {tab === 'dead' && (
         <div className="bg-white rounded-lg border overflow-x-auto">
           <div className="px-4 py-3 border-b bg-red-50">
-            <p className="text-sm text-red-700">San pham co ton nhung khong ban trong 90 ngay gan nhat</p>
+            <p className="text-sm text-red-700">Sản phẩm có tồn nhưng không bán trong 90 ngày gần nhất</p>
           </div>
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b bg-gray-50">
-                <th className="text-left px-4 py-3 font-medium">San pham</th>
+                <th className="text-left px-4 py-3 font-medium">Sản phẩm</th>
                 <th className="text-left px-4 py-3 font-medium">SKU</th>
-                <th className="text-right px-4 py-3 font-medium">Ton</th>
+                <th className="text-right px-4 py-3 font-medium">Tồn</th>
                 <th className="text-right px-4 py-3 font-medium">Gia von</th>
                 <th className="text-right px-4 py-3 font-medium">Gia tri ton dong</th>
               </tr>

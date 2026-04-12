@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { OrderEntity } from './entities/order.entity';
 import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderTimelineEntity } from './entities/order-timeline.entity';
@@ -143,7 +143,7 @@ export class OrdersService extends BaseService<OrderEntity> {
 
     // Ghi timeline entry
     const timeline = this.timelineRepo.create({
-      salOrderTimelineId: uuidv4(),
+      salOrderTimelineId: randomUUID(),
       salOrderId: id,
       salOrderTimelineStep: dto.status,
       salOrderTimelineStatus: STATUS_LABELS[dto.status] || 'unknown',

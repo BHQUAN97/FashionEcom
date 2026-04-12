@@ -10,6 +10,9 @@
 }
 
 @layer base {
+  html {
+    font-size: 14px;
+  }
   .theme {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);

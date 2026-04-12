@@ -65,20 +65,20 @@ export default function SearchPage() {
             <div className="text-center py-12">
               <p className="text-4xl mb-3">🔍</p>
               <p className="text-gray-500">
-                Khong tim thay san pham cho &ldquo;{debouncedQuery}&rdquo;
+                Không tìm thấy sản phẩm cho &ldquo;{debouncedQuery}&rdquo;
               </p>
-              <p className="text-sm text-gray-400 mt-1">Thu tim voi tu khoa khac</p>
+              <p className="text-sm text-gray-400 mt-1">Thử tìm với từ khóa khác</p>
 
               {/* Goi y san pham pho bien */}
               <div className="mt-8 text-left">
-                <h3 className="text-lg font-bold mb-4">San pham pho bien</h3>
+                <h3 className="text-lg font-bold mb-4">Sản phẩm phổ biến</h3>
                 <ProductGrid products={MOCK_PRODUCTS.slice(0, 4)} columns={4} />
               </div>
             </div>
           ) : (
             <>
               <p className="text-sm text-gray-500 mb-4">
-                Tim thay {results.length} san pham cho &ldquo;{debouncedQuery}&rdquo;
+                Tìm thấy {results.length} sản phẩm cho &ldquo;{debouncedQuery}&rdquo;
               </p>
               <ProductGrid products={results} columns={4} />
             </>

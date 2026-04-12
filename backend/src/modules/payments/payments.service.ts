@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { PaymentEntity } from './entities/payment.entity';
 import { PaymentGatewayFactory } from './gateways/payment-gateway.factory';
 import {
@@ -71,7 +71,7 @@ export class PaymentsService extends BaseService<PaymentEntity> {
 
     // Luu record payment
     const payment = this.paymentRepo.create({
-      salPaymentId: uuidv4(),
+      salPaymentId: randomUUID(),
       salOrderId: order.salOrderId,
       salPaymentMethod: method,
       salPaymentAmount: amount,

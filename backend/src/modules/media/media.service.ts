@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
@@ -70,7 +70,7 @@ export class MediaService extends BaseService<MediaEntity> {
 
     // Tao ten file unique
     const ext = path.extname(file.originalname);
-    const uniqueName = `${uuidv4()}${ext}`;
+    const uniqueName = `${randomUUID()}${ext}`;
     const filePath = path.join(subDir, uniqueName);
 
     // Ghi file (async — khong block event loop)
@@ -79,7 +79,7 @@ export class MediaService extends BaseService<MediaEntity> {
     // Luu record
     const relativePath = `/uploads/${yearMonth}/${uniqueName}`;
     const media = this.mediaRepo.create({
-      sysMediaId: uuidv4(),
+      sysMediaId: randomUUID(),
       sysMediaFilename: file.originalname,
       sysMediaPath: relativePath,
       sysMediaType: file.mimetype.startsWith('video') ? 2 : 1,

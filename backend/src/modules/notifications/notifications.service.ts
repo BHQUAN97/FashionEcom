@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { Injectable, Inject, Optional } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { NotificationEntity, PushSubscriptionEntity } from './entities/notification.entity';
 import { NotificationChannel } from './notification-channel.interface';
 
@@ -32,7 +32,7 @@ export class NotificationsService {
     await this.subRepo.delete({ sysPushSubscriptionEndpoint: subscription.endpoint });
 
     const sub = this.subRepo.create({
-      sysPushSubscriptionId: uuidv4(),
+      sysPushSubscriptionId: randomUUID(),
       sysCustomerId: customerId,
       sysPushSubscriptionEndpoint: subscription.endpoint,
       sysPushSubscriptionKeys: subscription.keys,
@@ -56,7 +56,7 @@ export class NotificationsService {
     channel?: number;
   }) {
     const notif = this.notifRepo.create({
-      sysNotificationId: uuidv4(),
+      sysNotificationId: randomUUID(),
       sysCustomerId: params.customerId || null,
       sysNotificationType: params.type,
       sysNotificationTitle: params.title,

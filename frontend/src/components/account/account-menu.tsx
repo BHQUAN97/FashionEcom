@@ -8,10 +8,10 @@ import { ROUTES } from '@/lib/constants/routes';
 import { useAuthStore } from '@/lib/stores/auth.store';
 
 const MENU_ITEMS = [
-  { href: ROUTES.ACCOUNT, label: 'Thong tin ca nhan', icon: User },
-  { href: ROUTES.ORDERS, label: 'Don hang cua toi', icon: Package },
-  { href: ROUTES.WISHLIST, label: 'San pham yeu thich', icon: Heart },
-  { href: ROUTES.ADDRESSES, label: 'So dia chi', icon: MapPin },
+  { href: ROUTES.ACCOUNT, label: 'Thông tin cá nhân', icon: User },
+  { href: ROUTES.ORDERS, label: 'Đơn hàng của tôi', icon: Package },
+  { href: ROUTES.WISHLIST, label: 'Sản phẩm yêu thích', icon: Heart },
+  { href: ROUTES.ADDRESSES, label: 'Sổ địa chỉ', icon: MapPin },
 ];
 
 /** Account menu — mobile: list page, desktop: sidebar */
@@ -50,7 +50,7 @@ export function AccountMenu() {
         className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-red-50 text-red-600 text-sm w-full"
       >
         <LogOut className="w-5 h-5" />
-        <span>Dang xuat</span>
+        <span>Đăng xuất</span>
       </button>
     </nav>
   );

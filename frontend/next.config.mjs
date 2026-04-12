@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
+      {
+        protocol: "https",
+        hostname: "nextjs.org",
+      },
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",

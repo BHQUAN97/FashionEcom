@@ -200,15 +200,15 @@ export default function ProductDetailPage() {
               className="hidden lg:flex items-center gap-2 mt-3 text-sm text-gray-500 hover:text-red-600 transition"
             >
               <Heart className={cn('w-4 h-4', isWished(product.id) ? 'fill-red-600 text-red-600' : '')} />
-              {isWished(product.id) ? 'Da yeu thich' : 'Them yeu thich'}
+              {isWished(product.id) ? 'Đã yêu thích' : 'Thêm yêu thích'}
             </button>
 
             {/* Trust badges compact */}
             <div className="mt-6 grid grid-cols-2 gap-2 text-xs text-gray-500">
-              <span>✓ Mien phi giao hang tu 500K</span>
-              <span>✓ Hang chinh hang 100%</span>
-              <span>✓ Doi tra 7 ngay</span>
-              <span>✓ Ho tro 24/7</span>
+              <span>✓ Miễn phí giao hàng từ 500K</span>
+              <span>✓ Hàng chính hãng 100%</span>
+              <span>✓ Đổi trả 7 ngày</span>
+              <span>✓ Hỗ trợ 24/7</span>
             </div>
           </div>
         </div>

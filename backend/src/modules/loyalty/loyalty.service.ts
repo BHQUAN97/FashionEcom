@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThanOrEqual } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { LoyaltyConfigEntity } from './entities/loyalty-config.entity';
 import { LoyaltyTransactionEntity } from './entities/loyalty-transaction.entity';
 import { RedeemPointsDto, AdjustPointsDto, UpdateLoyaltyConfigDto } from './dto/loyalty.dto';
@@ -128,7 +128,7 @@ export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
     const balance = await this.getCurrentBalance(customerId);
 
     const transaction = this.transRepo.create({
-      prmLoyaltyTransactionId: uuidv4(),
+      prmLoyaltyTransactionId: randomUUID(),
       sysCustomerId: customerId,
       prmLoyaltyTransactionType: 0, // Earn
       prmLoyaltyTransactionPoints: totalPoints,
@@ -162,7 +162,7 @@ export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
     const discountAmount = (dto.points / redeemRate) * 10000;
 
     const transaction = this.transRepo.create({
-      prmLoyaltyTransactionId: uuidv4(),
+      prmLoyaltyTransactionId: randomUUID(),
       sysCustomerId: customerId,
       prmLoyaltyTransactionType: 1, // Redeem
       prmLoyaltyTransactionPoints: -dto.points,
@@ -184,7 +184,7 @@ export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
     const balance = await this.getCurrentBalance(dto.customerId);
 
     const transaction = this.transRepo.create({
-      prmLoyaltyTransactionId: uuidv4(),
+      prmLoyaltyTransactionId: randomUUID(),
       sysCustomerId: dto.customerId,
       prmLoyaltyTransactionType: 4, // Adjust
       prmLoyaltyTransactionPoints: dto.points,

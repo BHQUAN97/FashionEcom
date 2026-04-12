@@ -28,6 +28,8 @@ interface LayoutState {
   removeSection: (id: string) => void;
   reorderSections: (sections: LayoutSection[]) => void;
   toggleVisibility: (id: string) => void;
+  moveUp: (id: string) => void;
+  moveDown: (id: string) => void;
   undo: () => void;
   redo: () => void;
   pushHistory: () => void;
@@ -93,6 +95,28 @@ export const useLayoutStore = create<LayoutState>((set, get) => ({
       s.id === id ? { ...s, visible: s.visible ? 0 : 1 } : s,
     );
     set({ sections: newSections, isDirty: true });
+    get().pushHistory();
+  },
+
+  moveUp: (id) => {
+    const { sections } = get();
+    const idx = sections.findIndex(s => s.id === id);
+    if (idx <= 0) return;
+    const newSections = [...sections];
+    [newSections[idx - 1], newSections[idx]] = [newSections[idx], newSections[idx - 1]];
+    const reordered = newSections.map((s, i) => ({ ...s, sort: i }));
+    set({ sections: reordered, isDirty: true });
+    get().pushHistory();
+  },
+
+  moveDown: (id) => {
+    const { sections } = get();
+    const idx = sections.findIndex(s => s.id === id);
+    if (idx === -1 || idx >= sections.length - 1) return;
+    const newSections = [...sections];
+    [newSections[idx], newSections[idx + 1]] = [newSections[idx + 1], newSections[idx]];
+    const reordered = newSections.map((s, i) => ({ ...s, sort: i }));
+    set({ sections: reordered, isDirty: true });
     get().pushHistory();
   },
 

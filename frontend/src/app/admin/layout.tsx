@@ -16,8 +16,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           {[
             { label: 'Dashboard', href: '/admin' },
             { label: 'Don hang', href: '/admin/don-hang' },
-            { label: 'San pham', href: '/admin/san-pham' },
-            { label: 'Danh muc', href: '/admin/danh-muc' },
+            { label: 'Sản phẩm', href: '/admin/san-pham' },
+            { label: 'Danh mục', href: '/admin/danh-muc' },
             { label: 'Ton kho', href: '/admin/ton-kho' },
             { label: 'Khach hang', href: '/admin/khach-hang' },
             { label: 'Khuyen mai', href: '/admin/khuyen-mai' },

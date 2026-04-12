@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { InventoryLevelEntity } from './entities/inventory-level.entity';
 import { InventoryLogEntity } from './entities/inventory-log.entity';
 import { WarehouseEntity } from './entities/warehouse.entity';
@@ -80,7 +80,7 @@ export class InventoryService extends BaseService<InventoryLevelEntity> {
 
       if (!level) {
         level = queryRunner.manager.create(InventoryLevelEntity, {
-          invInventoryLevelId: uuidv4(),
+          invInventoryLevelId: randomUUID(),
           catProductVariantId: dto.variantId,
           invWarehouseId: dto.warehouseId,
           invInventoryLevelAvailable: 0,
@@ -99,7 +99,7 @@ export class InventoryService extends BaseService<InventoryLevelEntity> {
 
       // Ghi log trong cung transaction
       const log = queryRunner.manager.create(InventoryLogEntity, {
-        invInventoryLogId: uuidv4(),
+        invInventoryLogId: randomUUID(),
         catProductVariantId: dto.variantId,
         invWarehouseId: dto.warehouseId,
         invInventoryLogQty: dto.qty,

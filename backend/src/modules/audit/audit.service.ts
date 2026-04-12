@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { AuditLogEntity } from './entities/audit-log.entity';
 import { PaginationDto } from '@/common/dto/pagination.dto';
 import { BaseService } from '@/common/services/base.service';
@@ -71,7 +71,7 @@ export class AuditService extends BaseService<AuditLogEntity> {
     userId: string;
   }) {
     const entry = this.auditRepo.create({
-      logAuditId: uuidv4(),
+      logAuditId: randomUUID(),
       logAuditAction: params.action,
       logAuditEntityType: params.entityType,
       logAuditEntityId: params.entityId,

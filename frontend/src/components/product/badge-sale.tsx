@@ -11,7 +11,7 @@ export function BadgeSale({ percent, className }: BadgeSaleProps) {
   return (
     <span
       className={cn(
-        'absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-0.5 font-semibold z-10',
+        'absolute top-2 left-2 bg-red-600 text-white text-xs px-2.5 py-1 font-semibold z-10 rounded-full',
         className,
       )}
     >
@@ -25,7 +25,7 @@ export function BadgeNew({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        'absolute top-2 left-2 bg-black text-white text-xs px-2 py-0.5 font-semibold z-10',
+        'absolute top-2 left-2 bg-black text-white text-xs px-2.5 py-1 font-semibold z-10 rounded-full',
         className,
       )}
     >
@@ -39,7 +39,7 @@ export function BadgeOutOfStock({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        'absolute top-2 left-2 bg-gray-500 text-white text-xs px-2 py-0.5 font-semibold z-10',
+        'absolute top-2 left-2 bg-gray-500 text-white text-xs px-2.5 py-1 font-semibold z-10 rounded-full',
         className,
       )}
     >

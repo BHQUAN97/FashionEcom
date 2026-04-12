@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   UnauthorizedException,
@@ -8,7 +9,6 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from 'uuid';
 import { UserEntity } from '../users/entities/user.entity';
 import { RefreshTokenEntity } from './entities/refresh-token.entity';
 import { LoginDto } from './dto/login.dto';
@@ -205,7 +205,7 @@ export class AuthService {
     expiresAt.setDate(expiresAt.getDate() + 7);
 
     const tokenEntity = this.refreshTokenRepo.create({
-      sysRefreshTokenId: uuidv4(),
+      sysRefreshTokenId: randomUUID(),
       sysUserId: user.sysUserId,
       sysRefreshTokenHash: refreshToken.slice(-32), // Luu 32 ky tu cuoi de doi chieu
       sysRefreshTokenExpires: expiresAt,

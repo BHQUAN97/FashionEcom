@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { ReviewEntity } from './entities/review.entity';
 import { BaseService } from '@/common/services/base.service';
 import { StateMachine } from '@/common/patterns/state-machine';
@@ -56,7 +56,7 @@ export class ReviewsService extends BaseService<ReviewEntity> {
     }
 
     const review = this.reviewRepo.create({
-      salReviewId: uuidv4(),
+      salReviewId: randomUUID(),
       catProductId: params.productId,
       salOrderItemId: params.orderItemId,
       sysCustomerId: params.customerId,

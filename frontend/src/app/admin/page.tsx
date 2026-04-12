@@ -135,7 +135,7 @@ export default function AdminDashboard() {
         </div>
 
         <div className="bg-white rounded-lg border p-6">
-          <h3 className="text-sm font-medium mb-4">Phuong thuc thanh toan</h3>
+          <h3 className="text-sm font-medium mb-4">Phương thức thanh toán</h3>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie

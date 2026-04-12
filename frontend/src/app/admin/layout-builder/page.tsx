@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { useLayoutStore } from '@/features/layout-builder/stores/layout-store';
@@ -13,30 +13,40 @@ import { SectionEditorPanel } from '@/features/layout-builder/components/section
 import { PreviewWrapper } from '@/features/layout-builder/components/preview-wrapper';
 import { Toolbar } from '@/features/layout-builder/components/toolbar';
 
+/** Tabs trang — giong Shopee */
+const PAGE_TABS = [
+  { key: 'homepage', label: 'Trang chủ' },
+  { key: 'category', label: 'Trang danh mục' },
+  { key: 'featured', label: 'Top Sản phẩm nổi bật' },
+] as const;
+
 /**
- * Admin Layout Builder — Homepage Section Builder
- * DnD 16 section types, live preview, breakpoint toggle
+ * Admin Layout Builder — Thiet lap trang chu (Shopee style)
+ * 3-column: Palette | Canvas + Preview | Editor Panel
  */
 export default function LayoutBuilderPage() {
+  const [activePage, setActivePage] = useState<string>('homepage');
   const sections = useLayoutStore(s => s.sections);
   const addSection = useLayoutStore(s => s.addSection);
   const reorderSections = useLayoutStore(s => s.reorderSections);
   const activeId = useLayoutStore(s => s.activeId);
-  const { loadSections } = useLayoutPublish();
+  const loading = useLayoutStore(s => s.loading);
+  const { loadSections } = useLayoutPublish(activePage);
 
-  // Register keyboard shortcuts
+  // Keyboard shortcuts: Ctrl+Z / Ctrl+Shift+Z
   useLayoutHistory();
 
+  // Load sections khi doi tab page
   useEffect(() => {
     loadSections();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activePage]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    // Case 1: Drag tu Palette vao Canvas → them section moi
+    // Drag tu Palette vao Canvas → them section moi
     if (active.data.current?.type === 'palette') {
       const sectionType = active.data.current.sectionType as string;
       const definition = getSectionDefinition(sectionType);
@@ -58,7 +68,7 @@ export default function LayoutBuilderPage() {
       return;
     }
 
-    // Case 2: Reorder trong Canvas
+    // Reorder trong Canvas
     if (active.id !== over.id) {
       const oldIndex = sections.findIndex(s => s.id === active.id);
       const newIndex = sections.findIndex(s => s.id === over.id);
@@ -70,32 +80,61 @@ export default function LayoutBuilderPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Layout Builder</h1>
+    <div className="space-y-0">
+      {/* Header voi breadcrumb */}
+      <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <span>Trang chủ</span>
+        <span>›</span>
+        <span className="text-gray-800 font-medium">Thiet lap giao dien</span>
       </div>
 
+      {/* Page Tabs — Shopee style */}
+      <div className="flex items-center gap-6 border-b mb-4">
+        {PAGE_TABS.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActivePage(tab.key)}
+            className={`pb-2.5 text-sm font-medium border-b-2 transition ${
+              activePage === tab.key
+                ? 'border-orange-500 text-orange-500'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Toolbar */}
       <Toolbar />
 
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <div className="flex gap-4">
-          {/* Palette — sidebar trai */}
-          <div className="w-56 shrink-0">
-            <div className="sticky top-20 bg-white border rounded-lg p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-              <SectionPalette />
+      {/* Loading */}
+      {loading && (
+        <div className="text-center py-8 text-gray-400 text-sm">Dang tai...</div>
+      )}
+
+      {/* Main builder area */}
+      {!loading && (
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <div className="flex gap-0 mt-4">
+            {/* Palette — sidebar trai */}
+            <div className="w-52 shrink-0">
+              <div className="sticky top-20 bg-white border rounded-l-lg p-3 max-h-[calc(100vh-220px)] overflow-y-auto">
+                <SectionPalette />
+              </div>
+            </div>
+
+            {/* Canvas — khu vuc preview chinh */}
+            <div className="flex-1 min-w-0 border-t border-b">
+              <PreviewWrapper>
+                <SectionCanvas />
+              </PreviewWrapper>
             </div>
           </div>
+        </DndContext>
+      )}
 
-          {/* Canvas — khu vuc chinh */}
-          <div className="flex-1 min-w-0">
-            <PreviewWrapper>
-              <SectionCanvas />
-            </PreviewWrapper>
-          </div>
-        </div>
-      </DndContext>
-
-      {/* Editor Panel — slide-in khi chon section */}
+      {/* Editor Panel — slide-in tu ben phai */}
       {activeId && <SectionEditorPanel />}
     </div>
   );

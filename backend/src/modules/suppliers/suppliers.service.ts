@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { SupplierEntity } from './entities/supplier.entity';
 import { PurchaseOrderEntity } from './entities/purchase-order.entity';
 import { PurchaseOrderItemEntity } from './entities/purchase-order-item.entity';
@@ -74,7 +74,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
 
   async createSupplier(dto: CreateSupplierDto) {
     const supplier = this.supplierRepo.create({
-      invSupplierId: uuidv4(),
+      invSupplierId: randomUUID(),
       invSupplierCode: dto.code,
       invSupplierName: dto.name,
       invSupplierTaxCode: dto.taxCode || null,
@@ -111,7 +111,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
     const total = dto.items.reduce((sum, i) => sum + i.qty * i.unitCost, 0);
 
     const po = this.poRepo.create({
-      invPurchaseOrderId: uuidv4(),
+      invPurchaseOrderId: randomUUID(),
       invPurchaseOrderCode: code,
       invSupplierId: dto.supplierId,
       invWarehouseId: dto.warehouseId,
@@ -126,7 +126,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
     // Tao items
     for (const item of dto.items) {
       const poItem = this.poItemRepo.create({
-        invPurchaseOrderItemId: uuidv4(),
+        invPurchaseOrderItemId: randomUUID(),
         invPurchaseOrderId: po.invPurchaseOrderId,
         catProductVariantId: item.variantId,
         invPurchaseOrderItemQty: item.qty,
@@ -185,7 +185,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
     const receiptCode = await generateEntityCode('GRN', this.receiptRepo);
 
     const receipt = this.receiptRepo.create({
-      invGoodsReceiptId: uuidv4(),
+      invGoodsReceiptId: randomUUID(),
       invPurchaseOrderId: poId,
       invWarehouseId: dto.warehouseId,
       invGoodsReceiptCode: receiptCode,
@@ -197,7 +197,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
     for (const item of dto.items) {
       // Tao receipt item
       const receiptItem = this.receiptItemRepo.create({
-        invGoodsReceiptItemId: uuidv4(),
+        invGoodsReceiptItemId: randomUUID(),
         invGoodsReceiptId: receipt.invGoodsReceiptId,
         catProductVariantId: item.variantId,
         invGoodsReceiptItemQty: item.receivedQty,
@@ -219,7 +219,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
       });
       if (!level) {
         level = this.invLevelRepo.create({
-          invInventoryLevelId: uuidv4(),
+          invInventoryLevelId: randomUUID(),
           catProductVariantId: item.variantId,
           invWarehouseId: dto.warehouseId,
           invInventoryLevelAvailable: 0,
@@ -231,7 +231,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
 
       // Ghi inventory log
       const log = this.invLogRepo.create({
-        invInventoryLogId: uuidv4(),
+        invInventoryLogId: randomUUID(),
         catProductVariantId: item.variantId,
         invWarehouseId: dto.warehouseId,
         invInventoryLogQty: item.receivedQty,

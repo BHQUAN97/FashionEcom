@@ -7,12 +7,13 @@ import { Eye, EyeOff } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
 import { useAuthStore } from '@/lib/stores/auth.store';
 
-/** Register form — name + phone + email + password + confirm */
+/** Register form — Torano style: clean card, red CTA */
 export function RegisterForm() {
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
-  const [form, setForm] = useState({ name: '', phone: '', email: '', password: '', confirm: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [showPw, setShowPw] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -23,11 +24,11 @@ export function RegisterForm() {
     setError('');
 
     if (form.password !== form.confirm) {
-      setError('Mat khau xac nhan khong khop');
+      setError('Mật khẩu xác nhận không khớp');
       return;
     }
     if (form.password.length < 6) {
-      setError('Mat khau phai co it nhat 6 ky tu');
+      setError('Mật khẩu phải có ít nhất 6 ký tự');
       return;
     }
 
@@ -43,60 +44,114 @@ export function RegisterForm() {
     }, 800);
   };
 
-  const inputClass =
-    'w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black';
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold text-center">Dang ky tai khoan</h2>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Tieu de chinh */}
+      <h2 className="text-lg font-bold text-center tracking-wide uppercase">
+        Đăng ký tài khoản
+      </h2>
 
-      {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+      {/* Subtitle */}
+      <p className="text-sm text-gray-500 text-center -mt-2">
+        Nhập thông tin để tạo tài khoản mới:
+      </p>
 
+      {error && (
+        <p className="text-sm text-red-600 text-center bg-red-50 py-2 rounded">
+          {error}
+        </p>
+      )}
+
+      {/* Ho ten */}
       <div>
-        <label className="text-xs text-gray-500 mb-1 block">Ho ten *</label>
-        <input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Nguyen Van A" className={inputClass} required />
+        <input
+          type="text"
+          value={form.name}
+          onChange={(e) => update('name', e.target.value)}
+          placeholder="Họ tên"
+          className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition"
+          required
+        />
       </div>
 
+      {/* Email */}
       <div>
-        <label className="text-xs text-gray-500 mb-1 block">So dien thoai *</label>
-        <input type="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="0901234567" className={inputClass} required />
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => update('email', e.target.value)}
+          placeholder="Email"
+          className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition"
+          required
+        />
       </div>
 
-      <div>
-        <label className="text-xs text-gray-500 mb-1 block">Email *</label>
-        <input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="email@example.com" className={inputClass} required />
+      {/* Mat khau */}
+      <div className="relative">
+        <input
+          type={showPw ? 'text' : 'password'}
+          value={form.password}
+          onChange={(e) => update('password', e.target.value)}
+          placeholder="Mật khẩu"
+          className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition pr-11"
+          required
+        />
+        <button
+          type="button"
+          onClick={() => setShowPw(!showPw)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+        >
+          {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </button>
       </div>
 
-      <div>
-        <label className="text-xs text-gray-500 mb-1 block">Mat khau *</label>
-        <div className="relative">
-          <input type={showPw ? 'text' : 'password'} value={form.password} onChange={(e) => update('password', e.target.value)} placeholder="It nhat 6 ky tu" className={inputClass} required />
-          <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2">
-            {showPw ? <EyeOff className="w-4 h-4 text-gray-400" /> : <Eye className="w-4 h-4 text-gray-400" />}
-          </button>
-        </div>
+      {/* Xac nhan mat khau */}
+      <div className="relative">
+        <input
+          type={showConfirm ? 'text' : 'password'}
+          value={form.confirm}
+          onChange={(e) => update('confirm', e.target.value)}
+          placeholder="Xác nhận mật khẩu"
+          className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition pr-11"
+          required
+        />
+        <button
+          type="button"
+          onClick={() => setShowConfirm(!showConfirm)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+        >
+          {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </button>
       </div>
 
-      <div>
-        <label className="text-xs text-gray-500 mb-1 block">Xac nhan mat khau *</label>
-        <input type="password" value={form.confirm} onChange={(e) => update('confirm', e.target.value)} placeholder="Nhap lai mat khau" className={inputClass} required />
-      </div>
+      {/* reCAPTCHA notice */}
+      <p className="text-xs text-gray-400 text-center">
+        Trang web này được bảo vệ bởi reCAPTCHA.{' '}
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">
+          Chính sách bảo mật
+        </a>{' '}
+        và{' '}
+        <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">
+          Điều khoản dịch vụ
+        </a>{' '}
+        của Google.
+      </p>
 
-      <label className="flex items-start gap-2 cursor-pointer">
-        <input type="checkbox" className="rounded border-gray-300 mt-0.5" required />
-        <span className="text-xs text-gray-600">
-          Toi dong y voi <a href="/chinh-sach/bao-mat" className="text-red-600 hover:underline">Chinh sach bao mat</a> va{' '}
-          <a href="/chinh-sach/dieu-khoan" className="text-red-600 hover:underline">Dieu khoan su dung</a>
-        </span>
-      </label>
-
-      <button type="submit" disabled={loading} className="w-full py-2.5 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition disabled:opacity-50">
-        {loading ? 'Dang xu ly...' : 'DANG KY'}
+      {/* Nut dang ky — do Torano */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full py-3 bg-red-600 text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition disabled:opacity-50"
+      >
+        {loading ? 'Đang xử lý...' : 'ĐĂNG KÝ'}
       </button>
 
+      {/* Link dang nhap */}
       <p className="text-sm text-center text-gray-500">
-        Da co tai khoan?{' '}
-        <Link href={ROUTES.LOGIN} className="text-black font-medium hover:underline">Dang nhap</Link>
+        Đã có tài khoản?{' '}
+        <Link href={ROUTES.LOGIN} className="text-red-600 hover:underline font-medium">
+          Đăng nhập
+        </Link>
       </p>
     </form>
   );

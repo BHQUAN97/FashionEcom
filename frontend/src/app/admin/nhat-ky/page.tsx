@@ -53,7 +53,7 @@ export default function AuditLogPage() {
           className="border rounded-lg px-3 py-2 text-sm"
         >
           <option value="">Tat ca doi tuong</option>
-          <option value="cat_product">San pham</option>
+          <option value="cat_product">Sản phẩm</option>
           <option value="sal_order">Don hang</option>
           <option value="sys_user">Nguoi dung</option>
           <option value="prm_discount">Khuyen mai</option>

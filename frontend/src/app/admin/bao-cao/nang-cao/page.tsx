@@ -96,7 +96,7 @@ export default function AdvancedAnalyticsPage() {
   const tabs: { key: AdvancedTab; label: string }[] = [
     { key: 'funnel', label: 'Funnel Checkout' },
     { key: 'views', label: 'Luot xem SP' },
-    { key: 'search', label: 'Tim kiem' },
+    { key: 'search', label: 'Tìm kiếm' },
   ];
 
   return (
@@ -180,8 +180,8 @@ export default function AdvancedAnalyticsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-gray-50">
-                      <th className="text-left px-4 py-3 font-medium">San pham</th>
-                      <th className="text-left px-4 py-3 font-medium">Danh muc</th>
+                      <th className="text-left px-4 py-3 font-medium">Sản phẩm</th>
+                      <th className="text-left px-4 py-3 font-medium">Danh mục</th>
                       <th className="text-right px-4 py-3 font-medium">Luot xem</th>
                       <th className="text-right px-4 py-3 font-medium">Nguoi xem</th>
                     </tr>

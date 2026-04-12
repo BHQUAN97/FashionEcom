@@ -18,21 +18,21 @@ export function CartSummary({ subtotal, discount = 0, shippingFee }: CartSummary
   return (
     <div className="space-y-2 text-sm">
       <div className="flex justify-between">
-        <span className="text-gray-500">Tam tinh</span>
+        <span className="text-gray-500">Tạm tính</span>
         <span>{formatVND(subtotal)}</span>
       </div>
       {discount > 0 && (
         <div className="flex justify-between text-green-600">
-          <span>Giam gia</span>
+          <span>Giảm giá</span>
           <span>-{formatVND(discount)}</span>
         </div>
       )}
       <div className="flex justify-between">
-        <span className="text-gray-500">Phi van chuyen</span>
-        <span>{actualShipping === 0 ? <span className="text-green-600">Mien phi</span> : formatVND(actualShipping)}</span>
+        <span className="text-gray-500">Phí vận chuyển</span>
+        <span>{actualShipping === 0 ? <span className="text-green-600">Miễn phí</span> : formatVND(actualShipping)}</span>
       </div>
       <div className="flex justify-between font-bold text-base pt-2 border-t">
-        <span>Tong cong</span>
+        <span>Tổng cộng</span>
         <span className="text-red-600">{formatVND(total)}</span>
       </div>
     </div>

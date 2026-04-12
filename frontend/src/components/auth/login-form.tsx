@@ -7,7 +7,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
 import { useAuthStore } from '@/lib/stores/auth.store';
 
-/** Login form — email/phone + password, remember me, forgot link */
+/** Login form — Torano style: clean card, red CTA, centered links */
 export function LoginForm() {
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -33,72 +33,92 @@ export function LoginForm() {
     }, 800);
   };
 
-  const inputClass =
-    'w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black';
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold text-center">Dang nhap</h2>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Tieu de chinh */}
+      <h2 className="text-lg font-bold text-center tracking-wide uppercase">
+        Đăng nhập tài khoản
+      </h2>
 
-      {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+      {/* Subtitle */}
+      <p className="text-sm text-gray-500 text-center -mt-2">
+        Nhập email và mật khẩu của bạn:
+      </p>
 
+      {error && (
+        <p className="text-sm text-red-600 text-center bg-red-50 py-2 rounded">
+          {error}
+        </p>
+      )}
+
+      {/* Email */}
       <div>
-        <label className="text-xs text-gray-500 mb-1 block">Email hoac So dien thoai</label>
         <input
-          type="text"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="email@example.com"
-          className={inputClass}
+          placeholder="Email"
+          className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition"
           required
         />
       </div>
 
-      <div>
-        <label className="text-xs text-gray-500 mb-1 block">Mat khau</label>
-        <div className="relative">
-          <input
-            type={showPw ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Nhap mat khau"
-            className={inputClass}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPw(!showPw)}
-            className="absolute right-3 top-1/2 -translate-y-1/2"
-          >
-            {showPw ? <EyeOff className="w-4 h-4 text-gray-400" /> : <Eye className="w-4 h-4 text-gray-400" />}
-          </button>
-        </div>
+      {/* Mat khau */}
+      <div className="relative">
+        <input
+          type={showPw ? 'text' : 'password'}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Mật khẩu"
+          className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition pr-11"
+          required
+        />
+        <button
+          type="button"
+          onClick={() => setShowPw(!showPw)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+        >
+          {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </button>
       </div>
 
-      <div className="flex items-center justify-between text-sm">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" className="rounded border-gray-300" />
-          <span className="text-gray-600">Nho dang nhap</span>
-        </label>
-        <Link href={ROUTES.FORGOT_PASSWORD} className="text-red-600 hover:underline">
-          Quen mat khau?
-        </Link>
-      </div>
+      {/* reCAPTCHA notice */}
+      <p className="text-xs text-gray-400 text-center">
+        Trang web này được bảo vệ bởi reCAPTCHA.{' '}
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">
+          Chính sách bảo mật
+        </a>{' '}
+        và{' '}
+        <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">
+          Điều khoản dịch vụ
+        </a>{' '}
+        của Google.
+      </p>
 
+      {/* Nut dang nhap — do Torano */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-2.5 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
+        className="w-full py-3 bg-red-600 text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition disabled:opacity-50"
       >
-        {loading ? 'Dang xu ly...' : 'DANG NHAP'}
+        {loading ? 'Đang xử lý...' : 'ĐĂNG NHẬP'}
       </button>
 
-      <p className="text-sm text-center text-gray-500">
-        Chua co tai khoan?{' '}
-        <Link href={ROUTES.REGISTER} className="text-black font-medium hover:underline">
-          Dang ky ngay
-        </Link>
-      </p>
+      {/* Links ben duoi */}
+      <div className="space-y-2 text-sm text-center">
+        <p className="text-gray-500">
+          Khách hàng mới?{' '}
+          <Link href={ROUTES.REGISTER} className="text-red-600 hover:underline font-medium">
+            Tạo tài khoản
+          </Link>
+        </p>
+        <p className="text-gray-500">
+          Quên mật khẩu?{' '}
+          <Link href={ROUTES.FORGOT_PASSWORD} className="text-red-600 hover:underline font-medium">
+            Khôi phục mật khẩu
+          </Link>
+        </p>
+      </div>
     </form>
   );
 }

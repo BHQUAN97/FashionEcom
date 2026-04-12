@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { CategoryEntity } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -79,7 +79,7 @@ export class CategoriesService {
     if (exists) throw new ConflictException('Ma danh muc da ton tai');
 
     const category = this.categoryRepo.create({
-      catCategoryId: uuidv4(),
+      catCategoryId: randomUUID(),
       catCategoryCode: dto.code,
       catCategoryName: dto.name,
       catCategorySlug: dto.slug || createSlug(dto.name),

@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { WarehouseTransferEntity } from './entities/warehouse-transfer.entity';
 import { WarehouseTransferItemEntity } from './entities/warehouse-transfer-item.entity';
 import { InventoryLevelEntity } from './entities/inventory-level.entity';
@@ -61,7 +61,7 @@ export class WarehouseTransferService extends BaseService<WarehouseTransferEntit
     const code = await generateEntityCode('WTR', this.transferRepo);
 
     const transfer = this.transferRepo.create({
-      invWarehouseTransferId: uuidv4(),
+      invWarehouseTransferId: randomUUID(),
       invWarehouseTransferCode: code,
       invWarehouseFromId: dto.fromWarehouseId,
       invWarehouseToId: dto.toWarehouseId,
@@ -73,7 +73,7 @@ export class WarehouseTransferService extends BaseService<WarehouseTransferEntit
 
     for (const item of dto.items) {
       const transferItem = this.itemRepo.create({
-        invWarehouseTransferItemId: uuidv4(),
+        invWarehouseTransferItemId: randomUUID(),
         invWarehouseTransferId: transfer.invWarehouseTransferId,
         catProductVariantId: item.variantId,
         invWarehouseTransferItemQty: item.qty,
@@ -113,7 +113,7 @@ export class WarehouseTransferService extends BaseService<WarehouseTransferEntit
 
         // Log
         await this.logRepo.save(this.logRepo.create({
-          invInventoryLogId: uuidv4(),
+          invInventoryLogId: randomUUID(),
           catProductVariantId: item.catProductVariantId,
           invWarehouseId: transfer.invWarehouseFromId,
           invInventoryLogQty: -Number(item.invWarehouseTransferItemQty),
@@ -134,7 +134,7 @@ export class WarehouseTransferService extends BaseService<WarehouseTransferEntit
         });
         if (!level) {
           level = this.levelRepo.create({
-            invInventoryLevelId: uuidv4(),
+            invInventoryLevelId: randomUUID(),
             catProductVariantId: item.catProductVariantId,
             invWarehouseId: transfer.invWarehouseToId,
             invInventoryLevelAvailable: 0,
@@ -145,7 +145,7 @@ export class WarehouseTransferService extends BaseService<WarehouseTransferEntit
         await this.levelRepo.save(level);
 
         await this.logRepo.save(this.logRepo.create({
-          invInventoryLogId: uuidv4(),
+          invInventoryLogId: randomUUID(),
           catProductVariantId: item.catProductVariantId,
           invWarehouseId: transfer.invWarehouseToId,
           invInventoryLogQty: qty,

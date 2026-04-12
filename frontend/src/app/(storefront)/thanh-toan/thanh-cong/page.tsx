@@ -15,17 +15,17 @@ export default function CheckoutSuccessPage() {
   return (
     <div className="max-w-md mx-auto px-4 py-12 text-center">
       <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-      <h1 className="text-2xl font-bold mt-4">Dat hang thanh cong!</h1>
-      <p className="text-gray-500 mt-2">Cam on ban da mua hang tai Fashion Ecom</p>
+      <h1 className="text-2xl font-bold mt-4">Đặt hàng thành công!</h1>
+      <p className="text-gray-500 mt-2">Cảm ơn bạn đã mua hàng tại Fashion Ecom</p>
 
       <div className="bg-gray-50 rounded-lg p-4 mt-6">
-        <p className="text-sm text-gray-500">Ma don hang</p>
+        <p className="text-sm text-gray-500">Mã đơn hàng</p>
         <p className="text-lg font-bold mt-1">{orderCode}</p>
       </div>
 
       <p className="text-sm text-gray-500 mt-4">
-        Chung toi se gui email xac nhan don hang den dia chi email cua ban.
-        Ban co the theo doi don hang trong phan Tai khoan.
+        Chúng tôi sẽ gửi email xác nhận đơn hàng đến địa chỉ email của bạn.
+        Bạn có thể theo dõi đơn hàng trong phần Tài khoản.
       </p>
 
       <div className="flex flex-col gap-3 mt-6">
@@ -33,13 +33,13 @@ export default function CheckoutSuccessPage() {
           href={ROUTES.ORDERS}
           className="block py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition"
         >
-          THEO DOI DON HANG
+          THEO DÕI ĐƠN HÀNG
         </Link>
         <Link
           href={ROUTES.PRODUCTS}
           className="block py-3 border border-gray-300 font-semibold rounded-lg hover:bg-gray-50 transition"
         >
-          TIEP TUC MUA SAM
+          TIẾP TỤC MUA SẮM
         </Link>
       </div>
     </div>

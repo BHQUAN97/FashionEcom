@@ -11,8 +11,8 @@ interface PaymentConfig {
 }
 
 const GATEWAYS: PaymentConfig[] = [
-  { method: 'cod', label: 'Thanh toan khi nhan hang (COD)', enabled: true, feePercent: 0 },
-  { method: 'bank_transfer', label: 'Chuyen khoan ngan hang', enabled: true, feePercent: 0 },
+  { method: 'cod', label: 'Thanh toán khi nhận hàng (COD)', enabled: true, feePercent: 0 },
+  { method: 'bank_transfer', label: 'Chuyển khoản ngân hàng', enabled: true, feePercent: 0 },
   { method: 'momo', label: 'MoMo', enabled: false, feePercent: 1.5 },
   { method: 'vnpay', label: 'VNPAY', enabled: false, feePercent: 1.1 },
   { method: 'payoo', label: 'Payoo', enabled: false, feePercent: 2.0 },
@@ -45,7 +45,7 @@ export default function PaymentSettingsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Cai dat Thanh toan</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Cài đặt Thanh toán</h1>
         <button
           onClick={handleSave}
           disabled={loading}

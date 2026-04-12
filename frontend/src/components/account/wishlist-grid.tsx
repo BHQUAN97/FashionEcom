@@ -17,9 +17,9 @@ export function WishlistGrid() {
     return (
       <div className="text-center py-12">
         <p className="text-4xl mb-3">💜</p>
-        <p className="text-gray-500">Chua co san pham yeu thich nao</p>
+        <p className="text-gray-500">Chưa có sản phẩm yêu thích nào</p>
         <Link href={ROUTES.PRODUCTS} className="text-sm text-red-600 hover:underline mt-2 inline-block">
-          Kham pha san pham
+          Khám phá sản phẩm
         </Link>
       </div>
     );
@@ -27,7 +27,7 @@ export function WishlistGrid() {
 
   return (
     <div>
-      <h2 className="text-lg font-bold mb-4">San pham yeu thich ({products.length})</h2>
+      <h2 className="text-lg font-bold mb-4">Sản phẩm yêu thích ({products.length})</h2>
       <ProductGrid products={products} columns={4} />
     </div>
   );

@@ -19,11 +19,11 @@ interface ReturnRequest {
   createdDate: string;
 }
 
-const TYPE_LABELS: Record<number, string> = { 0: 'Doi hang', 1: 'Hoan tien', 2: 'Doi size' };
-const REASON_LABELS: Record<number, string> = { 0: 'Loi hang', 1: 'Sai SP', 2: 'Khong vua', 3: 'Doi y', 4: 'Khac' };
+const TYPE_LABELS: Record<number, string> = { 0: 'Đổi hàng', 1: 'Hoàn tiền', 2: 'Đổi size' };
+const REASON_LABELS: Record<number, string> = { 0: 'Lỗi hàng', 1: 'Sai SP', 2: 'Không vừa', 3: 'Đổi ý', 4: 'Khác' };
 const STATUS_LABELS: Record<number, string> = {
-  0: 'Yeu cau', 1: 'Dang xem xet', 2: 'Da duyet', 3: 'Tu choi',
-  4: 'Dang hoan tien', 5: 'Da hoan tien', 6: 'Dang doi hang', 7: 'Da doi hang',
+  0: 'Yêu cầu', 1: 'Đang xem xét', 2: 'Đã duyệt', 3: 'Từ chối',
+  4: 'Đang hoàn tiền', 5: 'Đã hoàn tiền', 6: 'Đang đổi hàng', 7: 'Đã đổi hàng',
 };
 const STATUS_BADGE_COLORS: Record<number, string> = {
   0: 'bg-yellow-100 text-yellow-700', 1: 'bg-blue-100 text-blue-700',
@@ -62,7 +62,7 @@ export default function ReturnsManagementPage() {
 
   return (
     <AdminTableLayout
-      title="Quan ly Doi tra (RMA)"
+      title="Quản lý Đổi trả (RMA)"
       filters={
         <select
           value={statusFilter}
@@ -119,7 +119,7 @@ export default function ReturnsManagementPage() {
               </tr>
             ))}
             {returns.length === 0 && (
-              <EmptyTableRow colSpan={7} message="Khong co yeu cau doi tra nao" />
+              <EmptyTableRow colSpan={7} message="Không có yêu cầu đổi trả nào" />
             )}
           </tbody>
         </table>

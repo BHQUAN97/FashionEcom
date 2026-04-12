@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { ReturnRequestEntity } from './entities/return-request.entity';
 import { ReturnRequestItemEntity } from './entities/return-request-item.entity';
 import { ReturnRequestMediaEntity } from './entities/return-request-media.entity';
@@ -78,7 +78,7 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
     const code = await generateEntityCode('RMA', this.returnRepo);
 
     const returnRequest = this.returnRepo.create({
-      salReturnRequestId: uuidv4(),
+      salReturnRequestId: randomUUID(),
       salReturnRequestCode: code,
       salOrderId: dto.orderId,
       sysCustomerId: customerId,
@@ -93,7 +93,7 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
     // Tao items
     for (const item of dto.items) {
       const returnItem = this.itemRepo.create({
-        salReturnRequestItemId: uuidv4(),
+        salReturnRequestItemId: randomUUID(),
         salReturnRequestId: returnRequest.salReturnRequestId,
         salOrderItemId: item.orderItemId,
         catProductVariantId: item.orderItemId, // Se duoc map chinh xac tu order_item

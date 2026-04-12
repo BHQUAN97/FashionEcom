@@ -23,13 +23,13 @@ export default function CartPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 text-center">
         <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto" />
-        <h2 className="text-xl font-bold mt-4">Gio hang trong</h2>
-        <p className="text-gray-500 mt-2">Ban chua co san pham nao trong gio hang</p>
+        <h2 className="text-xl font-bold mt-4">Giỏ hàng trống</h2>
+        <p className="text-gray-500 mt-2">Bạn chưa có sản phẩm nào trong giỏ hàng</p>
         <Link
           href={ROUTES.PRODUCTS}
-          className="inline-block mt-4 px-6 py-2.5 bg-black text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition"
+          className="inline-block mt-4 px-6 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition"
         >
-          TIEP TUC MUA SAM
+          TIẾP TỤC MUA SẮM
         </Link>
       </div>
     );
@@ -38,7 +38,7 @@ export default function CartPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
       <h1 className="text-lg md:text-2xl font-bold mb-4">
-        Gio hang <span className="text-gray-400 font-normal">({items.length})</span>
+        Giỏ hàng <span className="text-gray-400 font-normal">({items.length})</span>
       </h1>
 
       <div className="md:flex md:gap-8">
@@ -61,19 +61,19 @@ export default function CartPage() {
         {/* Summary — desktop: sticky sidebar */}
         <div className="md:w-80 flex-shrink-0 mt-6 md:mt-0">
           <div className="md:sticky md:top-20 bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-sm mb-3">Tong don hang</h3>
+            <h3 className="font-semibold text-sm mb-3">Tổng đơn hàng</h3>
             <CartSummary subtotal={subtotal} />
             <Link
               href={ROUTES.CHECKOUT}
               className="block text-center w-full mt-4 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition"
             >
-              TIEN HANH THANH TOAN
+              TIẾN HÀNH THANH TOÁN
             </Link>
             <Link
               href={ROUTES.PRODUCTS}
               className="block text-center text-sm text-gray-500 hover:underline mt-3"
             >
-              Tiep tuc mua sam
+              Tiếp tục mua sắm
             </Link>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function CartPage() {
           href={ROUTES.CHECKOUT}
           className="block text-center w-full py-3 bg-red-600 text-white font-semibold rounded-lg"
         >
-          THANH TOAN ({items.length} SP)
+          THANH TOÁN ({items.length} SP)
         </Link>
       </div>
     </div>

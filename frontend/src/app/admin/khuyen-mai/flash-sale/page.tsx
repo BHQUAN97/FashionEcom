@@ -179,7 +179,7 @@ export default function FlashSalePage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-sm">San pham ({form.items.length})</h3>
+                <h3 className="font-medium text-sm">Sản phẩm ({form.items.length})</h3>
                 <button onClick={addItem} className="text-xs px-2 py-1 border rounded">+ Them SP</button>
               </div>
               {form.items.map((item, i) => (

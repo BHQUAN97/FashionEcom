@@ -1,48 +1,203 @@
 import { z } from 'zod';
-import { type SectionDefinition } from '../../registry/types';
+import { type SectionDefinition, type SectionEditorProps, type SectionRendererProps } from '../../registry/types';
 import { createSimpleEditor } from '../_shared/simple-editor';
 
 const configSchema = z.object({
   title: z.string().default('Flash Sale'),
+  // Che do hien thi
+  display_mode: z.enum(['banner', 'compact', 'minimal']).default('banner'),
+  // Flash sale data
   flash_sale_id: z.string().nullable().default(null),
-  max_products: z.number().default(8),
+  max_products: z.number().min(4).max(16).default(8),
+  // Style
   bg_color: z.string().default('#D0021B'),
   text_color: z.string().default('#FFFFFF'),
+  timer_style: z.enum(['box', 'colon', 'circle']).default('box'),
+  // Hien thi
+  show_progress_bar: z.boolean().default(true),
+  show_original_price: z.boolean().default(true),
+  show_sold_count: z.boolean().default(true),
 });
 
 const Editor = createSimpleEditor([
   { key: 'title', label: 'Tieu de', type: 'text' },
-  { key: 'flash_sale_id', label: 'Flash Sale ID', type: 'text', placeholder: 'UUID cua flash sale' },
-  { key: 'max_products', label: 'So SP toi da', type: 'number' },
+  { key: 'display_mode', label: 'Che do hien thi', type: 'radio_cards', options: [
+    { value: 'banner', label: 'Banner', icon: '🔥', description: 'Day du voi nen' },
+    { value: 'compact', label: 'Nho gon', icon: '⚡', description: 'Header nho' },
+    { value: 'minimal', label: 'Toi gian', icon: '▫', description: 'Chi countdown' },
+  ]},
+  { key: 'timer_style', label: 'Kieu dong ho', type: 'radio_cards', options: [
+    { value: 'box', label: 'Hop', icon: '▣' },
+    { value: 'colon', label: 'Dau hai cham', icon: ':' },
+    { value: 'circle', label: 'Tron', icon: '◯' },
+  ]},
+  { key: 'section_data', label: 'Du lieu', type: 'section_header' },
+  { key: 'flash_sale_id', label: 'Flash Sale ID', type: 'text', placeholder: 'UUID cua flash sale (tu dong lay)' },
+  { key: 'max_products', label: 'So SP toi da', type: 'range', min: 4, max: 16, step: 2 },
+  { key: 'section_style', label: 'Mau sac', type: 'section_header' },
   { key: 'bg_color', label: 'Mau nen', type: 'color' },
   { key: 'text_color', label: 'Mau chu', type: 'color' },
+  { key: 'section_display', label: 'Hien thi', type: 'section_header' },
+  { key: 'show_progress_bar', label: 'Thanh tien trinh ban hang', type: 'toggle' },
+  { key: 'show_original_price', label: 'Hien gia goc', type: 'toggle' },
+  { key: 'show_sold_count', label: 'Hien so da ban', type: 'toggle' },
 ]);
 
-function Renderer({ config }: { config: Record<string, unknown>; preview?: boolean }) {
+/** Timer display component */
+function TimerDisplay({ style, color }: { style: string; color: string }) {
+  const units = [
+    { label: 'Ngay', value: '02' },
+    { label: 'Gio', value: '14' },
+    { label: 'Phut', value: '37' },
+    { label: 'Giay', value: '52' },
+  ];
+
+  if (style === 'circle') {
+    return (
+      <div className="flex gap-2">
+        {units.map((u, i) => (
+          <div key={i} className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-bold" style={{ borderColor: color, color }}>
+              {u.value}
+            </div>
+            <span className="text-[9px] mt-0.5 opacity-70" style={{ color }}>{u.label}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (style === 'colon') {
+    return (
+      <div className="flex items-center gap-1 text-xl font-bold font-mono" style={{ color }}>
+        {units.map((u, i) => (
+          <span key={i}>
+            {i > 0 && <span className="mx-0.5">:</span>}
+            {u.value}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  // Box style (default)
   return (
-    <div className="py-8 px-4" style={{ backgroundColor: config.bg_color as string, color: config.text_color as string }}>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold">{config.title as string}</h2>
-        <div className="flex gap-2 text-sm font-mono">
-          {['00', '12', '34', '56'].map((v, i) => (
-            <span key={i} className="bg-black/30 px-2 py-1 rounded">{v}</span>
+    <div className="flex gap-1.5">
+      {units.map((u, i) => (
+        <div key={i} className="flex flex-col items-center">
+          <span className="bg-black/30 px-2 py-1 rounded text-sm font-bold font-mono min-w-[32px] text-center" style={{ color }}>
+            {u.value}
+          </span>
+          <span className="text-[9px] mt-0.5 opacity-70" style={{ color }}>{u.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Renderer({ config }: SectionRendererProps) {
+  const title = (config.title as string) || 'Flash Sale';
+  const mode = (config.display_mode as string) || 'banner';
+  const bgColor = (config.bg_color as string) || '#D0021B';
+  const textColor = (config.text_color as string) || '#FFFFFF';
+  const timerStyle = (config.timer_style as string) || 'box';
+  const showProgress = config.show_progress_bar !== false;
+  const showOriginal = config.show_original_price !== false;
+  const maxProducts = (config.max_products as number) || 8;
+
+  const displayCount = Math.min(5, maxProducts);
+
+  // Minimal mode — chi countdown
+  if (mode === 'minimal') {
+    return (
+      <div className="py-4 px-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">⚡</span>
+            <span className="font-bold text-sm">{title}</span>
+          </div>
+          <TimerDisplay style={timerStyle} color="#D0021B" />
+        </div>
+      </div>
+    );
+  }
+
+  // Compact mode — header nho
+  if (mode === 'compact') {
+    return (
+      <div className="py-6 px-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔥</span>
+            <span className="font-bold">{title}</span>
+          </div>
+          <TimerDisplay style={timerStyle} color="#D0021B" />
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {Array.from({ length: displayCount }).map((_, i) => (
+            <div key={i} className="shrink-0 w-36 border rounded-lg p-2">
+              <div className="aspect-square bg-gray-100 rounded mb-2 relative">
+                <div className="absolute top-1 left-1 bg-red-500 text-white text-[9px] px-1 py-0.5 rounded font-bold">-50%</div>
+              </div>
+              <div className="flex gap-1 items-baseline">
+                <span className="text-xs text-red-600 font-bold">199K</span>
+                {showOriginal && <span className="text-[10px] text-gray-400 line-through">399K</span>}
+              </div>
+              {showProgress && (
+                <div className="mt-1.5 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-orange-500 rounded-full" style={{ width: `${60 + i * 10}%` }} />
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="shrink-0 w-40 bg-white rounded-lg p-2">
-            <div className="aspect-square bg-gray-100 rounded mb-2" />
-            <div className="h-2 bg-gray-200 rounded w-3/4 mb-1" />
-            <div className="flex gap-1">
-              <span className="text-xs text-red-600 font-bold">199K</span>
-              <span className="text-xs text-gray-400 line-through">399K</span>
+    );
+  }
+
+  // Banner mode (default) — giong storefront FlashSaleCountdown
+  return (
+    <div className="py-8 px-4" style={{ backgroundColor: bgColor }}>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">🔥</span>
+          <h2 className="text-xl font-bold" style={{ color: textColor }}>{title}</h2>
+        </div>
+        <TimerDisplay style={timerStyle} color={textColor} />
+      </div>
+
+      {/* Product carousel */}
+      <div className="flex gap-3 overflow-x-auto pb-2">
+        {Array.from({ length: displayCount }).map((_, i) => (
+          <div key={i} className="shrink-0 w-40 bg-white rounded-lg p-2.5 shadow-sm">
+            <div className="aspect-square bg-gray-50 rounded-md mb-2 relative">
+              <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14" />
+                </svg>
+              </div>
+              <div className="absolute top-1 left-1 bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">-{30 + i * 10}%</div>
             </div>
-            <div className="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-red-500 rounded-full" style={{ width: '60%' }} />
+            <p className="text-xs text-gray-700 line-clamp-1 mb-1">Sản phẩm flash sale</p>
+            <div className="flex gap-1 items-baseline">
+              <span className="text-sm text-red-600 font-bold">{(99000 + i * 30000).toLocaleString('vi-VN')}d</span>
+              {showOriginal && <span className="text-[10px] text-gray-400 line-through">{(199000 + i * 30000).toLocaleString('vi-VN')}d</span>}
             </div>
+            {showProgress && (
+              <div className="mt-2 h-1.5 bg-red-100 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-orange-400 to-red-500 rounded-full" style={{ width: `${50 + i * 12}%` }} />
+              </div>
+            )}
           </div>
         ))}
+      </div>
+
+      {/* CTA */}
+      <div className="text-center mt-5">
+        <button className="px-6 py-2 bg-white text-red-600 text-xs font-bold rounded tracking-wide hover:bg-gray-100 transition">
+          XEM TAT CA FLASH SALE
+        </button>
       </div>
     </div>
   );
@@ -54,8 +209,19 @@ export const flashSaleCountdownDefinition: SectionDefinition = {
   icon: 'Zap',
   group: 'product',
   maxInstances: 1,
-  defaultConfig: { title: 'Flash Sale', flash_sale_id: null, max_products: 8, bg_color: '#D0021B', text_color: '#FFFFFF' },
+  defaultConfig: {
+    title: 'Flash Sale',
+    display_mode: 'banner',
+    flash_sale_id: null,
+    max_products: 8,
+    bg_color: '#D0021B',
+    text_color: '#FFFFFF',
+    timer_style: 'box',
+    show_progress_bar: true,
+    show_original_price: true,
+    show_sold_count: true,
+  },
   configSchema,
-  EditorComponent: Editor,
+  EditorComponent: Editor as React.FC<SectionEditorProps>,
   RendererComponent: Renderer,
 };

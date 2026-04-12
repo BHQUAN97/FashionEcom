@@ -32,11 +32,11 @@ export default function CollectionPage() {
   // Tao filter chips tu state
   const chips = [
     ...filters.categories.map((c) => ({
-      label: `Danh muc: ${c}`,
+      label: `Danh mục: ${c}`,
       onRemove: () => setFilters((f) => ({ ...f, categories: f.categories.filter((x) => x !== c) })),
     })),
     ...filters.colors.map((c) => ({
-      label: `Mau: ${c}`,
+      label: `Màu: ${c}`,
       onRemove: () => setFilters((f) => ({ ...f, colors: f.colors.filter((x) => x !== c) })),
     })),
     ...filters.sizes.map((s) => ({
@@ -44,7 +44,7 @@ export default function CollectionPage() {
       onRemove: () => setFilters((f) => ({ ...f, sizes: f.sizes.filter((x) => x !== s) })),
     })),
     ...(filters.priceRange
-      ? [{ label: 'Khoang gia', onRemove: () => setFilters((f) => ({ ...f, priceRange: null })) }]
+      ? [{ label: 'Khoảng giá', onRemove: () => setFilters((f) => ({ ...f, priceRange: null })) }]
       : []),
   ];
 
@@ -63,12 +63,12 @@ export default function CollectionPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
-      <Breadcrumb items={[{ label: 'Tat ca san pham' }]} />
+      <Breadcrumb items={[{ label: 'Tất cả sản phẩm' }]} />
 
       {/* Header */}
       <div className="flex items-center justify-between mt-4 mb-3">
         <h1 className="text-lg md:text-2xl font-bold">
-          Tat ca san pham <span className="text-gray-400 text-sm font-normal">({MOCK_PRODUCTS.length})</span>
+          Tất cả sản phẩm <span className="text-gray-400 text-sm font-normal">({MOCK_PRODUCTS.length})</span>
         </h1>
         <div className="flex items-center gap-2">
           <GridToggle columns={gridCols} onChange={setGridCols} />
@@ -83,7 +83,7 @@ export default function CollectionPage() {
           className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-gray-300 rounded-lg text-sm"
         >
           <SlidersHorizontal className="w-4 h-4" />
-          Bo loc
+          Bộ lọc
         </button>
         <SortSelect value={sort} onChange={setSort} className="flex-1" />
       </div>

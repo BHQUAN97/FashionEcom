@@ -15,7 +15,7 @@ export default function AccountPage() {
   if (bp === 'mobile') {
     return (
       <div>
-        <h2 className="text-lg font-bold mb-4">Tai khoan</h2>
+        <h2 className="text-lg font-bold mb-4">Tài khoản</h2>
         <AccountMenu />
       </div>
     );

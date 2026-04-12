@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { AccessLogEntity, PasswordHistoryEntity } from './entities/access-log.entity';
 import { BaseService } from '@/common/services/base.service';
@@ -57,7 +57,7 @@ export class SecurityService extends BaseService<AccessLogEntity> {
    */
   async savePasswordHistory(userId: string, passwordHash: string) {
     const entry = this.pwHistoryRepo.create({
-      sysPasswordHistoryId: uuidv4(),
+      sysPasswordHistoryId: randomUUID(),
       sysUserId: userId,
       sysPasswordHistoryHash: passwordHash,
     });
@@ -75,7 +75,7 @@ export class SecurityService extends BaseService<AccessLogEntity> {
     userAgent?: string;
   }) {
     const log = this.accessLogRepo.create({
-      logAccessId: uuidv4(),
+      logAccessId: randomUUID(),
       sysUserId: params.userId || null,
       logAccessEmail: params.email,
       logAccessSuccess: params.success ? 1 : 0,

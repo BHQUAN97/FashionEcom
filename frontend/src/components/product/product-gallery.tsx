@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
 import { cn } from '@/lib/utils';
 import type { ProductImage } from '@/types/product';
 
@@ -13,16 +14,17 @@ interface ProductGalleryProps {
 /** Product gallery — swipe carousel mobile, thumbnail strip desktop */
 export function ProductGallery({ images }: ProductGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: 4000, stopOnInteraction: true }),
+  ]);
 
-  const onSelect = useCallback(() => {
+  useEffect(() => {
     if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
-  if (emblaApi) {
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
     emblaApi.on('select', onSelect);
-  }
+    onSelect();
+    return () => { emblaApi.off('select', onSelect); };
+  }, [emblaApi]);
 
   const scrollTo = useCallback(
     (index: number) => {

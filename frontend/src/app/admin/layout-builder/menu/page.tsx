@@ -158,7 +158,7 @@ export default function MenuBuilderPage() {
                 className="text-xs border rounded px-2 py-1"
               >
                 <option value="url">URL</option>
-                <option value="category">Danh muc</option>
+                <option value="category">Danh mục</option>
                 <option value="page">Trang</option>
               </select>
               <input

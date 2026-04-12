@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   NotFoundException,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { ColorEntity } from './entities/color.entity';
 import { SizeGroupEntity } from './entities/size-group.entity';
 import { CreateColorDto, UpdateColorDto } from './dto/create-color.dto';
@@ -33,7 +33,7 @@ export class AttributesService {
     if (exists) throw new ConflictException('Ten mau da ton tai');
 
     const color = this.colorRepo.create({
-      catColorId: uuidv4(),
+      catColorId: randomUUID(),
       catColorName: dto.name,
       catColorHex: dto.hex,
       catColorSort: dto.sort || 0,
@@ -73,7 +73,7 @@ export class AttributesService {
     if (exists) throw new ConflictException('Ten nhom size da ton tai');
 
     const group = this.sizeGroupRepo.create({
-      catSizeGroupId: uuidv4(),
+      catSizeGroupId: randomUUID(),
       catSizeGroupName: dto.name,
       catSizeGroupValues: JSON.stringify(dto.values),
       catSizeGroupGuide: dto.guide || null,

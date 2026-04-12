@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { SettingEntity } from './entities/setting.entity';
 
 @Injectable()
@@ -54,7 +54,7 @@ export class SettingsService {
         await this.settingRepo.save(existing);
       } else {
         const setting = this.settingRepo.create({
-          sysSettingId: uuidv4(),
+          sysSettingId: randomUUID(),
           sysSettingGroup: group,
           sysSettingKey: key,
           sysSettingValue: value,

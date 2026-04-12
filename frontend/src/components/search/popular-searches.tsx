@@ -11,7 +11,7 @@ interface PopularSearchesProps {
 export function PopularSearches({ terms, onSelect }: PopularSearchesProps) {
   return (
     <div className="mt-4">
-      <h3 className="text-sm font-semibold mb-2">Tim kiem pho bien</h3>
+      <h3 className="text-sm font-semibold mb-2">Tìm kiếm phổ biến</h3>
       <div className="space-y-1">
         {terms.map((term) => (
           <button

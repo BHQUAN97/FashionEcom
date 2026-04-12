@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Injectable,
   ConflictException,
@@ -6,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -64,7 +64,7 @@ export class UsersService extends BaseService<UserEntity> {
 
     const hashed = await hashPassword(dto.password);
     const user = this.userRepo.create({
-      sysUserId: uuidv4(),
+      sysUserId: randomUUID(),
       sysUserEmail: dto.email,
       sysUserPassword: hashed,
       sysUserRole: dto.role,

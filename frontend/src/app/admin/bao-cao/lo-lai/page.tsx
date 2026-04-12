@@ -122,7 +122,7 @@ export default function PnLReportPage() {
                   { label: '(-) Gia von (COGS)', key: 'cogs', indent: true },
                   { label: '= LAI GOP', key: 'gross_profit', bold: true },
                   { label: '(-) Chi phi van chuyen', key: 'shipping_cost', indent: true },
-                  { label: '(-) Phi cong thanh toan', key: 'payment_fees', indent: true },
+                  { label: '(-) Phí cổng thanh toán', key: 'payment_fees', indent: true },
                   { label: '= LAI RONG', key: 'net_profit', bold: true, highlight: true },
                   { label: 'Ty le lai gop (%)', key: 'gross_margin', percent: true },
                   { label: 'Ty le lai rong (%)', key: 'net_margin', percent: true },
