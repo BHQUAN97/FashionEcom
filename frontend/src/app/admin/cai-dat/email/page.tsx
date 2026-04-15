@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import DOMPurify from 'isomorphic-dompurify';
+import { sanitizeHtml } from '@/lib/utils/sanitize';
 import { api } from '@/lib/api/client';
 
 interface EmailTemplate {
@@ -13,14 +13,14 @@ interface EmailTemplate {
 }
 
 const TEMPLATE_LABELS: Record<string, string> = {
-  welcome: 'Chao mung',
-  order_confirmation: 'Xac nhan don hang',
-  order_shipped: 'Don hang dang giao',
-  order_delivered: 'Giao hang thanh cong',
-  order_cancelled: 'Huy don hang',
-  password_reset: 'Dat lai mat khau',
-  flash_sale_notify: 'Thong bao Flash Sale',
-  discount_code: 'Ma giam gia',
+  welcome: 'Chào mừng',
+  order_confirmation: 'Xác nhận đơn hàng',
+  order_shipped: 'Đơn hàng đang giao',
+  order_delivered: 'Giao hàng thành công',
+  order_cancelled: 'Hủy đơn hàng',
+  password_reset: 'Đặt lại mật khẩu',
+  flash_sale_notify: 'Thông báo Flash Sale',
+  discount_code: 'Mã giảm giá',
 };
 
 /**
@@ -95,7 +95,7 @@ export default function EmailTemplatesPage() {
                 <button onClick={() => setShowPreview(!showPreview)} className="px-3 py-1.5 text-xs border rounded">
                   {showPreview ? 'Editor' : 'Preview'}
                 </button>
-                <button onClick={handleSave} disabled={saving} className="px-4 py-1.5 text-xs bg-black text-white rounded disabled:opacity-50">
+                <button onClick={handleSave} disabled={saving} className="px-4 py-1.5 text-xs bg-[#ee4d2d] text-white rounded hover:bg-[#d73211] disabled:opacity-50">
                   {saving ? 'Luu...' : 'Luu'}
                 </button>
               </div>
@@ -125,14 +125,14 @@ export default function EmailTemplatesPage() {
             )}
 
             {showPreview ? (
-              <div className="border rounded-lg p-4 bg-white min-h-[300px]" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(form.body) }} />
+              <div className="border rounded-lg p-4 bg-white min-h-[300px]" dangerouslySetInnerHTML={{ __html: sanitizeHtml(form.body) }} />
             ) : (
               <textarea
                 value={form.body}
                 onChange={(e) => setForm({ ...form, body: e.target.value })}
                 rows={15}
                 className="w-full border rounded px-3 py-2 text-sm font-mono"
-                placeholder="<h2>Noi dung email HTML</h2>"
+                placeholder="<h2>Nội dung email HTML</h2>"
               />
             )}
           </div>

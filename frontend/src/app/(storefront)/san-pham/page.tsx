@@ -62,7 +62,7 @@ export default function CollectionPage() {
   const products = MOCK_PRODUCTS.slice(0, visibleCount);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
+    <div className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-10 py-4">
       <Breadcrumb items={[{ label: 'Tất cả sản phẩm' }]} />
 
       {/* Header */}
@@ -94,7 +94,7 @@ export default function CollectionPage() {
       {/* Layout: sidebar (desktop) + grid */}
       <div className="md:flex md:gap-6">
         {/* Sidebar — desktop only */}
-        <div className="hidden md:block md:w-60 flex-shrink-0">
+        <div className="hidden md:block md:w-52 lg:w-56 flex-shrink-0">
           <FilterSidebar filters={filters} onChange={setFilters} className="sticky top-20" />
         </div>
 
@@ -102,7 +102,7 @@ export default function CollectionPage() {
         <div className="flex-1">
           <ProductGrid
             products={products}
-            columns={gridCols === 4 ? 4 : 4}
+            columns={4}
           />
           <LoadMoreButton
             onClick={handleLoadMore}

@@ -96,7 +96,7 @@ export default function DiscountCodesPage() {
     <AdminTableLayout
       title="Ma giam gia"
       actions={
-        <button onClick={() => { setShowForm(true); setEditId(null); generateCode(); }} className="px-4 py-2 bg-black text-white text-sm rounded">
+        <button onClick={() => { setShowForm(true); setEditId(null); generateCode(); }} className="px-4 py-2 bg-[#ee4d2d] text-white text-sm rounded hover:bg-[#d73211]">
           + Tao ma
         </button>
       }
@@ -131,7 +131,7 @@ export default function DiscountCodesPage() {
                   <StatusBadge status={d.prmDiscountStatus} label={STATUS_LABELS[d.prmDiscountStatus]} />
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <button onClick={() => { setEditId(d.prmDiscountId); setForm({ code: d.prmDiscountCode, type: d.prmDiscountType, value: d.prmDiscountValue, maxAmount: d.prmDiscountMaxAmount, maxUsage: d.prmDiscountMaxUsage?.toString() || '', maxPerCustomer: '', startDate: d.prmDiscountStartDate || '', endDate: d.prmDiscountEndDate || '', status: d.prmDiscountStatus, stackable: d.prmDiscountStackable, conditionsJson: '{}' }); setShowForm(true); }} className="text-blue-600 hover:underline text-xs mr-2">Sua</button>
+                  <button onClick={() => { setEditId(d.prmDiscountId); setForm({ code: d.prmDiscountCode, type: d.prmDiscountType, value: d.prmDiscountValue, maxAmount: d.prmDiscountMaxAmount, maxUsage: d.prmDiscountMaxUsage?.toString() || '', maxPerCustomer: '', startDate: d.prmDiscountStartDate || '', endDate: d.prmDiscountEndDate || '', status: d.prmDiscountStatus, stackable: d.prmDiscountStackable, conditionsJson: '{}' }); setShowForm(true); }} className="text-[#ee4d2d] hover:underline text-xs mr-2">Sua</button>
                   <button onClick={() => setConfirmState({ open: true, id: d.prmDiscountId })} className="text-red-600 hover:underline text-xs">Xoa</button>
                 </td>
               </tr>
@@ -145,79 +145,79 @@ export default function DiscountCodesPage() {
       {showForm && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-lg space-y-3 max-h-[90vh] overflow-y-auto">
-            <h2 className="font-bold">{editId ? 'Sua ma giam gia' : 'Tao ma giam gia moi'}</h2>
+            <h2 className="font-bold">{editId ? 'Sửa mã giảm giá' : 'Tạo mã giảm giá mới'}</h2>
 
             <div className="flex gap-2">
-              <input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="Ma giam gia" className="flex-1 border rounded px-3 py-2 text-sm font-mono" />
+              <input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="Mã giảm giá" className="flex-1 border rounded px-3 py-2 text-sm font-mono" />
               <button onClick={generateCode} type="button" className="px-3 py-2 border rounded text-xs">Random</button>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-500">Loai giam</label>
+                <label className="text-xs text-gray-500">Loại giảm</label>
                 <select value={form.type} onChange={(e) => setForm({ ...form, type: Number(e.target.value) })} className="w-full border rounded px-3 py-2 text-sm">
-                  <option value={1}>Phan tram (%)</option>
-                  <option value={2}>So tien (VND)</option>
+                  <option value={1}>Phần trăm (%)</option>
+                  <option value={2}>Số tiền (VND)</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs text-gray-500">Gia tri</label>
+                <label className="text-xs text-gray-500">Giá trị</label>
                 <input type="number" value={form.value} onChange={(e) => setForm({ ...form, value: Number(e.target.value) })} className="w-full border rounded px-3 py-2 text-sm" />
               </div>
             </div>
 
             {form.type === 1 && (
               <div>
-                <label className="text-xs text-gray-500">Giam toi da (VND)</label>
+                <label className="text-xs text-gray-500">Giảm tối đa (VND)</label>
                 <input type="number" value={form.maxAmount} onChange={(e) => setForm({ ...form, maxAmount: Number(e.target.value) })} className="w-full border rounded px-3 py-2 text-sm" />
               </div>
             )}
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-500">Gioi han luot</label>
-                <input type="number" value={form.maxUsage} onChange={(e) => setForm({ ...form, maxUsage: e.target.value })} placeholder="Khong gioi han" className="w-full border rounded px-3 py-2 text-sm" />
+                <label className="text-xs text-gray-500">Giới hạn lượt</label>
+                <input type="number" value={form.maxUsage} onChange={(e) => setForm({ ...form, maxUsage: e.target.value })} placeholder="Không giới hạn" className="w-full border rounded px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="text-xs text-gray-500">Luot/KH</label>
-                <input type="number" value={form.maxPerCustomer} onChange={(e) => setForm({ ...form, maxPerCustomer: e.target.value })} placeholder="Khong gioi han" className="w-full border rounded px-3 py-2 text-sm" />
+                <label className="text-xs text-gray-500">Lượt/KH</label>
+                <input type="number" value={form.maxPerCustomer} onChange={(e) => setForm({ ...form, maxPerCustomer: e.target.value })} placeholder="Không giới hạn" className="w-full border rounded px-3 py-2 text-sm" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-500">Bat dau</label>
+                <label className="text-xs text-gray-500">Bắt đầu</label>
                 <input type="datetime-local" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="text-xs text-gray-500">Ket thuc</label>
+                <label className="text-xs text-gray-500">Kết thúc</label>
                 <input type="datetime-local" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
               </div>
             </div>
 
             <div>
-              <label className="text-xs text-gray-500">Dieu kien (JSON)</label>
+              <label className="text-xs text-gray-500">Điều kiện (JSON)</label>
               <textarea value={form.conditionsJson} onChange={(e) => setForm({ ...form, conditionsJson: e.target.value })} rows={3} className="w-full border rounded px-3 py-2 text-sm font-mono" placeholder='{"min_order_value": 300000}' />
             </div>
 
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={!!form.stackable} onChange={(e) => setForm({ ...form, stackable: e.target.checked ? 1 : 0 })} />
-              Cho phep ket hop voi ma khac
+              Cho phép kết hợp với mã khác
             </label>
 
             <div className="flex justify-end gap-2 pt-2">
-              <button onClick={() => setShowForm(false)} className="px-4 py-2 border rounded text-sm">Huy</button>
-              <button onClick={handleSubmit} className="px-4 py-2 bg-black text-white rounded text-sm">Luu</button>
+              <button onClick={() => setShowForm(false)} className="px-4 py-2 border rounded text-sm">Hủy</button>
+              <button onClick={handleSubmit} className="px-4 py-2 bg-[#ee4d2d] text-white rounded text-sm hover:bg-[#d73211]">Lưu</button>
             </div>
           </div>
         </div>
       )}
       <ConfirmDialog
         open={confirmState.open}
-        title="Xac nhan xoa"
-        message="Ban co chac chan muon xoa ma giam gia nay? Hanh dong nay khong the hoan tac."
+        title="Xác nhận xóa"
+        message="Bạn có chắc chắn muốn xóa mã giảm giá này? Hành động này không thể hoàn tác."
         variant="danger"
-        confirmLabel="Xoa"
+        confirmLabel="Xóa"
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmState({ open: false, id: null })}
       />

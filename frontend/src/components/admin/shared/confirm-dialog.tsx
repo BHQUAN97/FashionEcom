@@ -25,7 +25,7 @@ export function ConfirmDialog({
 
   const confirmClass = variant === 'danger'
     ? 'bg-red-600 hover:bg-red-700 text-white'
-    : 'bg-black hover:bg-gray-800 text-white';
+    : 'bg-[#ee4d2d] hover:bg-[#d73211] text-white';
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">

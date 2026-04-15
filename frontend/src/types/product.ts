@@ -17,6 +17,10 @@ export interface ProductVariant {
   size_name: string;
   price: number;
   compare_at_price: number;
+  /** Gia sale tot nhat (tu BE campaign/flash sale) */
+  sale_price?: number;
+  sale_discount_pct?: number;
+  sale_campaign_name?: string;
   stock_qty: number;
   images: ProductImage[];
 }
@@ -46,6 +50,15 @@ export interface Product {
   stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
   tags: string[];
   created_at: string;
+  // Thuoc tinh chi tiet san pham (optional — mock data co the khong co)
+  origin?: string | null;
+  material?: string | null;
+  packaging_type?: string | null;
+  condition?: string | null;
+  weight?: number;
+  length?: number;
+  width?: number;
+  height?: number;
 }
 
 export interface ProductListItem {
@@ -55,6 +68,10 @@ export interface ProductListItem {
   price: number;
   compare_at_price: number;
   discount_percent: number;
+  /** Gia sale tot nhat tu campaign/flash sale (tinh tu API) */
+  sale_price?: number;
+  /** Ten chuong trinh sale (hien badge) */
+  sale_campaign_name?: string;
   image: string;
   image_hover?: string;
   avg_rating: number;

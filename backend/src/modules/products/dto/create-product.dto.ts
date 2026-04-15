@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsInt, Min, Max, MaxLength, IsUUID } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsNumber, Min, Max, MaxLength, Matches } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -9,7 +9,7 @@ export class CreateProductDto {
   @MaxLength(20)
   code!: string;
 
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   categoryId!: string;
 
   @IsString()
@@ -53,4 +53,54 @@ export class CreateProductDto {
   @IsInt()
   @IsOptional()
   isNew?: number;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  origin?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  material?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  packagingType?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(20)
+  condition?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  weight?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  length?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  width?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  height?: number;
+
+  @IsInt()
+  @IsOptional()
+  preOrder?: number;
+
+  @IsInt()
+  @IsOptional()
+  @Min(1)
+  @Max(15)
+  preOrderDays?: number;
 }

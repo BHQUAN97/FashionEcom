@@ -33,7 +33,7 @@ export function QuantityStepper({
           btnSize,
           'flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-30 disabled:cursor-not-allowed',
         )}
-        aria-label="Giam so luong"
+        aria-label="Giảm số lượng"
       >
         <Minus className="w-4 h-4" />
       </button>
@@ -45,7 +45,7 @@ export function QuantityStepper({
           btnSize,
           'flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-30 disabled:cursor-not-allowed',
         )}
-        aria-label="Tang so luong"
+        aria-label="Tăng số lượng"
       >
         <Plus className="w-4 h-4" />
       </button>

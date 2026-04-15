@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { api } from '@/lib/api/client';
 
 interface ThemeEntry {
@@ -13,11 +14,11 @@ interface ThemeEntry {
 }
 
 const GROUP_LABELS: Record<string, string> = {
-  colors: 'Mau sac',
-  fonts: 'Font chu',
-  branding: 'Thuong hieu',
+  colors: 'Màu sắc',
+  fonts: 'Font chữ',
+  branding: 'Thương hiệu',
   footer: 'Footer',
-  announcement: 'Thong bao',
+  announcement: 'Thông báo',
 };
 
 /**
@@ -53,9 +54,20 @@ export default function ThemeSettingsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Cai dat giao dien</h1>
-        <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-black text-white text-sm rounded disabled:opacity-50">
-          {saving ? 'Dang luu...' : 'Luu thay doi'}
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/layout-builder"
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition"
+            title="Quay lại Layout Builder"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+          <h1 className="text-xl font-bold">Cài đặt giao diện</h1>
+        </div>
+        <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-[#ee4d2d] text-white text-sm rounded hover:bg-[#d73211] disabled:opacity-50">
+          {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
         </button>
       </div>
 
@@ -101,15 +113,15 @@ export default function ThemeSettingsPage() {
                       onChange={(e) => updateValue(entry.cmsThemeConfigKey, e.target.value)}
                       className="w-full text-sm border rounded px-3 py-2"
                     >
-                      <option value="0">Tat</option>
-                      <option value="1">Bat</option>
+                      <option value="0">Tắt</option>
+                      <option value="1">Bật</option>
                     </select>
                   ) : entry.cmsThemeConfigType === 'image' ? (
                     <input
                       type="text"
                       value={entry.cmsThemeConfigValue}
                       onChange={(e) => updateValue(entry.cmsThemeConfigKey, e.target.value)}
-                      placeholder="URL anh"
+                      placeholder="URL ảnh"
                       className="w-full text-sm border rounded px-3 py-2"
                     />
                   ) : (

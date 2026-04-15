@@ -89,7 +89,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
                 'w-2 h-2 rounded-full transition-all',
                 i === selectedIndex ? 'bg-black w-5' : 'bg-gray-300',
               )}
-              aria-label={`Anh ${i + 1}`}
+              aria-label={`Ảnh ${i + 1}`}
             />
           ))}
         </div>

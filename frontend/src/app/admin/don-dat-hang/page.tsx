@@ -16,7 +16,7 @@ interface PurchaseOrder {
 }
 
 const STATUS_LABELS: Record<number, string> = {
-  0: 'Draft', 1: 'Cho duyet', 2: 'Da dat', 3: 'Nhan 1 phan', 4: 'Da nhan', 5: 'Hoan thanh', 6: 'Da huy',
+  0: 'Draft', 1: 'Chờ duyệt', 2: 'Đã đặt', 3: 'Nhận 1 phần', 4: 'Đã nhận', 5: 'Hoàn thành', 6: 'Đã hủy',
 };
 const STATUS_BADGE_COLORS: Record<number, string> = {
   0: 'bg-gray-100 text-gray-700', 1: 'bg-yellow-100 text-yellow-700', 2: 'bg-blue-100 text-blue-700',
@@ -32,10 +32,10 @@ export default function PurchaseOrdersPage() {
 
   return (
     <AdminTableLayout
-      title="Don dat hang NCC"
+      title="Đơn đặt hàng NCC"
       actions={
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-          Tao PO moi
+        <button className="px-4 py-2 bg-[#ee4d2d] text-white rounded-lg hover:bg-[#d73211] text-sm">
+          Tạo PO mới
         </button>
       }
       loading={loading}
@@ -44,11 +44,11 @@ export default function PurchaseOrdersPage() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Ma PO</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Trang thai</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-600">Tong gia tri</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Ngay du kien</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Ngay tao</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-600">Mã PO</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-600">Trạng thái</th>
+              <th className="px-4 py-3 text-right font-medium text-gray-600">Tổng giá trị</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-600">Ngày dự kiến</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-600">Ngày tạo</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -64,7 +64,7 @@ export default function PurchaseOrdersPage() {
               </tr>
             ))}
             {orders.length === 0 && (
-              <EmptyTableRow colSpan={5} message="Chua co don dat hang nao" />
+              <EmptyTableRow colSpan={5} message="Chưa có đơn đặt hàng nào" />
             )}
           </tbody>
         </table>

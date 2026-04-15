@@ -107,7 +107,7 @@ export default function ReturnsManagementPage() {
                 <td className="px-4 py-3 text-gray-500">{new Date(r.createdDate).toLocaleDateString('vi-VN')}</td>
                 <td className="px-4 py-3 space-x-2">
                   {r.salReturnRequestStatus === 0 && (
-                    <button onClick={() => updateStatus(r.salReturnRequestId, 1)} className="text-blue-600 hover:underline text-xs">Tiep nhan</button>
+                    <button onClick={() => updateStatus(r.salReturnRequestId, 1)} className="text-[#ee4d2d] hover:underline text-xs">Tiep nhan</button>
                   )}
                   {r.salReturnRequestStatus === 1 && (
                     <>
@@ -126,10 +126,10 @@ export default function ReturnsManagementPage() {
       </div>
       <ConfirmDialog
         open={confirmState.open}
-        title="Xac nhan tu choi"
-        message="Ban co chac chan muon tu choi yeu cau doi tra nay? Hanh dong nay khong the hoan tac."
+        title="Xác nhận từ chối"
+        message="Bạn có chắc chắn muốn từ chối yêu cầu đổi trả này? Hành động này không thể hoàn tác."
         variant="danger"
-        confirmLabel="Tu choi"
+        confirmLabel="Từ chối"
         onConfirm={handleConfirmReject}
         onCancel={() => setConfirmState({ open: false, id: null })}
       />

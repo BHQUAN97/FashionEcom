@@ -5,6 +5,7 @@ import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
 } from 'recharts';
+import { authFetch } from '@/lib/api/client';
 import { DateRangePicker } from '@/components/admin/reports/date-range-picker';
 import { ExportButton } from '@/components/admin/reports/export-button';
 import { EmptyReport } from '@/components/admin/reports/empty-report';
@@ -51,7 +52,7 @@ export default function PnLReportPage() {
       const params = new URLSearchParams({ group_by: groupBy });
       if (from) params.set('from', from);
       if (to) params.set('to', to);
-      const res = await fetch(`/api/reports/pnl?${params}`);
+      const res = await authFetch(`/api/reports/pnl?${params}`);
       const json = await res.json();
       if (json.success && json.data) {
         setPnl(json.data.pnl || []);

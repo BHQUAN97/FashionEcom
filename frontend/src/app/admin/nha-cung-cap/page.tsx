@@ -44,7 +44,7 @@ export default function SuppliersPage() {
     <AdminTableLayout
       title="Nha cung cap"
       actions={
-        <button onClick={() => setShowForm(!showForm)} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+        <button onClick={() => setShowForm(!showForm)} className="px-4 py-2 bg-[#ee4d2d] text-white rounded-lg hover:bg-[#d73211] text-sm">
           {showForm ? 'Dong' : 'Them NCC'}
         </button>
       }
@@ -52,12 +52,12 @@ export default function SuppliersPage() {
     >
       {showForm && (
         <div className="bg-white border rounded-lg p-6 grid grid-cols-2 gap-4">
-          <input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} placeholder="Ma NCC (VD: NCC-001)" className="border rounded px-3 py-2 text-sm" />
-          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ten NCC" className="border rounded px-3 py-2 text-sm" />
-          <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="SDT" className="border rounded px-3 py-2 text-sm" />
+          <input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} placeholder="Mã NCC (VD: NCC-001)" className="border rounded px-3 py-2 text-sm" />
+          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Tên NCC" className="border rounded px-3 py-2 text-sm" />
+          <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="SĐT" className="border rounded px-3 py-2 text-sm" />
           <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" className="border rounded px-3 py-2 text-sm" />
-          <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Dia chi" className="border rounded px-3 py-2 text-sm col-span-2" />
-          <button onClick={handleCreate} className="bg-green-600 text-white rounded px-4 py-2 text-sm hover:bg-green-700">Tao NCC</button>
+          <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Địa chỉ" className="border rounded px-3 py-2 text-sm col-span-2" />
+          <button onClick={handleCreate} className="bg-[#ee4d2d] text-white rounded px-4 py-2 text-sm hover:bg-[#d73211]">Tạo NCC</button>
         </div>
       )}
 

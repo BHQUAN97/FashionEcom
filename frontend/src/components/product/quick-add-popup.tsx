@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { X, Check, Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCartStore } from '@/lib/stores/cart.store';
+import { useUIStore } from '@/lib/stores/ui.store';
 import { ROUTES } from '@/lib/constants/routes';
 import type { ProductListItem } from '@/types/product';
 import { PriceDisplay } from './price-display';
@@ -22,6 +23,7 @@ interface QuickAddPopupProps {
  */
 export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
   const addToCart = useCartStore((s) => s.addItem);
+  const openMiniCart = useUIStore((s) => s.openMiniCart);
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.id || null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
@@ -89,7 +91,11 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
       max_qty: maxQty,
     });
     setAdded(true);
-    setTimeout(() => onClose(), 1200);
+    // Dong quick-add popup roi mo cart drawer
+    setTimeout(() => {
+      onClose();
+      openMiniCart();
+    }, 800);
   };
 
   return (
@@ -174,13 +180,13 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
               <span className="text-gray-400">SKU: {product.slug.toUpperCase()}</span>
               <span className="text-gray-300">|</span>
               <span className={isInStock ? 'text-green-600' : 'text-red-500'}>
-                {isInStock ? 'Con hang' : 'Het hang'}
+                {isInStock ? 'Còn hàng' : 'Hết hàng'}
               </span>
             </div>
 
             {/* Gia + Badge giam gia */}
             <div className="mt-4 p-3 bg-gray-50 rounded-lg flex items-center gap-3">
-              <span className="text-sm text-gray-500">Gia:</span>
+              <span className="text-sm text-gray-500">Giá:</span>
               <PriceDisplay
                 price={currentVariant?.price || product.price}
                 compareAtPrice={currentVariant?.compare_at_price || product.compare_at_price}
@@ -197,7 +203,7 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
             {product.colors.length > 0 && (
               <div className="mt-5">
                 <label className="text-sm font-semibold mb-2 block">
-                  Mau sac: <span className="text-red-600">{product.colors.find((c) => c.id === selectedColor)?.name}</span>
+                  Màu sắc: <span className="text-red-600">{product.colors.find((c) => c.id === selectedColor)?.name}</span>
                 </label>
                 <div className="flex gap-2 flex-wrap">
                   {product.colors.map((c) => {
@@ -233,7 +239,7 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
             {/* Kich thuoc — check ton kho theo mau */}
             {product.sizes.length > 0 && (
               <div className="mt-4">
-                <label className="text-sm font-semibold mb-2 block">Kich thuoc:</label>
+                <label className="text-sm font-semibold mb-2 block">Kích thước:</label>
                 <div className="flex gap-2 flex-wrap">
                   {product.sizes.map((s) => {
                     const stock = sizeStock[s.id] ?? 0;
@@ -264,14 +270,14 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
                   })}
                 </div>
                 {currentVariant && currentVariant.stock_qty > 0 && currentVariant.stock_qty <= 5 && (
-                  <p className="text-xs text-orange-600 mt-1.5">Chi con {currentVariant.stock_qty} san pham</p>
+                  <p className="text-xs text-orange-600 mt-1.5">Chỉ còn {currentVariant.stock_qty} sản phẩm</p>
                 )}
               </div>
             )}
 
             {/* So luong */}
             <div className="mt-4 flex items-center gap-4">
-              <label className="text-sm font-semibold">So luong:</label>
+              <label className="text-sm font-semibold">Số lượng:</label>
               <div className="flex items-center border rounded-lg">
                 <button
                   onClick={() => setQty(Math.max(1, qty - 1))}
@@ -303,12 +309,12 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
               )}
             >
               {added
-                ? '✓ DA THEM VAO GIO HANG'
+                ? '✓ ĐÃ THÊM VÀO GIỎ HÀNG'
                 : !selectedSize && product.sizes.length > 0
-                  ? 'VUI LONG CHON KICH THUOC'
+                  ? 'VUI LÒNG CHỌN KÍCH THƯỚC'
                   : !canAdd
-                    ? 'HET HANG'
-                    : 'THEM VAO GIO'}
+                    ? 'HẾT HÀNG'
+                    : 'THÊM VÀO GIỎ'}
             </button>
 
             {/* Link xem chi tiet */}
@@ -318,7 +324,7 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
                 onClick={onClose}
                 className="text-sm text-gray-500 hover:text-red-600 underline underline-offset-2 transition"
               >
-                Xem chi tiet san pham &raquo;
+                Xem chi tiết sản phẩm &raquo;
               </Link>
             </div>
           </div>

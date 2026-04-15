@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { api } from '@/lib/api/client';
 import { ConfirmDialog } from '@/components/admin/shared/confirm-dialog';
 
@@ -122,8 +123,13 @@ export default function MenuBuilderPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Menu Builder</h1>
-        <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-black text-white text-sm rounded disabled:opacity-50">
+        <div className="flex items-center gap-3">
+          <Link href="/admin/layout-builder" className="p-1.5 rounded-lg hover:bg-gray-100 transition" title="Quay lại">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          </Link>
+          <h1 className="text-xl font-bold">Menu Builder</h1>
+        </div>
+        <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-[#ee4d2d] text-white text-sm rounded hover:bg-[#d73211] disabled:opacity-50">
           {saving ? 'Dang luu...' : 'Luu menu'}
         </button>
       </div>
@@ -134,7 +140,7 @@ export default function MenuBuilderPage() {
           <button
             key={type}
             onClick={() => setMenuType(type)}
-            className={`px-4 py-2 text-sm rounded-full border transition ${menuType === type ? 'bg-black text-white' : 'hover:bg-gray-50'}`}
+            className={`px-4 py-2 text-sm rounded-full border transition ${menuType === type ? 'bg-[#ee4d2d] text-white' : 'hover:bg-gray-50'}`}
           >
             {type === 'header' ? 'Header' : type === 'footer' ? 'Footer' : 'Mobile'}
           </button>
@@ -168,7 +174,7 @@ export default function MenuBuilderPage() {
                 className="w-40 text-sm border rounded px-2 py-1"
               />
               {menuType === 'header' && (
-                <button onClick={() => addChild(item.cmsMenuItemId)} className="text-xs text-blue-600 hover:underline">+ Sub</button>
+                <button onClick={() => addChild(item.cmsMenuItemId)} className="text-xs text-[#ee4d2d] hover:underline">+ Sub</button>
               )}
               <button onClick={() => setConfirmState({ open: true, id: item.cmsMenuItemId })} className="text-xs text-red-600 hover:underline">Xoa</button>
             </div>
@@ -199,15 +205,15 @@ export default function MenuBuilderPage() {
         ))}
 
         <button onClick={addItem} className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-400 hover:border-gray-400 hover:text-gray-500">
-          + Them menu item
+          + Thêm menu item
         </button>
       </div>
       <ConfirmDialog
         open={confirmState.open}
-        title="Xac nhan xoa"
-        message="Ban co chac chan muon xoa menu item nay? Hanh dong nay khong the hoan tac."
+        title="Xác nhận xóa"
+        message="Bạn có chắc chắn muốn xóa menu item này? Hành động này không thể hoàn tác."
         variant="danger"
-        confirmLabel="Xoa"
+        confirmLabel="Xóa"
         onConfirm={handleConfirmRemove}
         onCancel={() => setConfirmState({ open: false, id: null })}
       />

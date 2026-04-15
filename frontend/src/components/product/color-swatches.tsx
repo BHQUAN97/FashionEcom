@@ -27,7 +27,7 @@ export function ColorSwatches({ colors, selectedId, onChange, className }: Color
             )}
             style={{ backgroundColor: color.hex }}
             title={color.name}
-            aria-label={`Mau ${color.name}`}
+            aria-label={`Màu ${color.name}`}
             aria-pressed={isSelected}
           >
             {isSelected && (

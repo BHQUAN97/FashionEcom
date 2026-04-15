@@ -12,7 +12,8 @@ interface PriceDisplayProps {
 
 /** Hien thi gia — gia sale do + gia goc gach ngang */
 export function PriceDisplay({ price, compareAtPrice, size = 'md', className }: PriceDisplayProps) {
-  const hasSale = compareAtPrice && compareAtPrice > price;
+  // Chỉ hiện giá gốc khi > 0 VÀ > giá bán
+  const hasSale = typeof compareAtPrice === 'number' && compareAtPrice > 0 && compareAtPrice > price;
 
   const sizeClasses = {
     sm: { sale: 'text-sm font-bold', original: 'text-xs' },
@@ -27,7 +28,7 @@ export function PriceDisplay({ price, compareAtPrice, size = 'md', className }: 
       </span>
       {hasSale && (
         <span className={cn(sizeClasses[size].original, 'text-gray-400 line-through')}>
-          {formatVND(compareAtPrice)}
+          {formatVND(compareAtPrice!)}
         </span>
       )}
     </div>

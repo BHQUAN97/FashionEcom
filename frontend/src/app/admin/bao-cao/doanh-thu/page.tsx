@@ -5,6 +5,7 @@ import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
 } from 'recharts';
+import { authFetch } from '@/lib/api/client';
 import { ReportCard } from '@/components/admin/reports/report-card';
 import { DateRangePicker } from '@/components/admin/reports/date-range-picker';
 import { ExportButton } from '@/components/admin/reports/export-button';
@@ -45,7 +46,7 @@ export default function RevenueReportPage() {
       const params = new URLSearchParams({ period });
       if (from) params.set('from', from);
       if (to) params.set('to', to);
-      const res = await fetch(`/api/reports/revenue?${params}`);
+      const res = await authFetch(`/api/reports/revenue?${params}`);
       const json = await res.json();
       if (json.success && json.data) {
         setRows(json.data.rows || []);
@@ -117,7 +118,7 @@ export default function RevenueReportPage() {
                 <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
                 <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
                 <Legend />
-                <Bar dataKey="net_revenue" name="Doanh thu thuan" fill="#1a1a1a" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="net_revenue" name="Doanh thu thuan" fill="#ee4d2d" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -134,7 +135,7 @@ export default function RevenueReportPage() {
                 <XAxis dataKey="period_label" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}K`} />
                 <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
-                <Line type="monotone" dataKey="aov" name="AOV" stroke="#D0021B" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="aov" name="AOV" stroke="#ee4d2d" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>

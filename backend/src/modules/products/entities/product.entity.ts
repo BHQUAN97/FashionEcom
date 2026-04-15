@@ -38,6 +38,36 @@ export class ProductEntity {
   @Column({ name: 'cat_product_brand', type: 'varchar', length: 100, nullable: true })
   catProductBrand!: string | null;
 
+  @Column({ name: 'cat_product_origin', type: 'varchar', length: 100, nullable: true })
+  catProductOrigin!: string | null;
+
+  @Column({ name: 'cat_product_material', type: 'varchar', length: 255, nullable: true })
+  catProductMaterial!: string | null;
+
+  @Column({ name: 'cat_product_packaging_type', type: 'varchar', length: 50, nullable: true })
+  catProductPackagingType!: string | null;
+
+  @Column({ name: 'cat_product_condition', type: 'varchar', length: 20, nullable: true, default: 'new' })
+  catProductCondition!: string | null;
+
+  @Column({ name: 'cat_product_weight', type: 'decimal', precision: 18, scale: 4, default: 0 })
+  catProductWeight!: number;
+
+  @Column({ name: 'cat_product_length', type: 'decimal', precision: 18, scale: 4, default: 0 })
+  catProductLength!: number;
+
+  @Column({ name: 'cat_product_width', type: 'decimal', precision: 18, scale: 4, default: 0 })
+  catProductWidth!: number;
+
+  @Column({ name: 'cat_product_height', type: 'decimal', precision: 18, scale: 4, default: 0 })
+  catProductHeight!: number;
+
+  @Column({ name: 'cat_product_pre_order', type: 'tinyint', default: 0 })
+  catProductPreOrder!: number;
+
+  @Column({ name: 'cat_product_pre_order_days', type: 'int', default: 7 })
+  catProductPreOrderDays!: number;
+
   @Column({ name: 'cat_product_is_featured', type: 'tinyint', default: 0 })
   catProductIsFeatured!: number;
 

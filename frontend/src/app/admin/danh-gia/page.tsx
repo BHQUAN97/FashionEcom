@@ -18,7 +18,7 @@ interface Review {
   createdDate: string;
 }
 
-const STATUS_LABELS: Record<number, string> = { 0: 'Cho duyet', 1: 'Da duyet', 2: 'Tu choi', 3: 'An' };
+const STATUS_LABELS: Record<number, string> = { 0: 'Chờ duyệt', 1: 'Đã duyệt', 2: 'Từ chối', 3: 'Ẩn' };
 const STATUS_BADGE_COLORS: Record<number, string> = {
   0: 'bg-yellow-100 text-yellow-700', 1: 'bg-green-100 text-green-700',
   2: 'bg-red-100 text-red-700', 3: 'bg-gray-100 text-gray-600',
@@ -59,14 +59,14 @@ export default function ReviewsPage() {
 
   return (
     <AdminTableLayout
-      title="Quan ly Danh gia"
+      title="Quản lý Đánh giá"
       filters={
-        <div className="flex gap-2">
+        <div className="flex gap-4 border-b">
           {[0, 1, 2, 3].map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={`px-3 py-1.5 rounded-lg text-sm ${statusFilter === s ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600'}`}
+              className={`px-1 py-2 text-sm font-medium transition ${statusFilter === s ? 'text-[#ee4d2d] border-b-2 border-[#ee4d2d]' : 'text-gray-500 hover:text-gray-700 border-b-2 border-transparent'}`}
             >
               {STATUS_LABELS[s]}
             </button>
@@ -85,11 +85,11 @@ export default function ReviewsPage() {
               </div>
               <span className="text-xs text-gray-400">{new Date(r.createdDate).toLocaleDateString('vi-VN')}</span>
             </div>
-            <p className="text-gray-700 text-sm">{r.salReviewContent || '(Khong co noi dung)'}</p>
+            <p className="text-gray-700 text-sm">{r.salReviewContent || '(Không có nội dung)'}</p>
 
             {r.salReviewAdminReply && (
-              <div className="mt-2 pl-3 border-l-2 border-blue-300">
-                <p className="text-xs text-blue-600 font-medium">Official Reply</p>
+              <div className="mt-2 pl-3 border-l-2 border-[#ee4d2d]/30">
+                <p className="text-xs text-[#ee4d2d] font-medium">Official Reply</p>
                 <p className="text-sm text-gray-600">{r.salReviewAdminReply}</p>
               </div>
             )}
@@ -97,12 +97,12 @@ export default function ReviewsPage() {
             <div className="mt-3 flex gap-2">
               {r.salReviewStatus === 0 && (
                 <>
-                  <button onClick={() => updateStatus(r.salReviewId, 1)} className="px-3 py-1 bg-green-100 text-green-700 rounded text-xs hover:bg-green-200">Duyet</button>
-                  <button onClick={() => setConfirmState({ open: true, id: r.salReviewId })} className="px-3 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200">Tu choi</button>
+                  <button onClick={() => updateStatus(r.salReviewId, 1)} className="px-3 py-1 bg-green-100 text-green-700 rounded text-xs hover:bg-green-200">Duyệt</button>
+                  <button onClick={() => setConfirmState({ open: true, id: r.salReviewId })} className="px-3 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200">Từ chối</button>
                 </>
               )}
               {!r.salReviewAdminReply && (
-                <button onClick={() => setReplyId(r.salReviewId)} className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-xs hover:bg-blue-200">Phan hoi</button>
+                <button onClick={() => setReplyId(r.salReviewId)} className="px-3 py-1 bg-orange-100 text-[#ee4d2d] rounded text-xs hover:bg-orange-200">Phản hồi</button>
               )}
             </div>
 
@@ -111,24 +111,24 @@ export default function ReviewsPage() {
                 <input
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Noi dung phan hoi..."
+                  placeholder="Nội dung phản hồi..."
                   className="flex-1 border rounded px-3 py-1.5 text-sm"
                 />
-                <button onClick={() => sendReply(r.salReviewId)} className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm">Gui</button>
+                <button onClick={() => sendReply(r.salReviewId)} className="px-3 py-1.5 bg-[#ee4d2d] hover:bg-[#d73211] text-white rounded text-sm">Gửi</button>
               </div>
             )}
           </div>
         ))}
         {reviews.length === 0 && (
-          <div className="text-center py-8 text-gray-400">Khong co danh gia nao</div>
+          <div className="text-center py-8 text-gray-400">Không có đánh giá nào</div>
         )}
       </div>
       <ConfirmDialog
         open={confirmState.open}
-        title="Xac nhan tu choi"
-        message="Ban co chac chan muon tu choi danh gia nay? Hanh dong nay khong the hoan tac."
+        title="Xác nhận từ chối"
+        message="Bạn có chắc chắn muốn từ chối đánh giá này? Hành động này không thể hoàn tác."
         variant="danger"
-        confirmLabel="Tu choi"
+        confirmLabel="Từ chối"
         onConfirm={handleConfirmReject}
         onCancel={() => setConfirmState({ open: false, id: null })}
       />

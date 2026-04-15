@@ -1,6 +1,6 @@
 import {
   IsString, IsOptional, IsNumber, Min,
-  MaxLength, IsUUID,
+  MaxLength, Matches,
 } from 'class-validator';
 
 /** DTO tao product variant — validate SKU, gia, stock */
@@ -10,7 +10,7 @@ export class CreateVariantDto {
   catProductVariantSku!: string;
 
   @IsNumber()
-  @Min(0)
+  @Min(1, { message: 'Gia san pham phai >= 1 VND' })
   catProductVariantPrice!: number;
 
   @IsNumber()
@@ -18,11 +18,11 @@ export class CreateVariantDto {
   @IsOptional()
   catProductVariantSalePrice?: number;
 
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   @IsOptional()
   catColorId?: string;
 
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   @IsOptional()
   catSizeId?: string;
 

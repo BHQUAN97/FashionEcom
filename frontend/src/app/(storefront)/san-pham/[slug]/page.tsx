@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useMemo, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { Star, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
@@ -19,17 +19,158 @@ import { useCartStore } from '@/lib/stores/cart.store';
 import { useWishlistStore } from '@/lib/stores/wishlist.store';
 import { MOCK_PRODUCT_DETAIL, MOCK_REVIEWS, MOCK_PRODUCTS, MOCK_TRUST_BAR } from '@/lib/mock/data';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4300/api';
+
+/** Map API variant data sang format cac component storefront expect */
+interface ApiVariant {
+  catProductVariantId: string;
+  catProductVariantSku: string;
+  catProductVariantPrice: number;
+  catProductVariantComparePrice: number;
+  catProductVariantCost: number;
+  catProductVariantColor?: string | null;
+  catProductVariantSize?: string | null;
+  catProductVariantStatus: number;
+  color?: { catColorId: string; catColorName: string; catColorHex: string } | null;
+  size?: { catSizeId: string; catSizeValue: string } | null;
+  bestSalePrice?: { salePrice: number; discountPct: number; campaignName: string } | null;
+}
+
+interface ApiProduct {
+  catProductId: string;
+  catProductName: string;
+  catProductSlug: string;
+  catProductDescription: string | null;
+  catProductShortDesc: string | null;
+  catProductBrand: string | null;
+  catProductStatus: number;
+  catProductIsFeatured: number;
+  catProductIsNew: number;
+  catCategoryId: string;
+  catProductOrigin: string | null;
+  catProductMaterial: string | null;
+  catProductPackagingType: string | null;
+  catProductCondition: string | null;
+  catProductWeight: number;
+  catProductLength: number;
+  catProductWidth: number;
+  catProductHeight: number;
+  category?: { catCategoryId: string; catCategoryName: string };
+  variants?: ApiVariant[];
+  media?: { sysMediaId: string; sysMediaUrl: string; sysMediaAlt: string; sysMediaSort: number }[];
+}
+
+function mapApiToProduct(apiProduct: ApiProduct) {
+  const variants = (apiProduct.variants || []).map((v) => ({
+    id: v.catProductVariantId,
+    sku: v.catProductVariantSku,
+    color_id: v.color?.catColorId || '',
+    color_name: v.color?.catColorName || v.catProductVariantColor || '',
+    color_hex: v.color?.catColorHex || '#cccccc',
+    size_id: v.size?.catSizeId || '',
+    size_name: v.size?.catSizeValue || v.catProductVariantSize || '',
+    price: Number(v.catProductVariantPrice),
+    compare_at_price: Number(v.catProductVariantComparePrice),
+    // Sale price tu BE — gia uu dai tot nhat tu campaign/flash sale
+    sale_price: v.bestSalePrice?.salePrice ?? undefined,
+    sale_discount_pct: v.bestSalePrice?.discountPct ?? 0,
+    sale_campaign_name: v.bestSalePrice?.campaignName ?? undefined,
+    stock_qty: 99,
+    images: [],
+  }));
+
+  // Extract unique colors va sizes tu variants
+  const colorMap = new Map<string, { id: string; name: string; hex: string }>();
+  const sizeMap = new Map<string, { id: string; name: string }>();
+  for (const v of variants) {
+    if (v.color_id && !colorMap.has(v.color_id)) {
+      colorMap.set(v.color_id, { id: v.color_id, name: v.color_name, hex: v.color_hex });
+    }
+    if (v.size_id && !sizeMap.has(v.size_id)) {
+      sizeMap.set(v.size_id, { id: v.size_id, name: v.size_name });
+    }
+  }
+
+  const images = (apiProduct.media || [])
+    .sort((a, b) => a.sysMediaSort - b.sysMediaSort)
+    .map((m) => ({ id: m.sysMediaId, url: m.sysMediaUrl, alt: m.sysMediaAlt || apiProduct.catProductName, sort_order: m.sysMediaSort }));
+
+  return {
+    id: apiProduct.catProductId,
+    name: apiProduct.catProductName,
+    slug: apiProduct.catProductSlug,
+    description: apiProduct.catProductDescription || '',
+    short_description: apiProduct.catProductShortDesc || '',
+    category_id: apiProduct.catCategoryId,
+    category_name: apiProduct.category?.catCategoryName || '',
+    category_slug: '',
+    brand: apiProduct.catProductBrand || '',
+    price: variants[0]?.price || 0,
+    compare_at_price: variants[0]?.compare_at_price || 0,
+    discount_percent: 0,
+    images,
+    variants,
+    colors: Array.from(colorMap.values()),
+    sizes: Array.from(sizeMap.values()),
+    avg_rating: 0,
+    review_count: 0,
+    is_new: apiProduct.catProductIsNew === 1,
+    is_sale: false,
+    is_bestseller: false,
+    stock_status: 'in_stock' as const,
+    // Thuoc tinh chi tiet san pham
+    origin: apiProduct.catProductOrigin || null,
+    material: apiProduct.catProductMaterial || null,
+    packaging_type: apiProduct.catProductPackagingType || null,
+    condition: apiProduct.catProductCondition || null,
+    weight: apiProduct.catProductWeight || 0,
+    length: apiProduct.catProductLength || 0,
+    width: apiProduct.catProductWidth || 0,
+    height: apiProduct.catProductHeight || 0,
+  };
+}
+
 /**
  * Product Detail Page — /san-pham/[slug]
  * Gallery, variant selection, sticky CTA, tabs, related products
+ * Fetch tu API, fallback mock neu API chua san sang
  */
 export default function ProductDetailPage() {
+  const { slug } = useParams<{ slug: string }>();
   const router = useRouter();
-  const product = MOCK_PRODUCT_DETAIL;
+
+  // Fetch product tu API, fallback mock
+  const [apiProduct, setApiProduct] = useState<ReturnType<typeof mapApiToProduct> | null>(null);
+  const [, setLoadingApi] = useState(true);
+
+  useEffect(() => {
+    if (!slug) return;
+    setLoadingApi(true);
+    fetch(`${API_BASE}/products/slug/${slug}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success !== false && json.data) {
+          setApiProduct(mapApiToProduct(json.data));
+        }
+      })
+      .catch(() => {
+        // Fallback: dung mock data
+      })
+      .finally(() => setLoadingApi(false));
+  }, [slug]);
+
+  // Dung API product neu co, fallback mock
+  const product = apiProduct || MOCK_PRODUCT_DETAIL;
   const reviews = MOCK_REVIEWS;
 
   const addToCart = useCartStore((s) => s.addItem);
-  const { hasItem: isWished, toggleItem: toggleWishlist } = useWishlistStore();
+  const toggleWishlist = useWishlistStore((s) => s.toggleItem);
+  const wishlistItems = useWishlistStore((s) => s.items);
+
+  // Defer wishlist state de tranh hydration mismatch (localStorage chi co tren client)
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+  const isWished = (id: string) => hydrated && wishlistItems.includes(id);
 
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.id || null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -53,8 +194,11 @@ export default function ProductDetailPage() {
     ) || null;
   }, [selectedColor, selectedSize, product.variants]);
 
-  const currentPrice = currentVariant?.price || product.price;
-  const currentComparePrice = currentVariant?.compare_at_price || product.compare_at_price;
+  // Uu tien sale price tu BE (da tinh san trong bestSalePrice)
+  const currentPrice = currentVariant?.sale_price ?? currentVariant?.price ?? product.price;
+  const currentComparePrice = currentVariant?.sale_price
+    ? (currentVariant?.price ?? product.price) // Khi co sale, gia goc la gia variant
+    : (currentVariant?.compare_at_price || product.compare_at_price);
 
   const handleAddToCart = () => {
     if (!currentVariant) return;
@@ -126,7 +270,7 @@ export default function ProductDetailPage() {
                   />
                 ))}
               </div>
-              <span className="text-sm text-gray-500">({product.review_count} danh gia)</span>
+              <span className="text-sm text-gray-500">({product.review_count} đánh giá)</span>
             </div>
 
             {/* Gia */}
@@ -138,7 +282,7 @@ export default function ProductDetailPage() {
             {/* Color swatches */}
             <div className="mt-4">
               <label className="text-sm font-semibold block mb-2">
-                Mau sac: {product.colors.find((c) => c.id === selectedColor)?.name}
+                Màu sắc: {product.colors.find((c) => c.id === selectedColor)?.name}
               </label>
               <ColorSwatches
                 colors={product.colors}
@@ -153,7 +297,7 @@ export default function ProductDetailPage() {
             {/* Size selector */}
             <div className="mt-4">
               <label className="text-sm font-semibold block mb-2">
-                Kich thuoc: {availableSizes.find((s) => s.id === selectedSize)?.name || 'Chon size'}
+                Kích thước: {availableSizes.find((s) => s.id === selectedSize)?.name || 'Chọn size'}
               </label>
               <SizeSelector
                 sizes={availableSizes}
@@ -164,7 +308,7 @@ export default function ProductDetailPage() {
 
             {/* Quantity */}
             <div className="mt-4">
-              <label className="text-sm font-semibold block mb-2">So luong</label>
+              <label className="text-sm font-semibold block mb-2">Số lượng</label>
               <QuantityStepper
                 value={qty}
                 min={1}
@@ -172,7 +316,7 @@ export default function ProductDetailPage() {
                 onChange={setQty}
               />
               {currentVariant && currentVariant.stock_qty <= 5 && currentVariant.stock_qty > 0 && (
-                <p className="text-xs text-orange-600 mt-1">Chi con {currentVariant.stock_qty} san pham</p>
+                <p className="text-xs text-orange-600 mt-1">Chỉ còn {currentVariant.stock_qty} sản phẩm</p>
               )}
             </div>
 
@@ -183,7 +327,7 @@ export default function ProductDetailPage() {
                 disabled={!canAddToCart}
                 className="flex-1 py-3 border-2 border-red-600 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                THEM VAO GIO
+                THÊM VÀO GIỎ
               </button>
               <button
                 onClick={handleBuyNow}
@@ -219,20 +363,40 @@ export default function ProductDetailPage() {
           reviews={reviews}
           avgRating={product.avg_rating}
           reviewCount={product.review_count}
+          attributes={{
+            origin: product.origin ?? null,
+            material: product.material ?? null,
+            packagingType: product.packaging_type ?? null,
+            condition: product.condition ?? null,
+            weight: product.weight ?? 0,
+            length: product.length ?? 0,
+            width: product.width ?? 0,
+            height: product.height ?? 0,
+          }}
         />
 
         {/* Related products */}
-        <RelatedProducts products={MOCK_PRODUCTS.slice(0, 5)} />
+        <RelatedProducts products={MOCK_PRODUCTS.slice(0, 10)} />
       </div>
 
       {/* Trust bar */}
       <TrustBar items={MOCK_TRUST_BAR} className="mt-8" />
 
-      {/* Sticky CTA — mobile/tablet */}
+      {/* Sticky bottom bar — Torano style, hien khi scroll qua product info */}
       <StickyBottomCTA
+        image={product.images[0]?.url || ''}
+        productName={product.name}
         price={currentPrice}
         compareAtPrice={currentComparePrice}
-        onAddToCart={handleAddToCart}
+        colors={product.colors}
+        selectedColorId={selectedColor}
+        onColorChange={(id) => { setSelectedColor(id); setSelectedSize(null); }}
+        sizes={availableSizes}
+        selectedSizeId={selectedSize}
+        onSizeChange={setSelectedSize}
+        qty={qty}
+        maxQty={currentVariant ? Math.min(currentVariant.stock_qty, 10) : 10}
+        onQtyChange={setQty}
         onBuyNow={handleBuyNow}
         disabled={!canAddToCart}
       />

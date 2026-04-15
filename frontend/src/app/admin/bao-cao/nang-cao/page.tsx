@@ -5,6 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { authFetch } from '@/lib/api/client';
 import { DateRangePicker } from '@/components/admin/reports/date-range-picker';
 import { ReportCard } from '@/components/admin/reports/report-card';
 import { EmptyReport } from '@/components/admin/reports/empty-report';
@@ -63,20 +64,20 @@ export default function AdvancedAnalyticsPage() {
       if (to) params.set('to', to);
 
       if (tab === 'funnel') {
-        const res = await fetch(`/api/reports/funnel?${params}`);
+        const res = await authFetch(`/api/reports/funnel?${params}`);
         const json = await res.json();
         if (json.success && json.data) {
           setFunnelSteps(json.data.steps || []);
           setTotalSessions(json.data.total_sessions || 0);
         }
       } else if (tab === 'views') {
-        const res = await fetch(`/api/reports/product-views?${params}`);
+        const res = await authFetch(`/api/reports/product-views?${params}`);
         const json = await res.json();
         if (json.success && json.data) {
           setProductViews(json.data.rows || []);
         }
       } else if (tab === 'search') {
-        const res = await fetch(`/api/reports/search?${params}`);
+        const res = await authFetch(`/api/reports/search?${params}`);
         const json = await res.json();
         if (json.success && json.data) {
           setTopTerms(json.data.top_terms || []);
@@ -95,7 +96,7 @@ export default function AdvancedAnalyticsPage() {
 
   const tabs: { key: AdvancedTab; label: string }[] = [
     { key: 'funnel', label: 'Funnel Checkout' },
-    { key: 'views', label: 'Luot xem SP' },
+    { key: 'views', label: 'Lượt xem SP' },
     { key: 'search', label: 'Tìm kiếm' },
   ];
 
@@ -126,10 +127,10 @@ export default function AdvancedAnalyticsPage() {
           {/* === FUNNEL TAB === */}
           {tab === 'funnel' && (
             <div className="space-y-6">
-              <ReportCard label="Tong sessions" value={totalSessions} />
+              <ReportCard label="Tổng sessions" value={totalSessions} />
 
               {funnelSteps.length === 0 ? (
-                <EmptyReport message="Chua co du lieu funnel. Tich hop tracking events truoc." />
+                <EmptyReport message="Chưa có dữ liệu funnel. Tích hợp tracking events trước." />
               ) : (
                 <div className="bg-white rounded-lg border p-6">
                   <h3 className="text-sm font-medium mb-4">Funnel Checkout</h3>
@@ -152,7 +153,7 @@ export default function AdvancedAnalyticsPage() {
                                 width: `${widthPct}%`,
                                 backgroundColor: step.dropoff_rate > 50 ? '#FEE2E2' : '#E5E7EB',
                                 borderLeft: '4px solid',
-                                borderColor: step.dropoff_rate > 50 ? '#EF4444' : '#1a1a1a',
+                                borderColor: step.dropoff_rate > 50 ? '#EF4444' : '#ee4d2d',
                               }}
                             >
                               {i > 0 && (
@@ -175,15 +176,15 @@ export default function AdvancedAnalyticsPage() {
           {tab === 'views' && (
             <div className="bg-white rounded-lg border overflow-x-auto">
               {productViews.length === 0 ? (
-                <EmptyReport message="Chua co du lieu luot xem." />
+                <EmptyReport message="Chưa có dữ liệu lượt xem." />
               ) : (
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-gray-50">
                       <th className="text-left px-4 py-3 font-medium">Sản phẩm</th>
                       <th className="text-left px-4 py-3 font-medium">Danh mục</th>
-                      <th className="text-right px-4 py-3 font-medium">Luot xem</th>
-                      <th className="text-right px-4 py-3 font-medium">Nguoi xem</th>
+                      <th className="text-right px-4 py-3 font-medium">Lượt xem</th>
+                      <th className="text-right px-4 py-3 font-medium">Người xem</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -205,21 +206,21 @@ export default function AdvancedAnalyticsPage() {
           {tab === 'search' && (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <ReportCard label="Tong luot tim kiem" value={searchSummary.total_searches} />
-                <ReportCard label="Tu khoa duy nhat" value={searchSummary.unique_terms} />
+                <ReportCard label="Tổng lượt tìm kiếm" value={searchSummary.total_searches} />
+                <ReportCard label="Từ khóa duy nhất" value={searchSummary.unique_terms} />
               </div>
 
               {/* Top search terms chart */}
               {topTerms.length > 0 && (
                 <div className="bg-white rounded-lg border p-6">
-                  <h3 className="text-sm font-medium mb-4">Top tu khoa tim kiem</h3>
+                  <h3 className="text-sm font-medium mb-4">Top từ khóa tìm kiếm</h3>
                   <ResponsiveContainer width="100%" height={Math.max(topTerms.length * 32, 200)}>
                     <BarChart data={topTerms.slice(0, 15)} layout="vertical">
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" />
                       <YAxis type="category" dataKey="term" width={150} tick={{ fontSize: 12 }} />
                       <Tooltip />
-                      <Bar dataKey="count" name="Luot tim" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
+                      <Bar dataKey="count" name="Lượt tìm" fill="#ee4d2d" radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -229,13 +230,13 @@ export default function AdvancedAnalyticsPage() {
               {noResultTerms.length > 0 && (
                 <div className="bg-white rounded-lg border overflow-x-auto">
                   <div className="px-4 py-3 border-b bg-red-50">
-                    <p className="text-sm text-red-700">Tu khoa khong co ket qua</p>
+                    <p className="text-sm text-red-700">Từ khóa không có kết quả</p>
                   </div>
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b bg-gray-50">
-                        <th className="text-left px-4 py-3 font-medium">Tu khoa</th>
-                        <th className="text-right px-4 py-3 font-medium">Luot tim</th>
+                        <th className="text-left px-4 py-3 font-medium">Từ khóa</th>
+                        <th className="text-right px-4 py-3 font-medium">Lượt tìm</th>
                       </tr>
                     </thead>
                     <tbody>

@@ -5,6 +5,7 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
+import { authFetch } from '@/lib/api/client';
 import { ReportCard } from '@/components/admin/reports/report-card';
 import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
 
@@ -30,7 +31,7 @@ interface HeatmapCell {
 
 // Mapping DAYOFWEEK MySQL: 1=Sun, 2=Mon, ..., 7=Sat
 const DAY_LABELS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
-const PIE_COLORS = ['#1a1a1a', '#3B82F6', '#D0021B', '#22C55E', '#F59E0B'];
+const PIE_COLORS = ['#ee4d2d', '#3B82F6', '#D0021B', '#22C55E', '#F59E0B'];
 const PAYMENT_LABELS: Record<number, string> = { 0: 'COD', 1: 'Chuyen khoan', 2: 'MoMo/VNPay' };
 
 export default function AdminDashboard() {
@@ -47,7 +48,14 @@ export default function AdminDashboard() {
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
     try {
-      const r = (url: string): Promise<{ data: unknown }> => fetch(url).then((res) => res.json() as Promise<{ data: unknown }>).catch(() => ({ data: null }));
+      const r = async (url: string): Promise<{ data: unknown }> => {
+        try {
+          const res = await authFetch(url);
+          return await res.json() as { data: unknown };
+        } catch {
+          return { data: null };
+        }
+      };
       const [kpiRes, revRes, payRes, prodRes, catRes, heatRes, custRes] = await Promise.all([
         r('/api/admin/dashboard/kpis'),
         r(`/api/admin/dashboard/charts/revenue?range=${range}`),
@@ -129,7 +137,7 @@ export default function AdminDashboard() {
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
               <YAxis tickFormatter={(v: number) => `${(v / 1000000).toFixed(0)}M`} />
               <Tooltip formatter={(value) => Number(value).toLocaleString('vi-VN') + 'd'} />
-              <Line type="monotone" dataKey="revenue" stroke="#1a1a1a" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="revenue" stroke="#ee4d2d" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -171,7 +179,7 @@ export default function AdminDashboard() {
               <XAxis type="number" />
               <YAxis type="category" dataKey="product_name" width={120} tick={{ fontSize: 11 }} />
               <Tooltip formatter={(value) => Number(value).toLocaleString()} />
-              <Bar dataKey="qty_sold" name="Da ban" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="qty_sold" name="Da ban" fill="#ee4d2d" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

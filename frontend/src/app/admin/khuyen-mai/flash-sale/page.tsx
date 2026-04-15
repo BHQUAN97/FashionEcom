@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { api } from '@/lib/api/client';
 import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
 import { AdminTableLayout } from '@/components/admin/shared/admin-table-layout';
-import { StatusBadge } from '@/components/admin/shared/status-badge';
 import { EmptyTableRow } from '@/components/admin/shared/empty-table-row';
 import { ConfirmDialog } from '@/components/admin/shared/confirm-dialog';
 
@@ -25,21 +24,39 @@ interface FlashSale {
   items: FlashSaleItem[];
 }
 
-const STATUS_LABELS: Record<number, string> = { 0: 'Draft', 1: 'Scheduled', 2: 'Active', 3: 'Ended' };
-const FLASH_SALE_STATUS_COLORS: Record<number, string> = {
-  0: 'bg-gray-100 text-gray-600',
-  1: 'bg-blue-100 text-blue-700',
-  2: 'bg-green-100 text-green-700',
-  3: 'bg-red-100 text-red-700',
-};
+const STATUS_LABELS: Record<number, string> = { 0: 'Draft', 1: 'Sắp diễn ra', 2: 'Đang diễn ra', 3: 'Đã kết thúc' };
+
+/** Gia trung binh uoc tinh de tinh doanh so (placeholder) */
+const ESTIMATED_PRICE = 350000;
+
+const STATUS_TABS = [
+  { label: 'Tất cả', value: null },
+  { label: 'Đang diễn ra', value: 2 },
+  { label: 'Sắp diễn ra', value: 1 },
+  { label: 'Đã kết thúc', value: 3 },
+];
+
+/** Format ngay gio theo kieu "HH:mm DD-MM-YYYY" */
+function formatSlot(dateStr: string): string {
+  const d = new Date(dateStr);
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mo = String(d.getMonth() + 1).padStart(2, '0');
+  const yy = d.getFullYear();
+  return `${hh}:${mm} ${dd}-${mo}-${yy}`;
+}
 
 /**
- * Admin Flash Sale Manager — CRUD, product selection, stock tracking
+ * Admin Flash Sale Manager — Shopee-style layout
+ * Stats overview, status filter tabs, time slot table
  */
 export default function FlashSalePage() {
   const { data, loading, refetch } = useAdminFetch<{ data: FlashSale[]; pagination: unknown }>({ url: '/admin/promotions/flash-sales' });
   const flashSales = data?.data || [];
 
+  const [activeTab, setActiveTab] = useState<number | null>(null);
+  const [toggleStates, setToggleStates] = useState<Record<string, boolean>>({});
   const [confirmState, setConfirmState] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
@@ -47,6 +64,32 @@ export default function FlashSalePage() {
     title: '', startDate: '', endDate: '', status: 0,
     items: [{ productId: '', discountPct: 10, maxQty: 100 }] as Array<{ productId: string; discountPct: number; maxQty: number }>,
   });
+
+  // --- Filtered list ---
+  const filteredSales = useMemo(() => {
+    if (activeTab === null) return flashSales;
+    return flashSales.filter(fs => fs.prmFlashSaleStatus === activeTab);
+  }, [flashSales, activeTab]);
+
+  // --- Aggregate stats ---
+  const stats = useMemo(() => {
+    const activeSales = flashSales.filter(fs => fs.prmFlashSaleStatus === 2 || fs.prmFlashSaleStatus === 3);
+    const totalSold = activeSales.reduce((sum, fs) => sum + fs.items.reduce((s, i) => s + i.prmFlashSaleItemSoldQty, 0), 0);
+    const revenue = totalSold * ESTIMATED_PRICE;
+    return { revenue, orders: totalSold, buyers: totalSold, accessRate: 0 };
+  }, [flashSales]);
+
+  // --- Helpers ---
+  const formatCurrency = (n: number) => {
+    if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}tr`;
+    if (n >= 1_000) return `${(n / 1_000).toFixed(0)}k`;
+    return String(n);
+  };
+
+  const isToggled = (id: string, status: number) => {
+    if (id in toggleStates) return toggleStates[id];
+    return status === 2;
+  };
 
   const addItem = () => {
     setForm({ ...form, items: [...form.items, { productId: '', discountPct: 10, maxQty: 100 }] });
@@ -96,77 +139,192 @@ export default function FlashSalePage() {
     return Math.round((totalSold / totalMax) * 100);
   };
 
+  const getStatusBadge = (status: number) => {
+    const styles: Record<number, string> = {
+      0: 'bg-gray-100 text-gray-600',
+      1: 'bg-blue-100 text-blue-700',
+      2: 'bg-green-100 text-green-700',
+      3: 'bg-gray-100 text-gray-500',
+    };
+    return (
+      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${styles[status] || styles[0]}`}>
+        {STATUS_LABELS[status] || 'N/A'}
+      </span>
+    );
+  };
+
   return (
     <AdminTableLayout
       title="Flash Sale"
       actions={
-        <button onClick={() => { setShowForm(true); setEditId(null); setForm({ title: '', startDate: '', endDate: '', status: 0, items: [{ productId: '', discountPct: 10, maxQty: 100 }] }); }} className="px-4 py-2 bg-black text-white text-sm rounded">
-          + Tao Flash Sale
+        <button
+          onClick={() => {
+            setShowForm(true);
+            setEditId(null);
+            setForm({ title: '', startDate: '', endDate: '', status: 0, items: [{ productId: '', discountPct: 10, maxQty: 100 }] });
+          }}
+          className="px-4 py-2 text-white text-sm rounded bg-[#ee4d2d] hover:bg-[#d73211]"
+        >
+          + Tạo Flash Sale
         </button>
       }
       loading={loading}
     >
+      {/* Stats Overview Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white border rounded-lg p-4">
+          <p className="text-sm text-gray-500">Doanh Số</p>
+          <p className="text-2xl font-bold mt-1">₫{formatCurrency(stats.revenue)}</p>
+          <p className="text-xs text-gray-400 mt-1">so với 7 ngày trước: 0%</p>
+        </div>
+        <div className="bg-white border rounded-lg p-4">
+          <p className="text-sm text-gray-500">Đơn hàng</p>
+          <p className="text-2xl font-bold mt-1">{stats.orders}</p>
+          <p className="text-xs text-gray-400 mt-1">so với 7 ngày trước: 0%</p>
+        </div>
+        <div className="bg-white border rounded-lg p-4">
+          <p className="text-sm text-gray-500">Người mua</p>
+          <p className="text-2xl font-bold mt-1">{stats.buyers}</p>
+          <p className="text-xs text-gray-400 mt-1">so với 7 ngày trước: 0%</p>
+        </div>
+        <div className="bg-white border rounded-lg p-4">
+          <p className="text-sm text-gray-500">Tỷ lệ truy cập</p>
+          <p className="text-2xl font-bold mt-1">{stats.accessRate.toFixed(1)}%</p>
+          <p className="text-xs text-gray-400 mt-1">so với 7 ngày trước: 0%</p>
+        </div>
+      </div>
+
+      {/* Status Filter Tabs */}
+      <div className="flex border-b mb-4">
+        {STATUS_TABS.map(tab => (
+          <button
+            key={tab.label}
+            onClick={() => setActiveTab(tab.value)}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === tab.value
+                ? 'text-[#ee4d2d] border-b-2 border-[#ee4d2d]'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Flash Sale Table */}
       <div className="bg-white border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="text-left px-4 py-3 font-medium">Tieu de</th>
-              <th className="text-left px-4 py-3 font-medium">Thoi gian</th>
-              <th className="text-left px-4 py-3 font-medium">Trang thai</th>
-              <th className="text-left px-4 py-3 font-medium">SP</th>
-              <th className="text-left px-4 py-3 font-medium">Da ban</th>
-              <th className="text-right px-4 py-3 font-medium">Hanh dong</th>
+              <th className="text-left px-4 py-3 font-medium">Khung giờ</th>
+              <th className="text-left px-4 py-3 font-medium">Sản Phẩm</th>
+              <th className="text-left px-4 py-3 font-medium">Lượt Người mua đặt</th>
+              <th className="text-left px-4 py-3 font-medium">Lượt nhấp chuột/xem</th>
+              <th className="text-left px-4 py-3 font-medium">Trạng thái</th>
+              <th className="text-center px-4 py-3 font-medium">Bật/Tắt</th>
+              <th className="text-right px-4 py-3 font-medium">Thao tác</th>
             </tr>
           </thead>
           <tbody className="divide-y">
-            {flashSales.map(fs => (
-              <tr key={fs.prmFlashSaleId} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium">{fs.prmFlashSaleTitle}</td>
-                <td className="px-4 py-3 text-xs text-gray-500">
-                  {new Date(fs.prmFlashSaleStartDate).toLocaleString('vi')} → {new Date(fs.prmFlashSaleEndDate).toLocaleString('vi')}
-                </td>
-                <td className="px-4 py-3">
-                  <StatusBadge
-                    status={fs.prmFlashSaleStatus}
-                    label={STATUS_LABELS[fs.prmFlashSaleStatus]}
-                    colors={FLASH_SALE_STATUS_COLORS}
-                  />
-                </td>
-                <td className="px-4 py-3 text-gray-500">{fs.items?.length || 0} SP</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-red-500 rounded-full" style={{ width: `${getTotalProgress(fs)}%` }} />
+            {filteredSales.map(fs => {
+              const totalSold = fs.items.reduce((s, i) => s + i.prmFlashSaleItemSoldQty, 0);
+              const activeItems = fs.items.filter(i => i.prmFlashSaleItemSoldQty > 0).length;
+              const enabled = isToggled(fs.prmFlashSaleId, fs.prmFlashSaleStatus);
+
+              return (
+                <tr key={fs.prmFlashSaleId} className="hover:bg-gray-50">
+                  {/* Khung gio */}
+                  <td className="px-4 py-3">
+                    <div className="text-xs text-gray-700">
+                      {formatSlot(fs.prmFlashSaleStartDate)} - {formatSlot(fs.prmFlashSaleEndDate)}
                     </div>
-                    <span className="text-xs text-gray-500">{getTotalProgress(fs)}%</span>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <button onClick={() => { setEditId(fs.prmFlashSaleId); setForm({ title: fs.prmFlashSaleTitle, startDate: fs.prmFlashSaleStartDate.slice(0, 16), endDate: fs.prmFlashSaleEndDate.slice(0, 16), status: fs.prmFlashSaleStatus, items: fs.items.map(i => ({ productId: i.catProductId, discountPct: Number(i.prmFlashSaleItemDiscountPct), maxQty: i.prmFlashSaleItemMaxQty })) }); setShowForm(true); }} className="text-blue-600 hover:underline text-xs mr-2">Sua</button>
-                  <button onClick={() => setConfirmState({ open: true, id: fs.prmFlashSaleId })} className="text-red-600 hover:underline text-xs">Xoa</button>
-                </td>
-              </tr>
-            ))}
-            {flashSales.length === 0 && <EmptyTableRow colSpan={6} />}
+                    <div className="text-xs text-gray-400 mt-0.5">{fs.prmFlashSaleTitle}</div>
+                  </td>
+
+                  {/* San pham */}
+                  <td className="px-4 py-3 text-xs text-gray-600">
+                    <div>Bật Flash Sale <span className="font-medium">{activeItems}</span> / Số sản phẩm tham gia <span className="font-medium">{fs.items?.length || 0}</span></div>
+                  </td>
+
+                  {/* Luot nguoi mua dat */}
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{totalSold}</span>
+                      <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#ee4d2d] rounded-full" style={{ width: `${getTotalProgress(fs)}%` }} />
+                      </div>
+                      <span className="text-xs text-gray-400">{getTotalProgress(fs)}%</span>
+                    </div>
+                  </td>
+
+                  {/* Luot nhan chuot/xem (placeholder) */}
+                  <td className="px-4 py-3 text-gray-400">--</td>
+
+                  {/* Trang thai */}
+                  <td className="px-4 py-3">{getStatusBadge(fs.prmFlashSaleStatus)}</td>
+
+                  {/* Toggle switch */}
+                  <td className="px-4 py-3">
+                    <div className="flex justify-center">
+                      <div
+                        onClick={() => setToggleStates(prev => ({ ...prev, [fs.prmFlashSaleId]: !enabled }))}
+                        className={`w-10 h-5 rounded-full relative cursor-pointer transition ${enabled ? 'bg-green-500' : 'bg-gray-300'}`}
+                      >
+                        <div className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition ${enabled ? 'right-0.5' : 'left-0.5'}`} />
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Thao tac */}
+                  <td className="px-4 py-3 text-right space-x-3">
+                    <button
+                      onClick={() => {
+                        setEditId(fs.prmFlashSaleId);
+                        setForm({
+                          title: fs.prmFlashSaleTitle,
+                          startDate: fs.prmFlashSaleStartDate.slice(0, 16),
+                          endDate: fs.prmFlashSaleEndDate.slice(0, 16),
+                          status: fs.prmFlashSaleStatus,
+                          items: fs.items.map(i => ({ productId: i.catProductId, discountPct: Number(i.prmFlashSaleItemDiscountPct), maxQty: i.prmFlashSaleItemMaxQty })),
+                        });
+                        setShowForm(true);
+                      }}
+                      className="text-[#ee4d2d] hover:underline text-xs"
+                    >
+                      Chi tiết
+                    </button>
+                    <button className="text-[#ee4d2d] hover:underline text-xs">Sao chép</button>
+                    <button className="text-[#ee4d2d] hover:underline text-xs">Dữ liệu</button>
+                    <button
+                      onClick={() => setConfirmState({ open: true, id: fs.prmFlashSaleId })}
+                      className="text-red-500 hover:underline text-xs"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+            {filteredSales.length === 0 && <EmptyTableRow colSpan={7} />}
           </tbody>
         </table>
       </div>
 
-      {/* Form modal */}
+      {/* Form modal — giu nguyen logic */}
       {showForm && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-lg space-y-3 max-h-[90vh] overflow-y-auto">
-            <h2 className="font-bold">{editId ? 'Sua Flash Sale' : 'Tao Flash Sale moi'}</h2>
+            <h2 className="font-bold">{editId ? 'Sửa Flash Sale' : 'Tạo Flash Sale mới'}</h2>
 
-            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Tieu de flash sale" className="w-full border rounded px-3 py-2 text-sm" />
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Tiêu đề flash sale" className="w-full border rounded px-3 py-2 text-sm" />
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-500">Bat dau</label>
+                <label className="text-xs text-gray-500">Bắt đầu</label>
                 <input type="datetime-local" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="text-xs text-gray-500">Ket thuc</label>
+                <label className="text-xs text-gray-500">Kết thúc</label>
                 <input type="datetime-local" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} className="w-full border rounded px-3 py-2 text-sm" />
               </div>
             </div>
@@ -180,7 +338,7 @@ export default function FlashSalePage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-sm">Sản phẩm ({form.items.length})</h3>
-                <button onClick={addItem} className="text-xs px-2 py-1 border rounded">+ Them SP</button>
+                <button onClick={addItem} className="text-xs px-2 py-1 border rounded">+ Thêm SP</button>
               </div>
               {form.items.map((item, i) => (
                 <div key={i} className="flex gap-2 items-center">
@@ -195,18 +353,18 @@ export default function FlashSalePage() {
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <button onClick={() => setShowForm(false)} className="px-4 py-2 border rounded text-sm">Huy</button>
-              <button onClick={handleSubmit} className="px-4 py-2 bg-black text-white rounded text-sm">Luu</button>
+              <button onClick={() => setShowForm(false)} className="px-4 py-2 border rounded text-sm">Hủy</button>
+              <button onClick={handleSubmit} className="px-4 py-2 text-white rounded text-sm bg-[#ee4d2d] hover:bg-[#d73211]">Lưu</button>
             </div>
           </div>
         </div>
       )}
       <ConfirmDialog
         open={confirmState.open}
-        title="Xac nhan xoa"
-        message="Ban co chac chan muon xoa flash sale nay? Hanh dong nay khong the hoan tac."
+        title="Xác nhận xóa"
+        message="Bạn có chắc chắn muốn xóa flash sale này? Hành động này không thể hoàn tác."
         variant="danger"
-        confirmLabel="Xoa"
+        confirmLabel="Xóa"
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmState({ open: false, id: null })}
       />

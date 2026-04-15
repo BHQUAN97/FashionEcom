@@ -1,10 +1,10 @@
-import { IsOptional, IsString, IsNumber, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsNumber, Matches } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationDto } from '@/common/dto/pagination.dto';
 
 export class ProductQueryDto extends PaginationDto {
   @IsOptional()
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   categoryId?: string;
 
   @IsOptional()

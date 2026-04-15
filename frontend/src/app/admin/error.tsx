@@ -14,7 +14,7 @@ export default function AdminError({
         <p className="text-sm text-gray-600">{error.message}</p>
         <button
           onClick={reset}
-          className="px-4 py-2 text-sm bg-black text-white rounded-lg hover:bg-gray-800"
+          className="px-4 py-2 text-sm bg-[#ee4d2d] text-white rounded-lg hover:bg-[#d73211]"
         >
           Thu lai
         </button>

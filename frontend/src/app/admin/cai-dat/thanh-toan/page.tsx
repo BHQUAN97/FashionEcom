@@ -49,7 +49,7 @@ export default function PaymentSettingsPage() {
         <button
           onClick={handleSave}
           disabled={loading}
-          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+          className="px-4 py-2 bg-[#ee4d2d] text-white rounded-lg hover:bg-[#d73211] disabled:opacity-50"
         >
           {loading ? 'Dang luu...' : 'Luu thay doi'}
         </button>

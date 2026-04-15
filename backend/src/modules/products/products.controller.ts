@@ -9,6 +9,7 @@ import { ProductQueryDto } from './dto/product-query.dto';
 import { BulkEditProductDto, BulkEditVariantDto } from './dto/bulk-edit.dto';
 import { CreateVariantDto } from './dto/create-variant.dto';
 import { UpdateVariantDto } from './dto/update-variant.dto';
+import { GenerateVariantsDto } from './dto/generate-variants.dto';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -36,32 +37,32 @@ export class ProductsController {
   @Post()
   async create(@Body() dto: CreateProductDto) {
     const data = await this.productsService.create(dto);
-    return { data, message: 'Tao san pham thanh cong' };
+    return { data, message: 'Tạo sản phẩm thành công' };
   }
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     const data = await this.productsService.update(id, dto);
-    return { data, message: 'Cap nhat san pham thanh cong' };
+    return { data, message: 'Cập nhật sản phẩm thành công' };
   }
 
   @Delete(':id')
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
   async remove(@Param('id') id: string) {
     await this.productsService.remove(id);
-    return { data: null, message: 'Xoa san pham thanh cong' };
+    return { data: null, message: 'Xóa sản phẩm thành công' };
   }
 
   @Post(':id/duplicate')
   async duplicate(@Param('id') id: string) {
     const data = await this.productsService.duplicate(id);
-    return { data, message: 'Nhan ban san pham thanh cong' };
+    return { data, message: 'Nhân bản sản phẩm thành công' };
   }
 
   @Put('bulk/edit')
   async bulkEdit(@Body() dto: BulkEditProductDto) {
     const data = await this.productsService.bulkEdit(dto);
-    return { data, message: 'Cap nhat hang loat thanh cong' };
+    return { data, message: 'Cập nhật hàng loạt thành công' };
   }
 
   // --- Variant endpoints ---
@@ -76,25 +77,32 @@ export class ProductsController {
   @Post(':id/variants')
   async createVariant(@Param('id') productId: string, @Body() dto: CreateVariantDto) {
     const data = await this.productsService.createVariant(productId, dto);
-    return { data, message: 'Tao variant thanh cong' };
+    return { data, message: 'Tạo variant thành công' };
+  }
+
+  /** Generate variant matrix tu colorIds x sizeIds */
+  @Post(':id/variants/generate')
+  async generateVariants(@Param('id') productId: string, @Body() dto: GenerateVariantsDto) {
+    const data = await this.productsService.generateVariantMatrix(productId, dto);
+    return { data, message: 'Tạo variant matrix thành công' };
   }
 
   @Put('variants/:variantId')
   async updateVariant(@Param('variantId') variantId: string, @Body() dto: UpdateVariantDto) {
     const data = await this.productsService.updateVariant(variantId, dto);
-    return { data, message: 'Cap nhat variant thanh cong' };
+    return { data, message: 'Cập nhật variant thành công' };
   }
 
   @Delete('variants/:variantId')
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
   async removeVariant(@Param('variantId') variantId: string) {
     await this.productsService.removeVariant(variantId);
-    return { data: null, message: 'Xoa variant thanh cong' };
+    return { data: null, message: 'Xóa variant thành công' };
   }
 
   @Put('variants/bulk/edit')
   async bulkEditVariants(@Body() dto: BulkEditVariantDto) {
     const data = await this.productsService.bulkEditVariants(dto);
-    return { data, message: 'Cap nhat variants hang loat thanh cong' };
+    return { data, message: 'Cập nhật variants hàng loạt thành công' };
   }
 }

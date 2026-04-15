@@ -9,6 +9,7 @@ import { ReportCard } from '@/components/admin/reports/report-card';
 import { ExportButton } from '@/components/admin/reports/export-button';
 import { EmptyReport } from '@/components/admin/reports/empty-report';
 import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
+import { authFetch } from '@/lib/api/client';
 
 /**
  * Bao cao ton kho — 4 tabs: Tong quan / Chi tiet / Dead Stock / Turnover
@@ -28,6 +29,7 @@ interface InventoryRow {
   product_name: string;
   sku: string;
   color: string;
+  color_hex: string | null;
   size: string;
   available: number;
   locked: number;
@@ -55,9 +57,9 @@ export default function InventoryReportPage() {
     setLoading(true);
     try {
       const [invRes, deadRes, turnRes] = await Promise.all([
-        fetch('/api/reports/inventory').then((r) => r.json()).catch(() => ({ success: false })),
-        fetch('/api/reports/inventory/dead-stock').then((r) => r.json()).catch(() => ({ success: false })),
-        fetch('/api/reports/inventory/turnover').then((r) => r.json()).catch(() => ({ success: false })),
+        authFetch('/api/reports/inventory').then((r) => r.json()).catch(() => ({ success: false })),
+        authFetch('/api/reports/inventory/dead-stock').then((r) => r.json()).catch(() => ({ success: false })),
+        authFetch('/api/reports/inventory/turnover').then((r) => r.json()).catch(() => ({ success: false })),
       ]);
 
       if (invRes.success && invRes.data) {
@@ -96,13 +98,13 @@ export default function InventoryReportPage() {
     <div className="space-y-6">
       {/* Tab bar */}
       <div className="flex items-center justify-between gap-4">
-        <div className="flex gap-1">
+        <div className="flex border-b">
           {tabs.map((t) => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`px-4 py-2 text-sm rounded-md transition ${
-                tab === t.key ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              className={`px-4 py-2 text-sm transition ${
+                tab === t.key ? 'text-[#ee4d2d] border-b-2 border-[#ee4d2d]' : 'text-gray-500 border-b-2 border-transparent hover:text-gray-700'
               }`}
             >
               {t.label}
@@ -130,7 +132,9 @@ export default function InventoryReportPage() {
               <tr className="border-b bg-gray-50">
                 <th className="text-left px-4 py-3 font-medium">Sản phẩm</th>
                 <th className="text-left px-4 py-3 font-medium">SKU</th>
-                <th className="text-left px-4 py-3 font-medium">Màu/Size</th>
+                <th className="text-left px-4 py-3 font-medium">Mau</th>
+                <th className="text-left px-4 py-3 font-medium">Size</th>
+                <th className="text-right px-4 py-3 font-medium">Can nang</th>
                 <th className="text-right px-4 py-3 font-medium">Ton</th>
                 <th className="text-right px-4 py-3 font-medium">Khoa</th>
                 <th className="text-right px-4 py-3 font-medium">Da ban (30d)</th>
@@ -139,13 +143,22 @@ export default function InventoryReportPage() {
             </thead>
             <tbody>
               {rows.length === 0 ? (
-                <tr><td colSpan={7}><EmptyReport /></td></tr>
+                <tr><td colSpan={9}><EmptyReport /></td></tr>
               ) : (
                 rows.map((row, i) => (
                   <tr key={i} className="border-b last:border-0 hover:bg-gray-50">
                     <td className="px-4 py-3">{row.product_name}</td>
                     <td className="px-4 py-3 text-gray-500">{row.sku}</td>
-                    <td className="px-4 py-3 text-gray-500">{[row.color, row.size].filter(Boolean).join(' / ')}</td>
+                    <td className="px-4 py-3">
+                      {row.color ? (
+                        <span className="flex items-center gap-1.5">
+                          {row.color_hex && <span className="w-3 h-3 rounded-full border" style={{ backgroundColor: row.color_hex }} />}
+                          {row.color}
+                        </span>
+                      ) : '-'}
+                    </td>
+                    <td className="px-4 py-3 text-gray-500">{row.size || '-'}</td>
+                    <td className="px-4 py-3 text-right text-gray-500">-</td>
                     <td className={`px-4 py-3 text-right ${Number(row.available) <= 10 ? 'text-red-600 font-medium' : ''}`}>
                       {Number(row.available).toLocaleString()}
                     </td>
@@ -172,13 +185,13 @@ export default function InventoryReportPage() {
                 <th className="text-left px-4 py-3 font-medium">Sản phẩm</th>
                 <th className="text-left px-4 py-3 font-medium">SKU</th>
                 <th className="text-right px-4 py-3 font-medium">Tồn</th>
-                <th className="text-right px-4 py-3 font-medium">Gia von</th>
-                <th className="text-right px-4 py-3 font-medium">Gia tri ton dong</th>
+                <th className="text-right px-4 py-3 font-medium">Giá vốn</th>
+                <th className="text-right px-4 py-3 font-medium">Giá trị tồn đọng</th>
               </tr>
             </thead>
             <tbody>
               {deadStock.length === 0 ? (
-                <tr><td colSpan={5}><EmptyReport message="Khong co dead stock" /></td></tr>
+                <tr><td colSpan={5}><EmptyReport message="Không có dead stock" /></td></tr>
               ) : (
                 deadStock.map((row, i) => (
                   <tr key={i} className="border-b last:border-0 hover:bg-gray-50">
@@ -210,7 +223,7 @@ export default function InventoryReportPage() {
                 <XAxis type="number" />
                 <YAxis type="category" dataKey="category_name" width={120} tick={{ fontSize: 12 }} />
                 <Tooltip formatter={(value) => Number(value).toFixed(2)} />
-                <Bar dataKey="turnover_rate" name="Turnover Rate" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="turnover_rate" name="Turnover Rate" fill="#ee4d2d" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}

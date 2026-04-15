@@ -78,7 +78,7 @@ export default function LoyaltyConfigPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Cau hinh Loyalty</h1>
-        <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50">
+        <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-[#ee4d2d] text-white rounded-lg hover:bg-[#d73211] disabled:opacity-50">
           {saving ? 'Dang luu...' : 'Luu thay doi'}
         </button>
       </div>

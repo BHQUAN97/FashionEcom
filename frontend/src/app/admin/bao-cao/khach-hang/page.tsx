@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
+import { authFetch } from '@/lib/api/client';
 import { ExportButton } from '@/components/admin/reports/export-button';
 import { EmptyReport } from '@/components/admin/reports/empty-report';
 import { ReportSkeleton } from '@/components/admin/reports/report-skeleton';
@@ -52,7 +53,7 @@ export default function CustomerRFMPage() {
   const fetchSegments = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/reports/rfm');
+      const res = await authFetch('/api/reports/rfm');
       const json = await res.json();
       if (json.success && json.data) {
         setSegments(json.data.segments || []);
@@ -70,7 +71,7 @@ export default function CustomerRFMPage() {
     setSelectedSegment(segment);
     setLoadingCustomers(true);
     try {
-      const res = await fetch(`/api/reports/rfm/${encodeURIComponent(segment)}/customers?limit=20`);
+      const res = await authFetch(`/api/reports/rfm/${encodeURIComponent(segment)}/customers?limit=20`);
       const json = await res.json();
       if (json.success && json.data) {
         setCustomers(json.data.rows || []);
@@ -83,7 +84,7 @@ export default function CustomerRFMPage() {
   };
 
   const handleRecalculate = async () => {
-    await fetch('/api/reports/rfm/recalculate', { method: 'POST' });
+    await authFetch('/api/reports/rfm/recalculate', { method: 'POST' });
     fetchSegments();
   };
 
@@ -108,13 +109,13 @@ export default function CustomerRFMPage() {
           onClick={handleRecalculate}
           className="px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800"
         >
-          Tinh lai RFM
+          Tính lại RFM
         </button>
         <ExportButton onExport={handleExport} />
       </div>
 
       {segments.length === 0 ? (
-        <EmptyReport message="Chua co du lieu RFM. Bam 'Tinh lai RFM' de bat dau." />
+        <EmptyReport message="Chưa có dữ liệu RFM. Bấm 'Tính lại RFM' để bắt đầu." />
       ) : (
         <>
           {/* Treemap */}
@@ -144,7 +145,7 @@ export default function CustomerRFMPage() {
                   );
                 }}
               >
-                <Tooltip formatter={(value) => `${Number(value)} khach hang`} />
+                <Tooltip formatter={(value) => `${Number(value)} khách hàng`} />
               </Treemap>
             </ResponsiveContainer>
 
@@ -172,10 +173,10 @@ export default function CustomerRFMPage() {
               <thead>
                 <tr className="border-b bg-gray-50">
                   <th className="text-left px-4 py-3 font-medium">Segment</th>
-                  <th className="text-right px-4 py-3 font-medium">So KH</th>
+                  <th className="text-right px-4 py-3 font-medium">Số KH</th>
                   <th className="text-right px-4 py-3 font-medium">%</th>
                   <th className="text-right px-4 py-3 font-medium">AOV</th>
-                  <th className="text-right px-4 py-3 font-medium">Tong DT</th>
+                  <th className="text-right px-4 py-3 font-medium">Tổng DT</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
@@ -196,9 +197,9 @@ export default function CustomerRFMPage() {
                     <td className="px-4 py-3">
                       <button
                         onClick={() => handleSegmentClick(s.name)}
-                        className="text-xs text-blue-600 hover:underline"
+                        className="text-xs text-[#ee4d2d] hover:underline"
                       >
-                        Chi tiet
+                        Chi tiết
                       </button>
                     </td>
                   </tr>
@@ -211,30 +212,30 @@ export default function CustomerRFMPage() {
           {selectedSegment && (
             <div className="bg-white rounded-lg border overflow-x-auto">
               <div className="px-4 py-3 border-b flex items-center justify-between">
-                <h3 className="text-sm font-medium">Khach hang: {selectedSegment}</h3>
+                <h3 className="text-sm font-medium">Khách hàng: {selectedSegment}</h3>
                 <button onClick={() => setSelectedSegment(null)} className="text-xs text-gray-500 hover:underline">
-                  Dong
+                  Đóng
                 </button>
               </div>
               {loadingCustomers ? (
-                <div className="p-8 text-center text-gray-400">Dang tai...</div>
+                <div className="p-8 text-center text-gray-400">Đang tải...</div>
               ) : (
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-gray-50">
-                      <th className="text-left px-4 py-3 font-medium">Ten</th>
+                      <th className="text-left px-4 py-3 font-medium">Tên</th>
                       <th className="text-left px-4 py-3 font-medium">SDT</th>
                       <th className="text-center px-4 py-3 font-medium">R</th>
                       <th className="text-center px-4 py-3 font-medium">F</th>
                       <th className="text-center px-4 py-3 font-medium">M</th>
-                      <th className="text-right px-4 py-3 font-medium">Tong chi tieu</th>
+                      <th className="text-right px-4 py-3 font-medium">Tổng chi tiêu</th>
                     </tr>
                   </thead>
                   <tbody>
                     {customers.map((c) => (
                       <tr key={c.customer_id} className="border-b last:border-0 hover:bg-gray-50">
                         <td className="px-4 py-3">
-                          <a href={`/admin/khach-hang/${c.customer_id}`} className="text-blue-600 hover:underline">
+                          <a href={`/admin/khach-hang/${c.customer_id}`} className="text-[#ee4d2d] hover:underline">
                             {c.name}
                           </a>
                         </td>
