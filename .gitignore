@@ -57,3 +57,22 @@ blob-report/
 *.tgz
 coverage/
 .turbo
+
+# Backup scripts
+scripts/.gdrive-credentials.json
+scripts/node_modules/
+scripts/package-lock.json
+scripts/*.old
+logs/
+
+# Secrets - managed by secrets-infra
+.env
+.env.local
+.env.*.local
+.env.prod
+.env.staging
+.env.production
+secrets/*.decrypted
+# Chi commit ban encrypted (.enc) va template (.example)
+!.env.example
+!.env.*.enc
