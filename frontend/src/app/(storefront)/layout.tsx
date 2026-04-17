@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { BackToTop } from '@/components/ui/back-to-top';
 import { CartIconButton } from '@/components/cart/cart-icon-button';
 import { CartDrawer } from '@/components/cart/cart-drawer';
-import { SearchTriggerMobile, SearchTriggerDesktop, SearchOverlayPanel, SearchTriggerBottomNav } from '@/components/search/search-overlay';
+import { SearchTriggerMobile, SearchTriggerDesktop, SearchOverlayPanel } from '@/components/search/search-overlay';
 import { DynamicNav } from '@/components/layout/dynamic-nav';
 import { MobileMenuDrawer } from '@/components/layout/mobile-menu-drawer';
 import { MobileMenuButton, BottomNavWithActiveState } from '@/components/layout/layout-client-parts';

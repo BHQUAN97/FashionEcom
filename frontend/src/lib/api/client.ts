@@ -17,6 +17,7 @@ function getToken(): string | null {
   try {
     if (typeof window === 'undefined') return null;
     // Token chi ton tai trong Zustand memory state, import truc tiep store
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { useAuthStore } = require('@/lib/stores/auth.store');
     return useAuthStore.getState().accessToken;
   } catch { return null; }

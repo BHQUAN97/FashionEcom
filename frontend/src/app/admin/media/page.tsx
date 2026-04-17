@@ -32,7 +32,8 @@ export default function MediaPage() {
 
   const getToken = () => {
     try {
-      // Lay token tu Zustand store memory state
+      // Lay token tu Zustand store memory state — dynamic require tranh circular SSR load
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useAuthStore } = require('@/lib/stores/auth.store');
       return useAuthStore.getState().accessToken;
     } catch { return null; }
