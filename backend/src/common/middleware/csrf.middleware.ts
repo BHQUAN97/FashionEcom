@@ -18,8 +18,9 @@ export class CsrfMiddleware implements NestMiddleware {
 
     // Kiem tra custom header — browser khong gui header nay tu cross-origin form
     const xRequestedWith = req.headers['x-requested-with'];
-    if (!xRequestedWith) {
-      throw new ForbiddenException('Missing X-Requested-With header');
+    const ALLOWED_VALUES = ['XMLHttpRequest', 'fetch'];
+    if (!xRequestedWith || !ALLOWED_VALUES.includes(String(xRequestedWith))) {
+      throw new ForbiddenException('Missing or invalid X-Requested-With header');
     }
 
     next();

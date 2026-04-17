@@ -23,17 +23,17 @@ export function AddressList() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold">So dia chi</h2>
+        <h2 className="text-lg font-bold">Sổ địa chỉ</h2>
         <button className="flex items-center gap-1.5 text-sm text-red-600 hover:underline">
           <Plus className="w-4 h-4" />
-          Them dia chi moi
+          Thêm địa chỉ mới
         </button>
       </div>
 
       {addresses.length === 0 ? (
         <div className="text-center py-12">
           <MapPin className="w-12 h-12 text-gray-300 mx-auto" />
-          <p className="text-gray-500 mt-2">Chua co dia chi nao</p>
+          <p className="text-gray-500 mt-2">Chưa có địa chỉ nào</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -52,7 +52,7 @@ export function AddressList() {
                     <span className="text-sm text-gray-500">|</span>
                     <span className="text-sm text-gray-500">{addr.phone}</span>
                     {addr.is_default && (
-                      <span className="text-xs bg-black text-white px-1.5 py-0.5 rounded">Mac dinh</span>
+                      <span className="text-xs bg-black text-white px-1.5 py-0.5 rounded">Mặc định</span>
                     )}
                   </div>
                   <p className="text-sm text-gray-600 mt-1">
@@ -60,14 +60,14 @@ export function AddressList() {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <button className="p-1.5 text-gray-400 hover:text-blue-600" aria-label="Sua">
+                  <button className="p-1.5 text-gray-400 hover:text-blue-600" aria-label="Sửa">
                     <Pencil className="w-4 h-4" />
                   </button>
                   {!addr.is_default && (
                     <button
                       onClick={() => handleDelete(addr.id)}
                       className="p-1.5 text-gray-400 hover:text-red-600"
-                      aria-label="Xoa"
+                      aria-label="Xóa"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -79,7 +79,7 @@ export function AddressList() {
                   onClick={() => handleSetDefault(addr.id)}
                   className="text-xs text-gray-500 hover:text-black mt-2"
                 >
-                  Dat lam mac dinh
+                  Đặt làm mặc định
                 </button>
               )}
             </div>

@@ -9,14 +9,14 @@ import type { Order, OrderStatus } from '@/types/order';
 import { MOCK_ORDERS } from '@/lib/mock/data';
 
 const STATUS_LABELS: Record<OrderStatus, { label: string; color: string }> = {
-  pending: { label: 'Cho xac nhan', color: 'bg-yellow-100 text-yellow-700' },
-  confirmed: { label: 'Da xac nhan', color: 'bg-blue-100 text-blue-700' },
-  processing: { label: 'Dang chuan bi', color: 'bg-blue-100 text-blue-700' },
-  shipping: { label: 'Dang giao', color: 'bg-purple-100 text-purple-700' },
-  delivered: { label: 'Da giao', color: 'bg-green-100 text-green-700' },
-  cancelled: { label: 'Da huy', color: 'bg-red-100 text-red-700' },
-  returned: { label: 'Da tra hang', color: 'bg-gray-100 text-gray-700' },
-  refunded: { label: 'Da hoan tien', color: 'bg-gray-100 text-gray-700' },
+  pending: { label: 'Chờ xác nhận', color: 'bg-yellow-100 text-yellow-700' },
+  confirmed: { label: 'Đã xác nhận', color: 'bg-blue-100 text-blue-700' },
+  processing: { label: 'Đang chuẩn bị', color: 'bg-blue-100 text-blue-700' },
+  shipping: { label: 'Đang giao', color: 'bg-purple-100 text-purple-700' },
+  delivered: { label: 'Đã giao', color: 'bg-green-100 text-green-700' },
+  cancelled: { label: 'Đã hủy', color: 'bg-red-100 text-red-700' },
+  returned: { label: 'Đã trả hàng', color: 'bg-gray-100 text-gray-700' },
+  refunded: { label: 'Đã hoàn tiền', color: 'bg-gray-100 text-gray-700' },
 };
 
 /** Order history list — tab filter by status, paginated */
@@ -25,13 +25,13 @@ export function OrderHistory() {
 
   return (
     <div>
-      <h2 className="text-lg font-bold mb-4">Don hang cua toi</h2>
+      <h2 className="text-lg font-bold mb-4">Đơn hàng của tôi</h2>
 
       {orders.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">Ban chua co don hang nao</p>
+          <p className="text-gray-500">Bạn chưa có đơn hàng nào</p>
           <Link href={ROUTES.PRODUCTS} className="text-sm text-red-600 hover:underline mt-2 inline-block">
-            Bat dau mua sam
+            Bắt đầu mua sắm
           </Link>
         </div>
       ) : (

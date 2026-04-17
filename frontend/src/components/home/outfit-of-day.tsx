@@ -48,7 +48,7 @@ export function OutfitOfDay({ outfits, className }: OutfitOfDayProps) {
                 </h3>
                 <Link
                   href={outfit.link}
-                  className="inline-block border-2 border-white text-white px-6 py-2 text-xs md:text-sm font-semibold hover:bg-white hover:text-black transition tracking-wide"
+                  className="btn-sweep btn-sweep-light inline-block text-xs md:text-sm"
                 >
                   MUA FULL SET
                 </Link>
@@ -62,9 +62,9 @@ export function OutfitOfDay({ outfits, className }: OutfitOfDayProps) {
       <div className="text-center mt-6 md:mt-8">
         <Link
           href="/bo-suu-tap"
-          className="inline-block border-2 border-black px-8 py-2.5 text-sm font-semibold hover:bg-black hover:text-white transition tracking-wide"
+          className="btn-sweep btn-sweep-light inline-block"
         >
-          XEM THEM
+          XEM THÊM
         </Link>
       </div>
     </section>

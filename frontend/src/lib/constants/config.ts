@@ -22,10 +22,11 @@ export const CONFIG = {
   DEFAULT_PAGE_SIZE: 12,
 
   // Bank transfer info — hien thi khi checkout
+  // BAO MAT: STK da duoc xoa, lay tu API /payments/methods (da che bot)
   BANK_INFO: {
     bank_name: 'Vietcombank',
     account_name: 'CONG TY TNHH FASHION ECOM',
-    account_number: '1234567890',
+    account_number: '******7890',
     branch: 'Ho Chi Minh',
   },
 } as const;

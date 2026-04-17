@@ -1,14 +1,19 @@
-import { IsString, IsNumber, IsOptional, IsDateString, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsDateString, IsArray, ValidateNested, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class FlashSaleItemDto {
   @IsString()
   productId!: string;
 
+  /** Phan tram giam gia: 1-99% — KHONG cho 100% (mien phi) hoac <= 0 */
   @IsNumber()
+  @Min(1, { message: 'Phan tram giam phai >= 1%' })
+  @Max(60, { message: 'Phan tram giam toi da 60%' })
   discountPct!: number;
 
+  /** So luong toi da: >= 1, chong set negative/zero */
   @IsNumber()
+  @Min(1, { message: 'So luong toi da phai >= 1' })
   maxQty!: number;
 }
 

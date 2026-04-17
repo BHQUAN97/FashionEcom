@@ -18,21 +18,25 @@ export class ReturnsController {
   @Post()
   async create(
     @Body() dto: CreateReturnDto,
-    @CurrentUser('sub') customerId: string,
+    @CurrentUser('userId') customerId: string,
   ) {
     const data = await this.returnsService.create(dto, customerId);
     return { data, message: 'Gui yeu cau doi tra thanh cong' };
   }
 
   @Get()
-  async findByCustomer(@CurrentUser('sub') customerId: string) {
+  async findByCustomer(@CurrentUser('userId') customerId: string) {
     const data = await this.returnsService.findByCustomer(customerId);
     return { data, message: 'OK' };
   }
 
+  /** BAO MAT: chi cho xem RMA cua chinh minh — chong IDOR */
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const data = await this.returnsService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+    @CurrentUser('userId') customerId: string,
+  ) {
+    const data = await this.returnsService.findOneWithOwnerCheck(id, customerId);
     return { data, message: 'OK' };
   }
 }
@@ -59,7 +63,7 @@ export class AdminReturnsController {
   async updateStatus(
     @Param('id') id: string,
     @Body() dto: UpdateReturnStatusDto,
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
   ) {
     const data = await this.returnsService.updateStatus(id, dto, userId);
     return { data, message: 'Cap nhat trang thai thanh cong' };
@@ -69,7 +73,7 @@ export class AdminReturnsController {
   async addReply(
     @Param('id') id: string,
     @Body('content') content: string,
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
   ) {
     const data = await this.returnsService.addReply(id, content, userId);
     return { data, message: 'OK' };

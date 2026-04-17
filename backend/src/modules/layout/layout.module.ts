@@ -8,6 +8,7 @@ import { MenuEntity } from './entities/menu.entity';
 import { MenuItemEntity } from './entities/menu-item.entity';
 import { ThemeConfigEntity } from './entities/theme-config.entity';
 import { EmailTemplateEntity } from './entities/email-template.entity';
+import { PageEntity } from './entities/page.entity';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { EmailTemplateEntity } from './entities/email-template.entity';
       MenuItemEntity,
       ThemeConfigEntity,
       EmailTemplateEntity,
+      PageEntity,
     ]),
   ],
   controllers: [LayoutAdminController, LayoutPublicController],

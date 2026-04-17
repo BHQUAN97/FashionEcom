@@ -1,0 +1,55 @@
+- generic [ref=e1]:
+  - alert [ref=e13]
+  - generic [ref=e14]:
+    - complementary [ref=e15]:
+      - generic [ref=e17]: ADMIN
+      - navigation [ref=e18]:
+        - link "Dashboard" [ref=e19] [cursor=pointer]:
+          - /url: /admin
+        - link "Đơn hàng" [ref=e20] [cursor=pointer]:
+          - /url: /admin/don-hang
+        - link "Sản phẩm" [active] [ref=e21] [cursor=pointer]:
+          - /url: /admin/san-pham
+        - link "Danh mục" [ref=e22] [cursor=pointer]:
+          - /url: /admin/danh-muc
+        - link "Tồn kho" [ref=e23] [cursor=pointer]:
+          - /url: /admin/ton-kho
+        - link "Khách hàng" [ref=e24] [cursor=pointer]:
+          - /url: /admin/khach-hang
+        - link "Khuyến mãi" [ref=e25] [cursor=pointer]:
+          - /url: /admin/khuyen-mai
+        - link "Layout Builder" [ref=e26] [cursor=pointer]:
+          - /url: /admin/layout-builder
+        - link "Báo cáo" [ref=e27] [cursor=pointer]:
+          - /url: /admin/bao-cao
+        - link "Media" [ref=e28] [cursor=pointer]:
+          - /url: /admin/media
+        - link "Người dùng" [ref=e29] [cursor=pointer]:
+          - /url: /admin/nguoi-dung
+        - link "Cài đặt" [ref=e30] [cursor=pointer]:
+          - /url: /admin/cai-dat
+        - link "Nhật ký" [ref=e31] [cursor=pointer]:
+          - /url: /admin/nhat-ky
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]: FashionEcom Admin
+        - button "Thông báo" [ref=e36] [cursor=pointer]:
+          - img [ref=e37]
+      - main [ref=e40]:
+        - generic [ref=e341]:
+          - generic [ref=e342]:
+            - heading "Sản phẩm" [level=1] [ref=e343]
+            - link "Thêm sản phẩm" [ref=e345] [cursor=pointer]:
+              - /url: /admin/san-pham/tao
+          - table [ref=e347]:
+            - rowgroup [ref=e348]:
+              - row "Mã SP Tên sản phẩm Danh mục Giá bán Trạng thái Thao tác" [ref=e349]:
+                - columnheader "Mã SP" [ref=e350]
+                - columnheader "Tên sản phẩm" [ref=e351]
+                - columnheader "Danh mục" [ref=e352]
+                - columnheader "Giá bán" [ref=e353]
+                - columnheader "Trạng thái" [ref=e354]
+                - columnheader "Thao tác" [ref=e355]
+            - rowgroup [ref=e356]:
+              - row "Chưa có sản phẩm nào" [ref=e357]:
+                - cell "Chưa có sản phẩm nào" [ref=e358]

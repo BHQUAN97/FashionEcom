@@ -37,12 +37,12 @@ function Editor({ config, onChange }: SectionEditorProps) {
     <div className="space-y-4">
       {/* Display mode */}
       <div>
-        <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wide mb-2">Che do hien thi</label>
+        <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wide mb-2">Chế độ hiển thị</label>
         <div className="grid grid-cols-3 gap-2">
           {[
-            { value: 'row', label: 'Hang ngang', icon: '—' },
-            { value: 'card', label: 'The card', icon: '□' },
-            { value: 'icon_only', label: 'Chi icon', icon: '◉' },
+            { value: 'row', label: 'Hàng ngang', icon: '—' },
+            { value: 'card', label: 'Thẻ card', icon: '□' },
+            { value: 'icon_only', label: 'Chỉ icon', icon: '◉' },
           ].map(m => (
             <button key={m.value} type="button" onClick={() => onChange({ ...config, display_mode: m.value })}
               className={`flex flex-col items-center gap-1 p-2 border-2 rounded-lg transition ${config.display_mode === m.value ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-gray-200 text-gray-500'}`}>
@@ -55,10 +55,10 @@ function Editor({ config, onChange }: SectionEditorProps) {
 
       {/* Colors */}
       <div className="border-t pt-3 space-y-2">
-        <p className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Mau sac</p>
+        <p className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Màu sắc</p>
         {[
-          { key: 'bg_color', label: 'Nen' },
-          { key: 'text_color', label: 'Chu' },
+          { key: 'bg_color', label: 'Nền' },
+          { key: 'text_color', label: 'Chữ' },
           { key: 'icon_color', label: 'Icon' },
         ].map(c => (
           <div key={c.key} className="flex items-center gap-2">
@@ -72,8 +72,8 @@ function Editor({ config, onChange }: SectionEditorProps) {
       {/* Toggles */}
       <div className="border-t pt-3 space-y-2">
         {[
-          { key: 'show_border', label: 'Hien vien card' },
-          { key: 'show_icon_bg', label: 'Nen icon' },
+          { key: 'show_border', label: 'Hiện viền card' },
+          { key: 'show_icon_bg', label: 'Nền icon' },
         ].map(t => (
           <label key={t.key} className="flex items-center justify-between cursor-pointer">
             <span className="text-xs text-gray-700">{t.label}</span>
@@ -95,12 +95,12 @@ function Editor({ config, onChange }: SectionEditorProps) {
                 <label className="text-[10px] text-gray-400">Icon (Truck, ShieldCheck, RefreshCw, Phone)</label>
                 <input value={item.icon} onChange={(e) => updateItem(i, 'icon', e.target.value)} placeholder="Icon name" className="w-full text-xs border rounded-md px-2 py-1.5" />
               </div>
-              <input value={item.title} onChange={(e) => updateItem(i, 'title', e.target.value)} placeholder="Tieu de" className="w-full text-xs border rounded-md px-2 py-1.5" />
-              <input value={item.subtitle} onChange={(e) => updateItem(i, 'subtitle', e.target.value)} placeholder="Mo ta" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={item.title} onChange={(e) => updateItem(i, 'title', e.target.value)} placeholder="Tiêu đề" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={item.subtitle} onChange={(e) => updateItem(i, 'subtitle', e.target.value)} placeholder="Mô tả" className="w-full text-xs border rounded-md px-2 py-1.5" />
             </div>
           ))}
         </div>
-        <button onClick={() => onChange({ ...config, items: [...items, { icon: 'Check', title: 'Tieu de', subtitle: 'Mo ta' }] })} className="text-xs text-orange-600 mt-2">+ Them muc</button>
+        <button onClick={() => onChange({ ...config, items: [...items, { icon: 'Check', title: 'Tiêu đề', subtitle: 'Mô tả' }] })} className="text-xs text-orange-600 mt-2">+ Thêm mục</button>
       </div>
     </div>
   );

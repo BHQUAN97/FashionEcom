@@ -7,17 +7,136 @@
   .text-balance {
     text-wrap: balance;
   }
+  .writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
+
+/* Torano-style menu link */
+@layer components {
+  .menu-link {
+    display: block;
+    padding: 15px 4px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.75px;
+    opacity: 0.85;
+    transition: all 0.3s ease-in-out;
+  }
+  .menu-link:hover {
+    opacity: 1;
+    color: #d60000;
+  }
+  .menu-dropdown-item {
+    display: block;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    transition: all 0.3s ease-in-out;
+  }
+  .menu-dropdown-item:hover {
+    color: #d60000;
+    padding-left: 24px;
+  }
+}
+
+/* Torano-style button: mau chay tu trai sang phai khi hover */
+@layer components {
+  /* Base — shared styles */
+  .btn-sweep {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+    overflow: hidden;
+    padding: 12px 28px;
+    border: 0;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    outline: none;
+    cursor: pointer;
+    transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+                border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  }
+  .btn-sweep::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-101%);
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    z-index: -1;
+  }
+  .btn-sweep:hover::before {
+    transform: translateX(0);
+  }
+
+  /* btn-sweep-light: nen trang, vien den → hover do chay vao, chu trang */
+  .btn-sweep-light {
+    background: #fff;
+    color: #000;
+    border: 1px solid #000 !important;
+  }
+  .btn-sweep-light::before {
+    background-color: #d60000;
+  }
+  .btn-sweep-light:hover {
+    color: #fff;
+    border-color: #d60000;
+  }
+
+  /* btn-sweep-red: nen do → hover den chay vao, chu trang */
+  .btn-sweep-red {
+    background-color: #d60000;
+    color: #fff;
+  }
+  .btn-sweep-red::before {
+    background-color: #1a1a1a;
+  }
+  .btn-sweep-red:hover {
+    color: #fff;
+  }
 }
 
 @layer base {
   html {
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
   }
   .theme {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
   }
   :root {
+    /* Torano design tokens */
+    --shop-color-bg: #ffffff;
+    --shop-color-main: #d60000;
+    --shop-color-text: #000000;
+    --shop-color-title: #000000;
+    --shop-color-hover: #d60000;
+    --shop-color-button: #d2d2d2;
+    --shop-color-button-text: #d30000;
+    --shop-color-border: #e7e7e7;
+    --topbar-bg: #242021;
+    --topbar-color-text: #ffffff;
+    --footer-bg: #f5f5f5;
+    --footer-color-title: #d60000;
+    --footer-color-text: #000000;
+    --footer-color-hover: #d60000;
+    --home-flashsale-bg: #faefec;
+    --home-flashsale-countdown-bg: #d60000;
+    --home-flashsale-countdown-txt: #ffffff;
+    --home-coupon-bg: #ffffff;
+    --home-coupon-border: #f8d0d3;
+
+    /* shadcn tokens */
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
@@ -89,8 +208,176 @@
   }
   body {
     @apply bg-background text-foreground;
+    line-height: 1.6;
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* Torano product hover — desktop: swap image + scale3d + actions slide up */
+@layer components {
+  .proloop-image-inner {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+  }
+  .proloop-image-inner .img-first,
+  .proloop-image-inner .img-second {
+    transition: all 500ms ease;
+  }
+  .proloop-image-inner .img-second {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .proloop-actions {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+}
+@media (min-width: 768px) {
+  .product-loop:hover .img-first {
+    opacity: 0;
+  }
+  .product-loop:hover .img-second {
+    opacity: 1;
+    transform: scale3d(1.1, 1.1, 1.1) translateZ(0);
+    transition: opacity 0.8s ease, transform 1.1s cubic-bezier(0.15, 0.75, 0.5, 1) 0s;
+  }
+  .product-loop:hover .proloop-actions {
+    bottom: 20px;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Torano section title — centered, large, tab underline animation */
+@layer components {
+  .section-title-torano {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  .section-title-torano h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--shop-color-title);
+    margin: 0;
+  }
+  @media (min-width: 768px) {
+    .section-title-torano h2 {
+      font-size: 37px;
+    }
+  }
+  .tab-title-torano {
+    font-size: 16px;
+    font-weight: 500;
+    color: #959595;
+    padding: 0 0 10px;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  @media (min-width: 768px) {
+    .tab-title-torano {
+      font-size: 30px;
+    }
+  }
+  .tab-title-torano::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 0;
+    height: 1.5px;
+    background: currentColor;
+    opacity: 0;
+    transition: width 0.25s ease-in-out;
+  }
+  .tab-title-torano.active {
+    color: var(--shop-color-title);
+  }
+  .tab-title-torano.active::after {
+    width: 100%;
+    opacity: 1;
+  }
+  .tab-title-torano:hover {
+    color: var(--shop-color-title);
+  }
+  .tab-title-torano:hover::after {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+/* Torano footer — accordion mobile, column borders desktop */
+@layer components {
+  .footer-torano .widget-footer {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  }
+  @media (min-width: 768px) {
+    .footer-torano .widget-footer {
+      border-bottom: 0;
+      border-right: 1px solid #dedede;
+      padding: 0 15px 0 35px;
+    }
+    .footer-torano .widget-footer:last-child {
+      border-right: 0;
+    }
+  }
+  .footer-torano .widget-title {
+    position: relative;
+    font-size: 16px;
+    color: var(--footer-color-title);
+    font-weight: 500;
+    padding: 15px 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  @media (min-width: 768px) {
+    .footer-torano .widget-title {
+      font-weight: 700;
+      font-size: 18px;
+      cursor: default;
+    }
+  }
+  .footer-link::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    background: var(--footer-color-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 50%;
+    opacity: 1;
+  }
+}
+
+/* Torano flash sale section background */
+@layer components {
+  .flashsale-bg {
+    background: var(--home-flashsale-bg);
+  }
+  .flashsale-countdown-box {
+    background: var(--home-flashsale-countdown-bg);
+    color: var(--home-flashsale-countdown-txt);
+    min-width: 36px;
+    border-radius: 5px;
+    font-weight: 500;
+    text-align: center;
+    padding: 4px 6px;
   }
 }

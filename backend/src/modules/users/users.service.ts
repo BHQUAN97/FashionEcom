@@ -14,6 +14,7 @@ import { hashPassword } from '@/common/utils/password.util';
 import { UserRole } from '@/common/constants/roles.constant';
 import { PaginationDto } from '@/common/dto/pagination.dto';
 import { BaseService } from '@/common/services/base.service';
+import { safeSortField, safeSortOrder } from '@/common/utils/safe-sort.util';
 
 @Injectable()
 export class UsersService extends BaseService<UserEntity> {
@@ -21,7 +22,7 @@ export class UsersService extends BaseService<UserEntity> {
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
   ) {
-    super(userRepo, 'sysUserId', 'Nguoi dung');
+    super(userRepo, 'sysUserId', 'Người dùng');
   }
 
   /**
@@ -32,7 +33,8 @@ export class UsersService extends BaseService<UserEntity> {
     const limit = Math.min(query.limit || 20, 100);
 
     const qb = this.userRepo.createQueryBuilder('u')
-      .where('u.sysUserRole > 0'); // Chi lay admin users
+      .where('u.sysUserRole > 0') // Chi lay admin users
+      .andWhere('u.sysUserStatus != 0'); // Loai bo user da soft-delete
 
     if (query.search) {
       qb.andWhere('(u.sysUserEmail LIKE :s OR u.sysUserName LIKE :s)', {
@@ -40,8 +42,8 @@ export class UsersService extends BaseService<UserEntity> {
       });
     }
 
-    const sortField = query.sort || 'createdDate';
-    const sortOrder = query.order || 'DESC';
+    const sortField = safeSortField(query.sort, 'user', 'createdDate');
+    const sortOrder = safeSortOrder(query.order);
     qb.orderBy(`u.${sortField}`, sortOrder);
 
     const total = await qb.getCount();
@@ -59,7 +61,7 @@ export class UsersService extends BaseService<UserEntity> {
       where: { sysUserEmail: dto.email },
     });
     if (existing) {
-      throw new ConflictException('Email da ton tai');
+      throw new ConflictException('Email đã tồn tại');
     }
 
     const hashed = await hashPassword(dto.password);
@@ -83,11 +85,16 @@ export class UsersService extends BaseService<UserEntity> {
    */
   async update(id: string, dto: UpdateUserDto, currentUserRole: number) {
     const user = await this.userRepo.findOne({ where: { sysUserId: id } });
-    if (!user) throw new NotFoundException('User khong ton tai');
+    if (!user) throw new NotFoundException('User không tồn tại');
 
-    // Chi super_admin moi duoc sua super_admin khac
-    if (user.sysUserRole === UserRole.SUPER_ADMIN && currentUserRole !== UserRole.SUPER_ADMIN) {
-      throw new ForbiddenException('Khong co quyen sua Super Admin');
+    // BAO MAT: Khong cho edit user co role cao hon minh (so nho = quyen cao hon)
+    if (user.sysUserRole < currentUserRole) {
+      throw new ForbiddenException('Không có quyền sửa người dùng có role cao hơn');
+    }
+
+    // BAO MAT: Khong cho gan role cao hon role cua chinh minh (chong privilege escalation)
+    if (dto.role !== undefined && dto.role < currentUserRole) {
+      throw new ForbiddenException('Không thể gán role cao hơn role của bạn');
     }
 
     if (dto.name !== undefined) user.sysUserName = dto.name;
@@ -103,10 +110,10 @@ export class UsersService extends BaseService<UserEntity> {
    */
   async remove(id: string, currentUserId: string) {
     if (id === currentUserId) {
-      throw new ForbiddenException('Khong the xoa chinh minh');
+      throw new ForbiddenException('Không thể xóa chính mình');
     }
     const user = await this.userRepo.findOne({ where: { sysUserId: id } });
-    if (!user) throw new NotFoundException('User khong ton tai');
+    if (!user) throw new NotFoundException('User không tồn tại');
 
     user.sysUserStatus = 0;
     return this.userRepo.save(user);

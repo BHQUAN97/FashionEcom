@@ -1,0 +1,1343 @@
+- generic [ref=e2]:
+  - paragraph [ref=e4]: "Miễn phí giao hàng cho đơn từ 500.000đ | Hotline: 1900-xxxx"
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - button "Menu" [ref=e7] [cursor=pointer]:
+        - img [ref=e8]
+      - link "Torano" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - img "Torano" [ref=e11]
+      - button "Giỏ hàng" [ref=e12] [cursor=pointer]:
+        - img [ref=e13]
+    - generic [ref=e16] [cursor=pointer]:
+      - searchbox "Tìm kiếm sản phẩm..." [ref=e17]
+      - generic:
+        - img
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e22]:
+          - generic [ref=e24]:
+            - img "Back In Form" [ref=e25]
+            - generic [ref=e27]:
+              - heading "Back In Form" [level=2] [ref=e28]
+              - paragraph [ref=e29]: Not just back to work — back with presence
+              - link "KHÁM PHÁ NGAY" [ref=e30] [cursor=pointer]:
+                - /url: /san-pham
+          - generic [ref=e32]:
+            - img "Embrace Holiday" [ref=e33]
+            - generic [ref=e35]:
+              - heading "Embrace Holiday" [level=2] [ref=e36]
+              - paragraph [ref=e37]: FW Collection 2026
+              - link "XEM BST" [ref=e38] [cursor=pointer]:
+                - /url: /danh-muc/ao-khoac
+          - generic [ref=e40]:
+            - img "Sale Lên Đến 50%" [ref=e41]
+            - generic [ref=e43]:
+              - heading "Sale Lên Đến 50%" [level=2] [ref=e44]
+              - paragraph [ref=e45]: Ưu đãi có hạn — chỉ trong tuần này
+              - link "MUA NGAY" [ref=e46] [cursor=pointer]:
+                - /url: /danh-muc/ao-polo
+          - generic [ref=e48]:
+            - img "Lookbook For Men" [ref=e49]
+            - generic [ref=e51]:
+              - heading "Lookbook For Men" [level=2] [ref=e52]
+              - paragraph [ref=e53]: Phong cách — Lịch lãm — Đẳng cấp
+              - link "KHÁM PHÁ" [ref=e54] [cursor=pointer]:
+                - /url: /san-pham
+        - generic [ref=e55]:
+          - button "Slide 1" [ref=e56] [cursor=pointer]
+          - button "Slide 2" [ref=e57] [cursor=pointer]
+          - button "Slide 3" [ref=e58] [cursor=pointer]
+          - button "Slide 4" [ref=e59] [cursor=pointer]
+      - generic [ref=e60]:
+        - heading "DANH MỤC SẢN PHẨM" [level=2] [ref=e61]
+        - generic [ref=e62]:
+          - link "Áo Polo Áo Polo" [ref=e63] [cursor=pointer]:
+            - /url: /danh-muc/ao-polo
+            - generic [ref=e64]:
+              - img "Áo Polo" [ref=e65]
+              - generic [ref=e67]:
+                - generic [ref=e68]: Áo Polo
+                - img [ref=e69]
+          - link "Áo Thun Áo Thun" [ref=e71] [cursor=pointer]:
+            - /url: /danh-muc/ao-thun
+            - generic [ref=e72]:
+              - img "Áo Thun" [ref=e73]
+              - generic [ref=e75]:
+                - generic [ref=e76]: Áo Thun
+                - img [ref=e77]
+          - link "Quần Short Quần Short" [ref=e79] [cursor=pointer]:
+            - /url: /danh-muc/quan-short
+            - generic [ref=e80]:
+              - img "Quần Short" [ref=e81]
+              - generic [ref=e83]:
+                - generic [ref=e84]: Quần Short
+                - img [ref=e85]
+          - link "Quần Âu Quần Âu" [ref=e87] [cursor=pointer]:
+            - /url: /danh-muc/quan-au
+            - generic [ref=e88]:
+              - img "Quần Âu" [ref=e89]
+              - generic [ref=e91]:
+                - generic [ref=e92]: Quần Âu
+                - img [ref=e93]
+          - link "Áo Khoác Áo Khoác" [ref=e95] [cursor=pointer]:
+            - /url: /danh-muc/ao-khoac
+            - generic [ref=e96]:
+              - img "Áo Khoác" [ref=e97]
+              - generic [ref=e99]:
+                - generic [ref=e100]: Áo Khoác
+                - img [ref=e101]
+          - link "Áo Sơ Mi Áo Sơ Mi" [ref=e103] [cursor=pointer]:
+            - /url: /danh-muc/ao-so-mi
+            - generic [ref=e104]:
+              - img "Áo Sơ Mi" [ref=e105]
+              - generic [ref=e107]:
+                - generic [ref=e108]: Áo Sơ Mi
+                - img [ref=e109]
+          - link "Áo Nỉ/Hoodie Áo Nỉ/Hoodie" [ref=e111] [cursor=pointer]:
+            - /url: /danh-muc/ao-ni
+            - generic [ref=e112]:
+              - img "Áo Nỉ/Hoodie" [ref=e113]
+              - generic [ref=e115]:
+                - generic [ref=e116]: Áo Nỉ/Hoodie
+                - img [ref=e117]
+          - link "Phụ Kiện Phụ Kiện" [ref=e119] [cursor=pointer]:
+            - /url: /danh-muc/phu-kien
+            - generic [ref=e120]:
+              - img "Phụ Kiện" [ref=e121]
+              - generic [ref=e123]:
+                - generic [ref=e124]: Phụ Kiện
+                - img [ref=e125]
+      - generic [ref=e128]:
+        - generic [ref=e130]:
+          - heading "Flash Sale" [level=2] [ref=e131]
+          - generic [ref=e132]:
+            - generic [ref=e133]: "00"
+            - generic [ref=e134]: "00"
+            - generic [ref=e135]: "00"
+        - generic [ref=e136]:
+          - generic [ref=e139]:
+            - generic [ref=e140] [cursor=pointer]:
+              - generic [ref=e141]: "-38%"
+              - generic [ref=e142]:
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e143]
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038 - hover" [ref=e144]
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e145]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+              - button "Thêm yêu thích" [ref=e146]:
+                - img [ref=e147]
+              - button "Thêm vào giỏ" [ref=e149]:
+                - img [ref=e150]
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]: +4 Màu sắc
+                - generic [ref=e156]: +5 Kích thước
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e157] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+                - heading "Áo Polo trơn basic thêu logo ngực ESTP038" [level=3] [ref=e158]
+              - generic [ref=e159]:
+                - generic [ref=e160]: 249.000 ₫
+                - generic [ref=e161]: 400.000 ₫
+          - generic [ref=e164]:
+            - generic [ref=e165] [cursor=pointer]:
+              - generic [ref=e166]: "-38%"
+              - generic [ref=e167]:
+                - img "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e168]
+                - img "Áo polo can phối thêu logo đại bàng GSTP047 - hover" [ref=e169]
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e170]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+              - button "Thêm yêu thích" [ref=e171]:
+                - img [ref=e172]
+              - button "Thêm vào giỏ" [ref=e174]:
+                - img [ref=e175]
+            - generic [ref=e178]:
+              - generic [ref=e179]:
+                - generic [ref=e180]: +2 Màu sắc
+                - generic [ref=e181]: +5 Kích thước
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e182] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+                - heading "Áo polo can phối thêu logo đại bàng GSTP047" [level=3] [ref=e183]
+              - generic [ref=e184]:
+                - generic [ref=e185]: 299.000 ₫
+                - generic [ref=e186]: 480.000 ₫
+          - generic [ref=e189]:
+            - generic [ref=e190] [cursor=pointer]:
+              - generic [ref=e191]: "-29%"
+              - generic [ref=e192]:
+                - img "Áo T shirt trơn in thể thao GSTS018" [ref=e193]
+                - img "Áo T shirt trơn in thể thao GSTS018 - hover" [ref=e194]
+              - link "Áo T shirt trơn in thể thao GSTS018" [ref=e195]:
+                - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+              - button "Thêm yêu thích" [ref=e196]:
+                - img [ref=e197]
+              - button "Thêm vào giỏ" [ref=e199]:
+                - img [ref=e200]
+            - generic [ref=e203]:
+              - generic [ref=e204]:
+                - generic [ref=e205]: +3 Màu sắc
+                - generic [ref=e206]: +5 Kích thước
+              - link "Áo T shirt trơn in thể thao GSTS018" [ref=e207] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+                - heading "Áo T shirt trơn in thể thao GSTS018" [level=3] [ref=e208]
+              - generic [ref=e209]:
+                - generic [ref=e210]: 249.000 ₫
+                - generic [ref=e211]: 349.000 ₫
+          - generic [ref=e214]:
+            - generic [ref=e215] [cursor=pointer]:
+              - generic [ref=e216]: "-29%"
+              - generic [ref=e217]:
+                - img "Áo T shirt trơn in thể thao GSTS017" [ref=e218]
+                - img "Áo T shirt trơn in thể thao GSTS017 - hover" [ref=e219]
+              - link "Áo T shirt trơn in thể thao GSTS017" [ref=e220]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+              - button "Thêm yêu thích" [ref=e221]:
+                - img [ref=e222]
+              - button "Thêm vào giỏ" [ref=e224]:
+                - img [ref=e225]
+            - generic [ref=e228]:
+              - generic [ref=e229]:
+                - generic [ref=e230]: +2 Màu sắc
+                - generic [ref=e231]: +5 Kích thước
+              - link "Áo T shirt trơn in thể thao GSTS017" [ref=e232] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+                - heading "Áo T shirt trơn in thể thao GSTS017" [level=3] [ref=e233]
+              - generic [ref=e234]:
+                - generic [ref=e235]: 249.000 ₫
+                - generic [ref=e236]: 349.000 ₫
+          - generic [ref=e239]:
+            - generic [ref=e240] [cursor=pointer]:
+              - generic [ref=e241]: "-40%"
+              - generic [ref=e242]:
+                - img "Áo T shirt thể thao basic FSTS002" [ref=e243]
+                - img "Áo T shirt thể thao basic FSTS002 - hover" [ref=e244]
+              - link "Áo T shirt thể thao basic FSTS002" [ref=e245]:
+                - /url: /san-pham/ao-t-shirt-the-thao-basic-5-fsts002
+              - button "Thêm yêu thích" [ref=e246]:
+                - img [ref=e247]
+              - button "Thêm vào giỏ" [ref=e249]:
+                - img [ref=e250]
+            - generic [ref=e253]:
+              - generic [ref=e254]:
+                - generic [ref=e255]: +2 Màu sắc
+                - generic [ref=e256]: +5 Kích thước
+              - link "Áo T shirt thể thao basic FSTS002" [ref=e257] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-the-thao-basic-5-fsts002
+                - heading "Áo T shirt thể thao basic FSTS002" [level=3] [ref=e258]
+              - generic [ref=e259]:
+                - generic [ref=e260]: 149.000 ₫
+                - generic [ref=e261]: 250.000 ₫
+          - generic [ref=e264]:
+            - generic [ref=e265] [cursor=pointer]:
+              - generic [ref=e266]: "-32%"
+              - generic [ref=e267]:
+                - img "Áo T shirt trơn in logo ngực FSTS001" [ref=e268]
+                - img "Áo T shirt trơn in logo ngực FSTS001 - hover" [ref=e269]
+              - link "Áo T shirt trơn in logo ngực FSTS001" [ref=e270]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-nguc-8-fsts001
+              - button "Thêm yêu thích" [ref=e271]:
+                - img [ref=e272]
+              - button "Thêm vào giỏ" [ref=e274]:
+                - img [ref=e275]
+            - generic [ref=e278]:
+              - generic [ref=e279]:
+                - generic [ref=e280]: +3 Màu sắc
+                - generic [ref=e281]: +5 Kích thước
+              - link "Áo T shirt trơn in logo ngực FSTS001" [ref=e282] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-nguc-8-fsts001
+                - heading "Áo T shirt trơn in logo ngực FSTS001" [level=3] [ref=e283]
+              - generic [ref=e284]:
+                - generic [ref=e285]: 169.000 ₫
+                - generic [ref=e286]: 250.000 ₫
+        - link "XEM TẤT CẢ FLASH SALE" [ref=e288] [cursor=pointer]:
+          - /url: /danh-muc/sale
+      - generic [ref=e289]:
+        - heading "SẢN PHẨM KHUYẾN MÃI" [level=2] [ref=e291]: SẢN PHẨM KHUYẾN MÃI
+        - generic [ref=e293]:
+          - generic [ref=e296]:
+            - generic [ref=e297] [cursor=pointer]:
+              - generic [ref=e298]: "-38%"
+              - generic [ref=e299]:
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e300]
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038 - hover" [ref=e301]
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e302]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+              - button "Thêm yêu thích" [ref=e303]:
+                - img [ref=e304]
+              - button "Thêm vào giỏ" [ref=e306]:
+                - img [ref=e307]
+            - generic [ref=e310]:
+              - generic [ref=e311]:
+                - generic [ref=e312]: +4 Màu sắc
+                - generic [ref=e313]: +5 Kích thước
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e314] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+                - heading "Áo Polo trơn basic thêu logo ngực ESTP038" [level=3] [ref=e315]
+              - generic [ref=e316]:
+                - generic [ref=e317]: 249.000 ₫
+                - generic [ref=e318]: 400.000 ₫
+          - generic [ref=e321]:
+            - generic [ref=e322] [cursor=pointer]:
+              - generic [ref=e323]: "-38%"
+              - generic [ref=e324]:
+                - img "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e325]
+                - img "Áo polo can phối thêu logo đại bàng GSTP047 - hover" [ref=e326]
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e327]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+              - button "Thêm yêu thích" [ref=e328]:
+                - img [ref=e329]
+              - button "Thêm vào giỏ" [ref=e331]:
+                - img [ref=e332]
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - generic [ref=e337]: +2 Màu sắc
+                - generic [ref=e338]: +5 Kích thước
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e339] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+                - heading "Áo polo can phối thêu logo đại bàng GSTP047" [level=3] [ref=e340]
+              - generic [ref=e341]:
+                - generic [ref=e342]: 299.000 ₫
+                - generic [ref=e343]: 480.000 ₫
+          - generic [ref=e346]:
+            - generic [ref=e347] [cursor=pointer]:
+              - generic [ref=e348]: "-29%"
+              - generic [ref=e349]:
+                - img "Áo T shirt trơn in thể thao GSTS018" [ref=e350]
+                - img "Áo T shirt trơn in thể thao GSTS018 - hover" [ref=e351]
+              - link "Áo T shirt trơn in thể thao GSTS018" [ref=e352]:
+                - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+              - button "Thêm yêu thích" [ref=e353]:
+                - img [ref=e354]
+              - button "Thêm vào giỏ" [ref=e356]:
+                - img [ref=e357]
+            - generic [ref=e360]:
+              - generic [ref=e361]:
+                - generic [ref=e362]: +3 Màu sắc
+                - generic [ref=e363]: +5 Kích thước
+              - link "Áo T shirt trơn in thể thao GSTS018" [ref=e364] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+                - heading "Áo T shirt trơn in thể thao GSTS018" [level=3] [ref=e365]
+              - generic [ref=e366]:
+                - generic [ref=e367]: 249.000 ₫
+                - generic [ref=e368]: 349.000 ₫
+          - generic [ref=e371]:
+            - generic [ref=e372] [cursor=pointer]:
+              - generic [ref=e373]: "-29%"
+              - generic [ref=e374]:
+                - img "Áo T shirt trơn in thể thao GSTS017" [ref=e375]
+                - img "Áo T shirt trơn in thể thao GSTS017 - hover" [ref=e376]
+              - link "Áo T shirt trơn in thể thao GSTS017" [ref=e377]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+              - button "Thêm yêu thích" [ref=e378]:
+                - img [ref=e379]
+              - button "Thêm vào giỏ" [ref=e381]:
+                - img [ref=e382]
+            - generic [ref=e385]:
+              - generic [ref=e386]:
+                - generic [ref=e387]: +2 Màu sắc
+                - generic [ref=e388]: +5 Kích thước
+              - link "Áo T shirt trơn in thể thao GSTS017" [ref=e389] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+                - heading "Áo T shirt trơn in thể thao GSTS017" [level=3] [ref=e390]
+              - generic [ref=e391]:
+                - generic [ref=e392]: 249.000 ₫
+                - generic [ref=e393]: 349.000 ₫
+          - generic [ref=e396]:
+            - generic [ref=e397] [cursor=pointer]:
+              - generic [ref=e398]: "-40%"
+              - generic [ref=e399]:
+                - img "Áo T shirt thể thao basic FSTS002" [ref=e400]
+                - img "Áo T shirt thể thao basic FSTS002 - hover" [ref=e401]
+              - link "Áo T shirt thể thao basic FSTS002" [ref=e402]:
+                - /url: /san-pham/ao-t-shirt-the-thao-basic-5-fsts002
+              - button "Thêm yêu thích" [ref=e403]:
+                - img [ref=e404]
+              - button "Thêm vào giỏ" [ref=e406]:
+                - img [ref=e407]
+            - generic [ref=e410]:
+              - generic [ref=e411]:
+                - generic [ref=e412]: +2 Màu sắc
+                - generic [ref=e413]: +5 Kích thước
+              - link "Áo T shirt thể thao basic FSTS002" [ref=e414] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-the-thao-basic-5-fsts002
+                - heading "Áo T shirt thể thao basic FSTS002" [level=3] [ref=e415]
+              - generic [ref=e416]:
+                - generic [ref=e417]: 149.000 ₫
+                - generic [ref=e418]: 250.000 ₫
+          - generic [ref=e421]:
+            - generic [ref=e422] [cursor=pointer]:
+              - generic [ref=e423]: "-32%"
+              - generic [ref=e424]:
+                - img "Áo T shirt trơn in logo ngực FSTS001" [ref=e425]
+                - img "Áo T shirt trơn in logo ngực FSTS001 - hover" [ref=e426]
+              - link "Áo T shirt trơn in logo ngực FSTS001" [ref=e427]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-nguc-8-fsts001
+              - button "Thêm yêu thích" [ref=e428]:
+                - img [ref=e429]
+              - button "Thêm vào giỏ" [ref=e431]:
+                - img [ref=e432]
+            - generic [ref=e435]:
+              - generic [ref=e436]:
+                - generic [ref=e437]: +3 Màu sắc
+                - generic [ref=e438]: +5 Kích thước
+              - link "Áo T shirt trơn in logo ngực FSTS001" [ref=e439] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-nguc-8-fsts001
+                - heading "Áo T shirt trơn in logo ngực FSTS001" [level=3] [ref=e440]
+              - generic [ref=e441]:
+                - generic [ref=e442]: 169.000 ₫
+                - generic [ref=e443]: 250.000 ₫
+          - generic [ref=e446]:
+            - generic [ref=e447] [cursor=pointer]:
+              - generic [ref=e448]: "-34%"
+              - generic [ref=e449]:
+                - img "Quần short đũi cạp chun basic FSBI001" [ref=e450]
+                - img "Quần short đũi cạp chun basic FSBI001 - hover" [ref=e451]
+              - link "Quần short đũi cạp chun basic FSBI001" [ref=e452]:
+                - /url: /san-pham/quan-short-dui-cap-chun-basic-gap-gau-fsbi001
+              - button "Thêm yêu thích" [ref=e453]:
+                - img [ref=e454]
+              - button "Thêm vào giỏ" [ref=e456]:
+                - img [ref=e457]
+            - generic [ref=e460]:
+              - generic [ref=e461]:
+                - generic [ref=e462]: +3 Màu sắc
+                - generic [ref=e463]: +5 Kích thước
+              - link "Quần short đũi cạp chun basic FSBI001" [ref=e464] [cursor=pointer]:
+                - /url: /san-pham/quan-short-dui-cap-chun-basic-gap-gau-fsbi001
+                - heading "Quần short đũi cạp chun basic FSBI001" [level=3] [ref=e465]
+              - generic [ref=e466]:
+                - generic [ref=e467]: 299.000 ₫
+                - generic [ref=e468]: 450.000 ₫
+          - generic [ref=e471]:
+            - generic [ref=e472] [cursor=pointer]:
+              - generic [ref=e473]: "-34%"
+              - generic [ref=e474]:
+                - img "Quần short khaki cạp thường basic FSBK012" [ref=e475]
+                - img "Quần short khaki cạp thường basic FSBK012 - hover" [ref=e476]
+              - link "Quần short khaki cạp thường basic FSBK012" [ref=e477]:
+                - /url: /san-pham/quan-short-khaki-cap-thuong-basic-fsbk012
+              - button "Thêm yêu thích" [ref=e478]:
+                - img [ref=e479]
+              - button "Thêm vào giỏ" [ref=e481]:
+                - img [ref=e482]
+            - generic [ref=e485]:
+              - generic [ref=e486]:
+                - generic [ref=e487]: +3 Màu sắc
+                - generic [ref=e488]: +5 Kích thước
+              - link "Quần short khaki cạp thường basic FSBK012" [ref=e489] [cursor=pointer]:
+                - /url: /san-pham/quan-short-khaki-cap-thuong-basic-fsbk012
+                - heading "Quần short khaki cạp thường basic FSBK012" [level=3] [ref=e490]
+              - generic [ref=e491]:
+                - generic [ref=e492]: 299.000 ₫
+                - generic [ref=e493]: 450.000 ₫
+          - generic [ref=e496]:
+            - generic [ref=e497] [cursor=pointer]:
+              - generic [ref=e498]: "-32%"
+              - generic [ref=e499]:
+                - img "Quần Short gió thể thao đục lỗ sườn BW600" [ref=e500]
+                - img "Quần Short gió thể thao đục lỗ sườn BW600 - hover" [ref=e501]
+              - link "Quần Short gió thể thao đục lỗ sườn BW600" [ref=e502]:
+                - /url: /san-pham/quan-short-gio-the-thao-duc-lo-suon-bw600
+              - button "Thêm yêu thích" [ref=e503]:
+                - img [ref=e504]
+              - button "Thêm vào giỏ" [ref=e506]:
+                - img [ref=e507]
+            - generic [ref=e510]:
+              - generic [ref=e511]:
+                - generic [ref=e512]: +3 Màu sắc
+                - generic [ref=e513]: +5 Kích thước
+              - link "Quần Short gió thể thao đục lỗ sườn BW600" [ref=e514] [cursor=pointer]:
+                - /url: /san-pham/quan-short-gio-the-thao-duc-lo-suon-bw600
+                - heading "Quần Short gió thể thao đục lỗ sườn BW600" [level=3] [ref=e515]
+              - generic [ref=e516]:
+                - generic [ref=e517]: 169.000 ₫
+                - generic [ref=e518]: 249.000 ₫
+          - generic [ref=e521]:
+            - generic [ref=e522] [cursor=pointer]:
+              - generic [ref=e523]: "-32%"
+              - generic [ref=e524]:
+                - img "Quần short gió basic phối chun cạp FSBW001" [ref=e525]
+                - img "Quần short gió basic phối chun cạp FSBW001 - hover" [ref=e526]
+              - link "Quần short gió basic phối chun cạp FSBW001" [ref=e527]:
+                - /url: /san-pham/quan-short-gio-basic-phoi-chun-cap-fsbw001
+              - button "Thêm yêu thích" [ref=e528]:
+                - img [ref=e529]
+              - button "Thêm vào giỏ" [ref=e531]:
+                - img [ref=e532]
+            - generic [ref=e535]:
+              - generic [ref=e536]:
+                - generic [ref=e537]: +2 Màu sắc
+                - generic [ref=e538]: +5 Kích thước
+              - link "Quần short gió basic phối chun cạp FSBW001" [ref=e539] [cursor=pointer]:
+                - /url: /san-pham/quan-short-gio-basic-phoi-chun-cap-fsbw001
+                - heading "Quần short gió basic phối chun cạp FSBW001" [level=3] [ref=e540]
+              - generic [ref=e541]:
+                - generic [ref=e542]: 169.000 ₫
+                - generic [ref=e543]: 249.000 ₫
+          - generic [ref=e546]:
+            - generic [ref=e547] [cursor=pointer]:
+              - generic [ref=e548]: "-34%"
+              - generic [ref=e549]:
+                - img "Quần short khaki cạp chun basic FSBK010" [ref=e550]
+                - img "Quần short khaki cạp chun basic FSBK010 - hover" [ref=e551]
+              - link "Quần short khaki cạp chun basic FSBK010" [ref=e552]:
+                - /url: /san-pham/quan-short-khaki-cap-chun-basic-fsbk010
+              - button "Thêm yêu thích" [ref=e553]:
+                - img [ref=e554]
+              - button "Thêm vào giỏ" [ref=e556]:
+                - img [ref=e557]
+            - generic [ref=e560]:
+              - generic [ref=e561]:
+                - generic [ref=e562]: +3 Màu sắc
+                - generic [ref=e563]: +5 Kích thước
+              - link "Quần short khaki cạp chun basic FSBK010" [ref=e564] [cursor=pointer]:
+                - /url: /san-pham/quan-short-khaki-cap-chun-basic-fsbk010
+                - heading "Quần short khaki cạp chun basic FSBK010" [level=3] [ref=e565]
+              - generic [ref=e566]:
+                - generic [ref=e567]: 299.000 ₫
+                - generic [ref=e568]: 450.000 ₫
+          - generic [ref=e571]:
+            - generic [ref=e572] [cursor=pointer]:
+              - generic [ref=e573]: "-31%"
+              - generic [ref=e574]:
+                - img "Quần âu slim-fit cạp trơn DABT900" [ref=e575]
+                - img "Quần âu slim-fit cạp trơn DABT900 - hover" [ref=e576]
+              - link "Quần âu slim-fit cạp trơn DABT900" [ref=e577]:
+                - /url: /san-pham/quan-au-slimfit-cap-tron-5-dabt900
+              - button "Thêm yêu thích" [ref=e578]:
+                - img [ref=e579]
+              - button "Thêm vào giỏ" [ref=e581]:
+                - img [ref=e582]
+            - generic [ref=e585]:
+              - generic [ref=e586]:
+                - generic [ref=e587]: +2 Màu sắc
+                - generic [ref=e588]: +5 Kích thước
+              - link "Quần âu slim-fit cạp trơn DABT900" [ref=e589] [cursor=pointer]:
+                - /url: /san-pham/quan-au-slimfit-cap-tron-5-dabt900
+                - heading "Quần âu slim-fit cạp trơn DABT900" [level=3] [ref=e590]
+              - generic [ref=e591]:
+                - generic [ref=e592]: 449.000 ₫
+                - generic [ref=e593]: 650.000 ₫
+          - generic [ref=e596]:
+            - generic [ref=e597] [cursor=pointer]:
+              - generic [ref=e598]: "-31%"
+              - generic [ref=e599]:
+                - img "Quần Jeans basic slim EABJ012" [ref=e600]
+                - img "Quần Jeans basic slim EABJ012 - hover" [ref=e601]
+              - link "Quần Jeans basic slim EABJ012" [ref=e602]:
+                - /url: /san-pham/quan-jeans-basic-slim-eabj012
+              - button "Thêm yêu thích" [ref=e603]:
+                - img [ref=e604]
+              - button "Thêm vào giỏ" [ref=e606]:
+                - img [ref=e607]
+            - generic [ref=e610]:
+              - generic [ref=e611]:
+                - generic [ref=e612]: +2 Màu sắc
+                - generic [ref=e613]: +5 Kích thước
+              - link "Quần Jeans basic slim EABJ012" [ref=e614] [cursor=pointer]:
+                - /url: /san-pham/quan-jeans-basic-slim-eabj012
+                - heading "Quần Jeans basic slim EABJ012" [level=3] [ref=e615]
+              - generic [ref=e616]:
+                - generic [ref=e617]: 449.000 ₫
+                - generic [ref=e618]: 650.000 ₫
+          - generic [ref=e621]:
+            - generic [ref=e622] [cursor=pointer]:
+              - generic [ref=e623]: "-39%"
+              - generic [ref=e624]:
+                - img "Quần kaki dài basic cạp tender FABK001" [ref=e625]
+                - img "Quần kaki dài basic cạp tender FABK001 - hover" [ref=e626]
+              - link "Quần kaki dài basic cạp tender FABK001" [ref=e627]:
+                - /url: /san-pham/quan-kaki-dai-basic-cap-tender-5-fabk001
+              - button "Thêm yêu thích" [ref=e628]:
+                - img [ref=e629]
+              - button "Thêm vào giỏ" [ref=e631]:
+                - img [ref=e632]
+            - generic [ref=e635]:
+              - generic [ref=e636]:
+                - generic [ref=e637]: +3 Màu sắc
+                - generic [ref=e638]: +5 Kích thước
+              - link "Quần kaki dài basic cạp tender FABK001" [ref=e639] [cursor=pointer]:
+                - /url: /san-pham/quan-kaki-dai-basic-cap-tender-5-fabk001
+                - heading "Quần kaki dài basic cạp tender FABK001" [level=3] [ref=e640]
+              - generic [ref=e641]:
+                - generic [ref=e642]: 399.000 ₫
+                - generic [ref=e643]: 650.000 ₫
+          - generic [ref=e646]:
+            - generic [ref=e647] [cursor=pointer]:
+              - generic [ref=e648]: "-43%"
+              - generic [ref=e649]:
+                - img "Áo khoác bộ gió 2 lớp can phối mũ liền GWCW051" [ref=e650]
+                - img "Áo khoác bộ gió 2 lớp can phối mũ liền GWCW051 - hover" [ref=e651]
+              - link "Áo khoác bộ gió 2 lớp can phối mũ liền GWCW051" [ref=e652]:
+                - /url: /san-pham/ao-khoac-gio-2-lop-can-phoi-mu-lien-3-gwcw051
+              - button "Thêm yêu thích" [ref=e653]:
+                - img [ref=e654]
+              - button "Thêm vào giỏ" [ref=e656]:
+                - img [ref=e657]
+            - generic [ref=e660]:
+              - generic [ref=e661]:
+                - generic [ref=e662]: +2 Màu sắc
+                - generic [ref=e663]: +5 Kích thước
+              - link "Áo khoác bộ gió 2 lớp can phối mũ liền GWCW051" [ref=e664] [cursor=pointer]:
+                - /url: /san-pham/ao-khoac-gio-2-lop-can-phoi-mu-lien-3-gwcw051
+                - heading "Áo khoác bộ gió 2 lớp can phối mũ liền GWCW051" [level=3] [ref=e665]
+              - generic [ref=e666]:
+                - generic [ref=e667]: 399.000 ₫
+                - generic [ref=e668]: 699.000 ₫
+          - generic [ref=e671]:
+            - generic [ref=e672] [cursor=pointer]:
+              - generic [ref=e673]: "-33%"
+              - generic [ref=e674]:
+                - img "Áo khoác bomber lót lông thêu logo ngực GWCU051" [ref=e675]
+                - img "Áo khoác bomber lót lông thêu logo ngực GWCU051 - hover" [ref=e676]
+              - link "Áo khoác bomber lót lông thêu logo ngực GWCU051" [ref=e677]:
+                - /url: /san-pham/ao-khoac-bomber-lot-long-theu-logo-nguc-5-gwcu051
+              - button "Thêm yêu thích" [ref=e678]:
+                - img [ref=e679]
+              - button "Thêm vào giỏ" [ref=e681]:
+                - img [ref=e682]
+            - generic [ref=e685]:
+              - generic [ref=e686]:
+                - generic [ref=e687]: +3 Màu sắc
+                - generic [ref=e688]: +5 Kích thước
+              - link "Áo khoác bomber lót lông thêu logo ngực GWCU051" [ref=e689] [cursor=pointer]:
+                - /url: /san-pham/ao-khoac-bomber-lot-long-theu-logo-nguc-5-gwcu051
+                - heading "Áo khoác bomber lót lông thêu logo ngực GWCU051" [level=3] [ref=e690]
+              - generic [ref=e691]:
+                - generic [ref=e692]: 599.000 ₫
+                - generic [ref=e693]: 899.000 ₫
+          - generic [ref=e696]:
+            - generic [ref=e697] [cursor=pointer]:
+              - generic [ref=e698]: "-23%"
+              - generic [ref=e699]:
+                - img "Áo khoác khaki 2 lớp chần bông cổ bomber GWCJ503" [ref=e700]
+                - img "Áo khoác khaki 2 lớp chần bông cổ bomber GWCJ503 - hover" [ref=e701]
+              - link "Áo khoác khaki 2 lớp chần bông cổ bomber GWCJ503" [ref=e702]:
+                - /url: /san-pham/ao-khoac-khaki-2-lop-chan-bong-co-bomber-theu-logo-mat-sau-4-gwcj503
+              - button "Thêm yêu thích" [ref=e703]:
+                - img [ref=e704]
+              - button "Thêm vào giỏ" [ref=e706]:
+                - img [ref=e707]
+            - generic [ref=e710]:
+              - generic [ref=e711]:
+                - generic [ref=e712]: +2 Màu sắc
+                - generic [ref=e713]: +5 Kích thước
+              - link "Áo khoác khaki 2 lớp chần bông cổ bomber GWCJ503" [ref=e714] [cursor=pointer]:
+                - /url: /san-pham/ao-khoac-khaki-2-lop-chan-bong-co-bomber-theu-logo-mat-sau-4-gwcj503
+                - heading "Áo khoác khaki 2 lớp chần bông cổ bomber GWCJ503" [level=3] [ref=e715]
+              - generic [ref=e716]:
+                - generic [ref=e717]: 999.000 ₫
+                - generic [ref=e718]: 1.299.000 ₫
+          - generic [ref=e721]:
+            - generic [ref=e722] [cursor=pointer]:
+              - generic [ref=e723]: "-27%"
+              - generic [ref=e724]:
+                - img "Áo khoác da lộn basic cổ bẻ lót lông GWCL902" [ref=e725]
+                - img "Áo khoác da lộn basic cổ bẻ lót lông GWCL902 - hover" [ref=e726]
+              - link "Áo khoác da lộn basic cổ bẻ lót lông GWCL902" [ref=e727]:
+                - /url: /san-pham/ao-khoac-da-lon-basic-co-be-theu-logo-nguc-4-gwcl902
+              - button "Thêm yêu thích" [ref=e728]:
+                - img [ref=e729]
+              - button "Thêm vào giỏ" [ref=e731]:
+                - img [ref=e732]
+            - generic [ref=e735]:
+              - generic [ref=e736]:
+                - generic [ref=e737]: +3 Màu sắc
+                - generic [ref=e738]: +5 Kích thước
+              - link "Áo khoác da lộn basic cổ bẻ lót lông GWCL902" [ref=e739] [cursor=pointer]:
+                - /url: /san-pham/ao-khoac-da-lon-basic-co-be-theu-logo-nguc-4-gwcl902
+                - heading "Áo khoác da lộn basic cổ bẻ lót lông GWCL902" [level=3] [ref=e740]
+              - generic [ref=e741]:
+                - generic [ref=e742]: 799.000 ₫
+                - generic [ref=e743]: 1.099.000 ₫
+          - generic [ref=e746]:
+            - generic [ref=e747] [cursor=pointer]:
+              - generic [ref=e748]: "-42%"
+              - generic [ref=e749]:
+                - img "Áo khoác phao 3 lớp lót bông regularfit GWCF004" [ref=e750]
+                - img "Áo khoác phao 3 lớp lót bông regularfit GWCF004 - hover" [ref=e751]
+              - link "Áo khoác phao 3 lớp lót bông regularfit GWCF004" [ref=e752]:
+                - /url: /san-pham/ao-khoac-phao-3-lop-lot-bong-co-cao-regularfit-tron-gwcf004
+              - button "Thêm yêu thích" [ref=e753]:
+                - img [ref=e754]
+              - button "Thêm vào giỏ" [ref=e756]:
+                - img [ref=e757]
+            - generic [ref=e760]:
+              - generic [ref=e761]:
+                - generic [ref=e762]: +3 Màu sắc
+                - generic [ref=e763]: +5 Kích thước
+              - link "Áo khoác phao 3 lớp lót bông regularfit GWCF004" [ref=e764] [cursor=pointer]:
+                - /url: /san-pham/ao-khoac-phao-3-lop-lot-bong-co-cao-regularfit-tron-gwcf004
+                - heading "Áo khoác phao 3 lớp lót bông regularfit GWCF004" [level=3] [ref=e765]
+              - generic [ref=e766]:
+                - generic [ref=e767]: 699.000 ₫
+                - generic [ref=e768]: 1.199.000 ₫
+          - generic [ref=e771]:
+            - generic [ref=e772] [cursor=pointer]:
+              - generic [ref=e773]: "-50%"
+              - generic [ref=e774]:
+                - img "Áo sơ mi dài tay trơn Bamboo DATB920" [ref=e775]
+                - img "Áo sơ mi dài tay trơn Bamboo DATB920 - hover" [ref=e776]
+              - link "Áo sơ mi dài tay trơn Bamboo DATB920" [ref=e777]:
+                - /url: /san-pham/ao-so-mi-dai-tay-tron-bamboo-datb920
+              - button "Thêm yêu thích" [ref=e778]:
+                - img [ref=e779]
+              - button "Thêm vào giỏ" [ref=e781]:
+                - img [ref=e782]
+            - generic [ref=e785]:
+              - generic [ref=e786]:
+                - generic [ref=e787]: +2 Màu sắc
+                - generic [ref=e788]: +5 Kích thước
+              - link "Áo sơ mi dài tay trơn Bamboo DATB920" [ref=e789] [cursor=pointer]:
+                - /url: /san-pham/ao-so-mi-dai-tay-tron-bamboo-datb920
+                - heading "Áo sơ mi dài tay trơn Bamboo DATB920" [level=3] [ref=e790]
+              - generic [ref=e791]:
+                - generic [ref=e792]: 210.000 ₫
+                - generic [ref=e793]: 420.000 ₫
+          - generic [ref=e796]:
+            - generic [ref=e797] [cursor=pointer]:
+              - generic [ref=e798]: "-27%"
+              - generic [ref=e799]:
+                - img "Sơ mi dài tay trơn dệt kim FATB001" [ref=e800]
+                - img "Sơ mi dài tay trơn dệt kim FATB001 - hover" [ref=e801]
+              - link "Sơ mi dài tay trơn dệt kim FATB001" [ref=e802]:
+                - /url: /san-pham/so-mi-dai-tay-tron-det-kim-3-fatb001
+              - button "Thêm yêu thích" [ref=e803]:
+                - img [ref=e804]
+              - button "Thêm vào giỏ" [ref=e806]:
+                - img [ref=e807]
+            - generic [ref=e810]:
+              - generic [ref=e811]:
+                - generic [ref=e812]: +3 Màu sắc
+                - generic [ref=e813]: +5 Kích thước
+              - link "Sơ mi dài tay trơn dệt kim FATB001" [ref=e814] [cursor=pointer]:
+                - /url: /san-pham/so-mi-dai-tay-tron-det-kim-3-fatb001
+                - heading "Sơ mi dài tay trơn dệt kim FATB001" [level=3] [ref=e815]
+              - generic [ref=e816]:
+                - generic [ref=e817]: 329.000 ₫
+                - generic [ref=e818]: 450.000 ₫
+          - generic [ref=e821]:
+            - generic [ref=e822] [cursor=pointer]:
+              - generic [ref=e823]: "-30%"
+              - generic [ref=e824]:
+                - img "Sơ mi dài tay trơn FATB002" [ref=e825]
+                - img "Sơ mi dài tay trơn FATB002 - hover" [ref=e826]
+              - link "Sơ mi dài tay trơn FATB002" [ref=e827]:
+                - /url: /san-pham/so-mi-dai-tay-tron-5-fatb002
+              - button "Thêm yêu thích" [ref=e828]:
+                - img [ref=e829]
+              - button "Thêm vào giỏ" [ref=e831]:
+                - img [ref=e832]
+            - generic [ref=e835]:
+              - generic [ref=e836]:
+                - generic [ref=e837]: +2 Màu sắc
+                - generic [ref=e838]: +5 Kích thước
+              - link "Sơ mi dài tay trơn FATB002" [ref=e839] [cursor=pointer]:
+                - /url: /san-pham/so-mi-dai-tay-tron-5-fatb002
+                - heading "Sơ mi dài tay trơn FATB002" [level=3] [ref=e840]
+              - generic [ref=e841]:
+                - generic [ref=e842]: 349.000 ₫
+                - generic [ref=e843]: 500.000 ₫
+          - generic [ref=e846]:
+            - generic [ref=e847] [cursor=pointer]:
+              - generic [ref=e848]: "-33%"
+              - generic [ref=e849]:
+                - img "Áo nỉ bộ can phối tay GWTW901" [ref=e850]
+                - img "Áo nỉ bộ can phối tay GWTW901 - hover" [ref=e851]
+              - link "Áo nỉ bộ can phối tay GWTW901" [ref=e852]:
+                - /url: /san-pham/ao-ni-can-phoi-tay-ao-basic-slimfit-5-gwtw901
+              - button "Thêm yêu thích" [ref=e853]:
+                - img [ref=e854]
+              - button "Thêm vào giỏ" [ref=e856]:
+                - img [ref=e857]
+            - generic [ref=e860]:
+              - generic [ref=e861]:
+                - generic [ref=e862]: +3 Màu sắc
+                - generic [ref=e863]: +5 Kích thước
+              - link "Áo nỉ bộ can phối tay GWTW901" [ref=e864] [cursor=pointer]:
+                - /url: /san-pham/ao-ni-can-phoi-tay-ao-basic-slimfit-5-gwtw901
+                - heading "Áo nỉ bộ can phối tay GWTW901" [level=3] [ref=e865]
+              - generic [ref=e866]:
+                - generic [ref=e867]: 399.000 ₫
+                - generic [ref=e868]: 599.000 ₫
+          - generic [ref=e871]:
+            - generic [ref=e872] [cursor=pointer]:
+              - generic [ref=e873]: "-24%"
+              - generic [ref=e874]:
+                - img "Áo nỉ bộ can phối tay FWTW001" [ref=e875]
+                - img "Áo nỉ bộ can phối tay FWTW001 - hover" [ref=e876]
+              - link "Áo nỉ bộ can phối tay FWTW001" [ref=e877]:
+                - /url: /san-pham/ao-ni-bo-can-phoi-tay-6-fwtw001
+              - button "Thêm yêu thích" [ref=e878]:
+                - img [ref=e879]
+              - button "Thêm vào giỏ" [ref=e881]:
+                - img [ref=e882]
+            - generic [ref=e885]:
+              - generic [ref=e886]:
+                - generic [ref=e887]: +2 Màu sắc
+                - generic [ref=e888]: +5 Kích thước
+              - link "Áo nỉ bộ can phối tay FWTW001" [ref=e889] [cursor=pointer]:
+                - /url: /san-pham/ao-ni-bo-can-phoi-tay-6-fwtw001
+                - heading "Áo nỉ bộ can phối tay FWTW001" [level=3] [ref=e890]
+              - generic [ref=e891]:
+                - generic [ref=e892]: 319.000 ₫
+                - generic [ref=e893]: 420.000 ₫
+        - link "XEM TẤT CẢ SẢN PHẨM KHUYẾN MÃI" [ref=e895] [cursor=pointer]:
+          - /url: /danh-muc/sale
+      - generic [ref=e897]:
+        - img "BỘ SƯU TẬP HÈ 2026" [ref=e898]
+        - generic [ref=e900]:
+          - paragraph [ref=e901]: NEW COLLECTION
+          - heading "BỘ SƯU TẬP HÈ 2026" [level=2] [ref=e902]
+          - link "KHÁM PHÁ NGAY" [ref=e903] [cursor=pointer]:
+            - /url: /bo-suu-tap/he-2026
+      - generic [ref=e904]:
+        - generic [ref=e906]:
+          - button "SẢN PHẨM NỔI BẬT" [ref=e907] [cursor=pointer]
+          - button "ÁO POLO" [ref=e908] [cursor=pointer]
+          - button "ÁO KHOÁC" [ref=e909] [cursor=pointer]
+          - button "QUẦN ÂU & JEANS" [ref=e910] [cursor=pointer]
+        - generic [ref=e911]:
+          - generic [ref=e913]:
+            - generic [ref=e914] [cursor=pointer]:
+              - generic [ref=e915]: NEW
+              - generic [ref=e916]:
+                - img "Áo polo kẻ bo tay GSTP068" [ref=e917]
+                - img "Áo polo kẻ bo tay GSTP068 - hover" [ref=e918]
+              - link "Áo polo kẻ bo tay GSTP068" [ref=e919]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-3-gstp068
+              - button "Thêm yêu thích" [ref=e920]:
+                - img [ref=e921]
+              - button "Thêm vào giỏ" [ref=e923]:
+                - img [ref=e924]
+            - generic [ref=e927]:
+              - generic [ref=e928]:
+                - generic [ref=e929]: +3 Màu sắc
+                - generic [ref=e930]: +5 Kích thước
+              - link "Áo polo kẻ bo tay GSTP068" [ref=e931] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-3-gstp068
+                - heading "Áo polo kẻ bo tay GSTP068" [level=3] [ref=e932]
+              - generic [ref=e934]: 550.000 ₫
+          - generic [ref=e936]:
+            - generic [ref=e937] [cursor=pointer]:
+              - generic [ref=e938]: NEW
+              - generic [ref=e939]:
+                - img "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e940]
+                - img "Áo polo trơn bo kẻ thêu logo ngực GSTP643 - hover" [ref=e941]
+              - link "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e942]:
+                - /url: /san-pham/ao-polo-tron-bo-ke-theu-logo-nguc-4-gstp643
+              - button "Thêm yêu thích" [ref=e943]:
+                - img [ref=e944]
+              - button "Thêm vào giỏ" [ref=e946]:
+                - img [ref=e947]
+            - generic [ref=e950]:
+              - generic [ref=e951]:
+                - generic [ref=e952]: +3 Màu sắc
+                - generic [ref=e953]: +5 Kích thước
+              - link "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e954] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-tron-bo-ke-theu-logo-nguc-4-gstp643
+                - heading "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [level=3] [ref=e955]
+              - generic [ref=e957]: 550.000 ₫
+          - generic [ref=e959]:
+            - generic [ref=e960] [cursor=pointer]:
+              - generic [ref=e961]: NEW
+              - generic [ref=e962]:
+                - img "Áo polo kẻ bo tay phối màu GSTP042" [ref=e963]
+                - img "Áo polo kẻ bo tay phối màu GSTP042 - hover" [ref=e964]
+              - link "Áo polo kẻ bo tay phối màu GSTP042" [ref=e965]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-phoi-mau-2-gstp042
+              - button "Thêm yêu thích" [ref=e966]:
+                - img [ref=e967]
+              - button "Thêm vào giỏ" [ref=e969]:
+                - img [ref=e970]
+            - generic [ref=e973]:
+              - generic [ref=e974]:
+                - generic [ref=e975]: +3 Màu sắc
+                - generic [ref=e976]: +5 Kích thước
+              - link "Áo polo kẻ bo tay phối màu GSTP042" [ref=e977] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-phoi-mau-2-gstp042
+                - heading "Áo polo kẻ bo tay phối màu GSTP042" [level=3] [ref=e978]
+              - generic [ref=e980]: 550.000 ₫
+          - generic [ref=e982]:
+            - generic [ref=e983] [cursor=pointer]:
+              - generic [ref=e984]: "-38%"
+              - generic [ref=e985]:
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e986]
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038 - hover" [ref=e987]
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e988]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+              - button "Thêm yêu thích" [ref=e989]:
+                - img [ref=e990]
+              - button "Thêm vào giỏ" [ref=e992]:
+                - img [ref=e993]
+            - generic [ref=e996]:
+              - generic [ref=e997]:
+                - generic [ref=e998]: +4 Màu sắc
+                - generic [ref=e999]: +5 Kích thước
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e1000] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+                - heading "Áo Polo trơn basic thêu logo ngực ESTP038" [level=3] [ref=e1001]
+              - generic [ref=e1002]:
+                - generic [ref=e1003]: 249.000 ₫
+                - generic [ref=e1004]: 400.000 ₫
+          - generic [ref=e1006]:
+            - generic [ref=e1007] [cursor=pointer]:
+              - generic [ref=e1008]: "-38%"
+              - generic [ref=e1009]:
+                - img "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e1010]
+                - img "Áo polo can phối thêu logo đại bàng GSTP047 - hover" [ref=e1011]
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e1012]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+              - button "Thêm yêu thích" [ref=e1013]:
+                - img [ref=e1014]
+              - button "Thêm vào giỏ" [ref=e1016]:
+                - img [ref=e1017]
+            - generic [ref=e1020]:
+              - generic [ref=e1021]:
+                - generic [ref=e1022]: +2 Màu sắc
+                - generic [ref=e1023]: +5 Kích thước
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e1024] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+                - heading "Áo polo can phối thêu logo đại bàng GSTP047" [level=3] [ref=e1025]
+              - generic [ref=e1026]:
+                - generic [ref=e1027]: 299.000 ₫
+                - generic [ref=e1028]: 480.000 ₫
+          - generic [ref=e1030]:
+            - generic [ref=e1031] [cursor=pointer]:
+              - generic [ref=e1032]: NEW
+              - generic [ref=e1033]:
+                - img "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e1034]
+                - img "Áo Polo dài tay basic thêu logo ngực GWTP502 - hover" [ref=e1035]
+              - link "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e1036]:
+                - /url: /san-pham/ao-polo-dai-tay-basic-theu-logo-nguc-3-gwtp502
+              - button "Thêm yêu thích" [ref=e1037]:
+                - img [ref=e1038]
+              - button "Thêm vào giỏ" [ref=e1040]:
+                - img [ref=e1041]
+            - generic [ref=e1044]:
+              - generic [ref=e1045]:
+                - generic [ref=e1046]: +3 Màu sắc
+                - generic [ref=e1047]: +5 Kích thước
+              - link "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e1048] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-dai-tay-basic-theu-logo-nguc-3-gwtp502
+                - heading "Áo Polo dài tay basic thêu logo ngực GWTP502" [level=3] [ref=e1049]
+              - generic [ref=e1051]: 699.000 ₫
+          - generic [ref=e1053]:
+            - generic [ref=e1054] [cursor=pointer]:
+              - generic [ref=e1055]: "-29%"
+              - generic [ref=e1056]:
+                - img "Áo T shirt trơn in thể thao GSTS018" [ref=e1057]
+                - img "Áo T shirt trơn in thể thao GSTS018 - hover" [ref=e1058]
+              - link "Áo T shirt trơn in thể thao GSTS018" [ref=e1059]:
+                - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+              - button "Thêm yêu thích" [ref=e1060]:
+                - img [ref=e1061]
+              - button "Thêm vào giỏ" [ref=e1063]:
+                - img [ref=e1064]
+            - generic [ref=e1067]:
+              - generic [ref=e1068]:
+                - generic [ref=e1069]: +3 Màu sắc
+                - generic [ref=e1070]: +5 Kích thước
+              - link "Áo T shirt trơn in thể thao GSTS018" [ref=e1071] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+                - heading "Áo T shirt trơn in thể thao GSTS018" [level=3] [ref=e1072]
+              - generic [ref=e1073]:
+                - generic [ref=e1074]: 249.000 ₫
+                - generic [ref=e1075]: 349.000 ₫
+          - generic [ref=e1077]:
+            - generic [ref=e1078] [cursor=pointer]:
+              - generic [ref=e1079]: "-29%"
+              - generic [ref=e1080]:
+                - img "Áo T shirt trơn in thể thao GSTS017" [ref=e1081]
+                - img "Áo T shirt trơn in thể thao GSTS017 - hover" [ref=e1082]
+              - link "Áo T shirt trơn in thể thao GSTS017" [ref=e1083]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+              - button "Thêm yêu thích" [ref=e1084]:
+                - img [ref=e1085]
+              - button "Thêm vào giỏ" [ref=e1087]:
+                - img [ref=e1088]
+            - generic [ref=e1091]:
+              - generic [ref=e1092]:
+                - generic [ref=e1093]: +2 Màu sắc
+                - generic [ref=e1094]: +5 Kích thước
+              - link "Áo T shirt trơn in thể thao GSTS017" [ref=e1095] [cursor=pointer]:
+                - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+                - heading "Áo T shirt trơn in thể thao GSTS017" [level=3] [ref=e1096]
+              - generic [ref=e1097]:
+                - generic [ref=e1098]: 249.000 ₫
+                - generic [ref=e1099]: 349.000 ₫
+          - generic [ref=e1101]:
+            - generic [ref=e1102] [cursor=pointer]:
+              - generic [ref=e1103]: "-34%"
+              - generic [ref=e1104]:
+                - img "Quần short khaki cạp thường basic FSBK012" [ref=e1105]
+                - img "Quần short khaki cạp thường basic FSBK012 - hover" [ref=e1106]
+              - link "Quần short khaki cạp thường basic FSBK012" [ref=e1107]:
+                - /url: /san-pham/quan-short-khaki-cap-thuong-basic-fsbk012
+              - button "Thêm yêu thích" [ref=e1108]:
+                - img [ref=e1109]
+              - button "Thêm vào giỏ" [ref=e1111]:
+                - img [ref=e1112]
+            - generic [ref=e1115]:
+              - generic [ref=e1116]:
+                - generic [ref=e1117]: +3 Màu sắc
+                - generic [ref=e1118]: +5 Kích thước
+              - link "Quần short khaki cạp thường basic FSBK012" [ref=e1119] [cursor=pointer]:
+                - /url: /san-pham/quan-short-khaki-cap-thuong-basic-fsbk012
+                - heading "Quần short khaki cạp thường basic FSBK012" [level=3] [ref=e1120]
+              - generic [ref=e1121]:
+                - generic [ref=e1122]: 299.000 ₫
+                - generic [ref=e1123]: 450.000 ₫
+          - generic [ref=e1125]:
+            - generic [ref=e1126] [cursor=pointer]:
+              - generic [ref=e1127]: "-31%"
+              - generic [ref=e1128]:
+                - img "Quần âu slim-fit cạp trơn DABT900" [ref=e1129]
+                - img "Quần âu slim-fit cạp trơn DABT900 - hover" [ref=e1130]
+              - link "Quần âu slim-fit cạp trơn DABT900" [ref=e1131]:
+                - /url: /san-pham/quan-au-slimfit-cap-tron-5-dabt900
+              - button "Thêm yêu thích" [ref=e1132]:
+                - img [ref=e1133]
+              - button "Thêm vào giỏ" [ref=e1135]:
+                - img [ref=e1136]
+            - generic [ref=e1139]:
+              - generic [ref=e1140]:
+                - generic [ref=e1141]: +2 Màu sắc
+                - generic [ref=e1142]: +5 Kích thước
+              - link "Quần âu slim-fit cạp trơn DABT900" [ref=e1143] [cursor=pointer]:
+                - /url: /san-pham/quan-au-slimfit-cap-tron-5-dabt900
+                - heading "Quần âu slim-fit cạp trơn DABT900" [level=3] [ref=e1144]
+              - generic [ref=e1145]:
+                - generic [ref=e1146]: 449.000 ₫
+                - generic [ref=e1147]: 650.000 ₫
+        - link "XEM TẤT CẢ SẢN PHẨM NỔI BẬT" [ref=e1149] [cursor=pointer]:
+          - /url: /san-pham
+      - generic [ref=e1150]:
+        - heading "OUTFIT OF THE DAY" [level=2] [ref=e1151]
+        - generic [ref=e1152]:
+          - generic [ref=e1154]:
+            - img "OUTFIT ĐI LÀM" [ref=e1155]
+            - generic [ref=e1157]:
+              - heading "OUTFIT ĐI LÀM" [level=3] [ref=e1158]
+              - link "MUA FULL SET" [ref=e1159] [cursor=pointer]:
+                - /url: /danh-muc/ao-polo
+          - generic [ref=e1161]:
+            - img "OUTFIT ĐI CHƠI" [ref=e1162]
+            - generic [ref=e1164]:
+              - heading "OUTFIT ĐI CHƠI" [level=3] [ref=e1165]
+              - link "MUA FULL SET" [ref=e1166] [cursor=pointer]:
+                - /url: /danh-muc/ao-thun
+          - generic [ref=e1168]:
+            - img "OUTFIT LỊCH LÃM" [ref=e1169]
+            - generic [ref=e1171]:
+              - heading "OUTFIT LỊCH LÃM" [level=3] [ref=e1172]
+              - link "MUA FULL SET" [ref=e1173] [cursor=pointer]:
+                - /url: /danh-muc/ao-khoac
+        - link "XEM THÊM" [ref=e1175] [cursor=pointer]:
+          - /url: /bo-suu-tap
+      - generic [ref=e1176]:
+        - generic [ref=e1177]:
+          - button "Áo Polo" [ref=e1178] [cursor=pointer]
+          - button "Quần Short" [ref=e1179] [cursor=pointer]
+          - button "Áo Sơ Mi" [ref=e1180] [cursor=pointer]
+          - button "Áo Khoác" [ref=e1181] [cursor=pointer]
+        - generic [ref=e1182]:
+          - generic [ref=e1184]:
+            - generic [ref=e1185] [cursor=pointer]:
+              - generic [ref=e1186]: NEW
+              - generic [ref=e1187]:
+                - img "Áo polo kẻ bo tay GSTP068" [ref=e1188]
+                - img "Áo polo kẻ bo tay GSTP068 - hover" [ref=e1189]
+              - link "Áo polo kẻ bo tay GSTP068" [ref=e1190]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-3-gstp068
+              - button "Thêm yêu thích" [ref=e1191]:
+                - img [ref=e1192]
+              - button "Thêm vào giỏ" [ref=e1194]:
+                - img [ref=e1195]
+            - generic [ref=e1198]:
+              - generic [ref=e1199]:
+                - generic [ref=e1200]: +3 Màu sắc
+                - generic [ref=e1201]: +5 Kích thước
+              - link "Áo polo kẻ bo tay GSTP068" [ref=e1202] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-3-gstp068
+                - heading "Áo polo kẻ bo tay GSTP068" [level=3] [ref=e1203]
+              - generic [ref=e1205]: 550.000 ₫
+          - generic [ref=e1207]:
+            - generic [ref=e1208] [cursor=pointer]:
+              - generic [ref=e1209]: NEW
+              - generic [ref=e1210]:
+                - img "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e1211]
+                - img "Áo polo trơn bo kẻ thêu logo ngực GSTP643 - hover" [ref=e1212]
+              - link "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e1213]:
+                - /url: /san-pham/ao-polo-tron-bo-ke-theu-logo-nguc-4-gstp643
+              - button "Thêm yêu thích" [ref=e1214]:
+                - img [ref=e1215]
+              - button "Thêm vào giỏ" [ref=e1217]:
+                - img [ref=e1218]
+            - generic [ref=e1221]:
+              - generic [ref=e1222]:
+                - generic [ref=e1223]: +3 Màu sắc
+                - generic [ref=e1224]: +5 Kích thước
+              - link "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e1225] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-tron-bo-ke-theu-logo-nguc-4-gstp643
+                - heading "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [level=3] [ref=e1226]
+              - generic [ref=e1228]: 550.000 ₫
+          - generic [ref=e1230]:
+            - generic [ref=e1231] [cursor=pointer]:
+              - generic [ref=e1232]: NEW
+              - generic [ref=e1233]:
+                - img "Áo polo kẻ bo tay phối màu GSTP042" [ref=e1234]
+                - img "Áo polo kẻ bo tay phối màu GSTP042 - hover" [ref=e1235]
+              - link "Áo polo kẻ bo tay phối màu GSTP042" [ref=e1236]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-phoi-mau-2-gstp042
+              - button "Thêm yêu thích" [ref=e1237]:
+                - img [ref=e1238]
+              - button "Thêm vào giỏ" [ref=e1240]:
+                - img [ref=e1241]
+            - generic [ref=e1244]:
+              - generic [ref=e1245]:
+                - generic [ref=e1246]: +3 Màu sắc
+                - generic [ref=e1247]: +5 Kích thước
+              - link "Áo polo kẻ bo tay phối màu GSTP042" [ref=e1248] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-ke-bo-tay-phoi-mau-2-gstp042
+                - heading "Áo polo kẻ bo tay phối màu GSTP042" [level=3] [ref=e1249]
+              - generic [ref=e1251]: 550.000 ₫
+          - generic [ref=e1253]:
+            - generic [ref=e1254] [cursor=pointer]:
+              - generic [ref=e1255]: "-38%"
+              - generic [ref=e1256]:
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e1257]
+                - img "Áo Polo trơn basic thêu logo ngực ESTP038 - hover" [ref=e1258]
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e1259]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+              - button "Thêm yêu thích" [ref=e1260]:
+                - img [ref=e1261]
+              - button "Thêm vào giỏ" [ref=e1263]:
+                - img [ref=e1264]
+            - generic [ref=e1267]:
+              - generic [ref=e1268]:
+                - generic [ref=e1269]: +4 Màu sắc
+                - generic [ref=e1270]: +5 Kích thước
+              - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e1271] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+                - heading "Áo Polo trơn basic thêu logo ngực ESTP038" [level=3] [ref=e1272]
+              - generic [ref=e1273]:
+                - generic [ref=e1274]: 249.000 ₫
+                - generic [ref=e1275]: 400.000 ₫
+          - generic [ref=e1277]:
+            - generic [ref=e1278] [cursor=pointer]:
+              - generic [ref=e1279]: "-38%"
+              - generic [ref=e1280]:
+                - img "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e1281]
+                - img "Áo polo can phối thêu logo đại bàng GSTP047 - hover" [ref=e1282]
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e1283]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+              - button "Thêm yêu thích" [ref=e1284]:
+                - img [ref=e1285]
+              - button "Thêm vào giỏ" [ref=e1287]:
+                - img [ref=e1288]
+            - generic [ref=e1291]:
+              - generic [ref=e1292]:
+                - generic [ref=e1293]: +2 Màu sắc
+                - generic [ref=e1294]: +5 Kích thước
+              - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e1295] [cursor=pointer]:
+                - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+                - heading "Áo polo can phối thêu logo đại bàng GSTP047" [level=3] [ref=e1296]
+              - generic [ref=e1297]:
+                - generic [ref=e1298]: 299.000 ₫
+                - generic [ref=e1299]: 480.000 ₫
+        - link "XEM THÊM ÁO POLO" [ref=e1301] [cursor=pointer]:
+          - /url: /danh-muc/ao-polo
+      - generic [ref=e1303]:
+        - generic [ref=e1304]:
+          - img [ref=e1305]
+          - generic [ref=e1310]: Miễn phí giao hàng
+          - generic [ref=e1311]: Đơn từ 500.000đ
+        - generic [ref=e1312]:
+          - img [ref=e1313]
+          - generic [ref=e1315]: Hàng chính hãng
+          - generic [ref=e1316]: 100% authentic
+        - generic [ref=e1317]:
+          - img [ref=e1318]
+          - generic [ref=e1323]: Đổi trả 7 ngày
+          - generic [ref=e1324]: Miễn phí đổi trả
+        - generic [ref=e1325]:
+          - img [ref=e1326]
+          - generic [ref=e1328]: Hỗ trợ 24/7
+          - generic [ref=e1329]: "Hotline: 1900-xxxx"
+      - generic [ref=e1331]:
+        - heading "Đăng ký nhận ưu đãi" [level=3] [ref=e1332]
+        - paragraph [ref=e1333]: Nhận ngay voucher 10% cho đơn hàng đầu tiên
+        - generic [ref=e1334]:
+          - textbox "Email của bạn" [ref=e1335]
+          - button "ĐĂNG KÝ" [ref=e1336] [cursor=pointer]
+  - contentinfo [ref=e1337]:
+    - generic [ref=e1338]:
+      - generic [ref=e1339]:
+        - img "Torano" [ref=e1341]
+        - paragraph [ref=e1342]: Hệ thống thời trang cho phái mạnh hàng đầu Việt Nam, hướng tới phong cách nam tính, lịch lãm và trẻ trung.
+        - generic [ref=e1343]:
+          - link "f" [ref=e1344] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e1345]: f
+          - link "t" [ref=e1346] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e1347]: t
+          - link "i" [ref=e1348] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e1349]: i
+          - link "t" [ref=e1350] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e1351]: t
+          - link "y" [ref=e1352] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e1353]: "y"
+        - heading "Phương thức thanh toán" [level=4] [ref=e1354]
+        - generic [ref=e1355]:
+          - generic [ref=e1356]: VNPAY
+          - generic [ref=e1357]: ZaloPay
+          - generic [ref=e1358]: MoMo
+          - generic [ref=e1359]: COD
+          - generic [ref=e1360]: VISA
+      - generic [ref=e1361]:
+        - heading "Thông tin liên hệ" [level=4] [ref=e1362] [cursor=pointer]
+        - list [ref=e1363]:
+          - listitem [ref=e1364]: "Địa chỉ: 123 Nguyễn Huệ, Quận 1, TP. HCM"
+          - listitem [ref=e1365]: "Điện thoại: 1900-xxxx"
+          - listitem [ref=e1366]: "Email: support@fashionecom.vn"
+        - heading "Phương thức vận chuyển" [level=4] [ref=e1367] [cursor=pointer]
+        - generic [ref=e1368]:
+          - generic [ref=e1369]: GHN
+          - generic [ref=e1370]: GHTK
+          - generic [ref=e1371]: J&T
+          - generic [ref=e1372]: Ninja Van
+      - generic [ref=e1373]:
+        - heading "Nhóm liên kết" [level=4] [ref=e1374] [cursor=pointer]
+        - list [ref=e1375]:
+          - listitem [ref=e1376]:
+            - link "Tìm kiếm" [ref=e1377] [cursor=pointer]:
+              - /url: /tim-kiem
+          - listitem [ref=e1378]:
+            - link "Giới thiệu" [ref=e1379] [cursor=pointer]:
+              - /url: /gioi-thieu
+          - listitem [ref=e1380]:
+            - link "Chính sách đổi trả" [ref=e1381] [cursor=pointer]:
+              - /url: /chinh-sach/doi-tra
+          - listitem [ref=e1382]:
+            - link "Chính sách bảo mật" [ref=e1383] [cursor=pointer]:
+              - /url: /chinh-sach/bao-mat
+          - listitem [ref=e1384]:
+            - link "Tuyển dụng" [ref=e1385] [cursor=pointer]:
+              - /url: /tuyen-dung
+          - listitem [ref=e1386]:
+            - link "Liên hệ" [ref=e1387] [cursor=pointer]:
+              - /url: /lien-he
+      - generic [ref=e1388]:
+        - heading "Đăng ký nhận tin" [level=4] [ref=e1389] [cursor=pointer]
+        - paragraph [ref=e1390]: Để cập nhật những sản phẩm mới, nhận thông tin ưu đãi đặc biệt và thông tin giảm giá khác.
+        - generic [ref=e1391]:
+          - img [ref=e1392]
+          - textbox "Nhập email của bạn" [ref=e1394]
+          - button "ĐĂNG KÝ" [ref=e1395] [cursor=pointer]
+    - generic [ref=e1397]: Copyright © 2026 Torano. All rights reserved.
+  - generic [ref=e1398]:
+    - generic [ref=e1399]:
+      - heading "Giỏ hàng" [level=2] [ref=e1400]
+      - button "Đóng giỏ hàng" [ref=e1401] [cursor=pointer]:
+        - img [ref=e1402]
+    - generic [ref=e1405]:
+      - img [ref=e1407]:
+        - generic [ref=e1419]: ✦
+        - generic [ref=e1420]: ★
+        - generic [ref=e1421]: ✦
+        - generic [ref=e1422]: ✦
+      - paragraph [ref=e1423]: Chưa có sản phẩm trong giỏ hàng...
+      - generic [ref=e1424]:
+        - link "Trở về trang sản phẩm" [ref=e1425] [cursor=pointer]:
+          - /url: /san-pham
+        - link "Khuyến mãi dành cho bạn" [ref=e1426] [cursor=pointer]:
+          - /url: /danh-muc/sale
+  - navigation [ref=e1427]:
+    - generic [ref=e1428]:
+      - link "Trang chủ" [ref=e1429] [cursor=pointer]:
+        - /url: /
+        - img [ref=e1431]
+        - generic [ref=e1433]: Trang chủ
+      - link "Danh mục" [ref=e1435] [cursor=pointer]:
+        - /url: /danh-muc/ao-nam
+        - img [ref=e1437]
+        - generic [ref=e1439]: Danh mục
+      - button "Tìm kiếm" [ref=e1440] [cursor=pointer]:
+        - img [ref=e1442]
+        - generic [ref=e1444]: Tìm kiếm
+      - link "Yêu thích" [ref=e1445] [cursor=pointer]:
+        - /url: /tai-khoan/yeu-thich
+        - img [ref=e1447]
+        - generic [ref=e1449]: Yêu thích
+      - link "Tài khoản" [ref=e1450] [cursor=pointer]:
+        - /url: /tai-khoan
+        - img [ref=e1452]
+        - generic [ref=e1454]: Tài khoản
+  - generic [ref=e1455]:
+    - generic [ref=e1456]:
+      - link "Torano" [ref=e1457] [cursor=pointer]:
+        - /url: /
+        - img "Torano" [ref=e1458]
+      - button "Đóng menu" [ref=e1459] [cursor=pointer]:
+        - img [ref=e1460]
+    - generic [ref=e1464]:
+      - link "ĐĂNG NHẬP" [ref=e1465] [cursor=pointer]:
+        - /url: /dang-nhap
+      - link "ĐĂNG KÝ" [ref=e1466] [cursor=pointer]:
+        - /url: /dang-ky
+    - generic [ref=e1467]:
+      - link "Sản phẩm mới" [ref=e1470] [cursor=pointer]:
+        - /url: /san-pham
+      - generic [ref=e1471]:
+        - generic [ref=e1472]:
+          - link "Áo nam" [ref=e1473] [cursor=pointer]:
+            - /url: /danh-muc/ao-nam
+          - button "Mở danh mục Áo nam" [ref=e1474] [cursor=pointer]:
+            - img [ref=e1475]
+        - generic [ref=e1477]:
+          - link "Áo Polo" [ref=e1478] [cursor=pointer]:
+            - /url: /danh-muc/ao-polo
+          - link "Áo Thun" [ref=e1479] [cursor=pointer]:
+            - /url: /danh-muc/ao-thun
+          - link "Áo Sơ Mi" [ref=e1480] [cursor=pointer]:
+            - /url: /danh-muc/ao-so-mi
+          - link "Áo Blazer" [ref=e1481] [cursor=pointer]:
+            - /url: /danh-muc/ao-blazer
+          - link "Áo Khoác" [ref=e1482] [cursor=pointer]:
+            - /url: /danh-muc/ao-khoac
+      - generic [ref=e1483]:
+        - generic [ref=e1484]:
+          - link "Quần nam" [ref=e1485] [cursor=pointer]:
+            - /url: /danh-muc/quan-nam
+          - button "Mở danh mục Quần nam" [ref=e1486] [cursor=pointer]:
+            - img [ref=e1487]
+        - generic [ref=e1489]:
+          - link "Quần Tây" [ref=e1490] [cursor=pointer]:
+            - /url: /danh-muc/quan-tay
+          - link "Quần Jeans" [ref=e1491] [cursor=pointer]:
+            - /url: /danh-muc/quan-jeans
+          - link "Quần Short" [ref=e1492] [cursor=pointer]:
+            - /url: /danh-muc/quan-short
+      - generic [ref=e1493]:
+        - generic [ref=e1494]:
+          - link "Phụ kiện" [ref=e1495] [cursor=pointer]:
+            - /url: /danh-muc/phu-kien
+          - button "Mở danh mục Phụ kiện" [ref=e1496] [cursor=pointer]:
+            - img [ref=e1497]
+        - link "Thắt Lưng" [ref=e1500] [cursor=pointer]:
+          - /url: /danh-muc/that-lung
+      - link "Sale" [ref=e1503] [cursor=pointer]:
+        - /url: /danh-muc/sale
+    - generic [ref=e1504]:
+      - link "Sản phẩm yêu thích" [ref=e1505] [cursor=pointer]:
+        - /url: /tai-khoan/yeu-thich
+        - img [ref=e1506]
+        - text: Sản phẩm yêu thích
+      - generic [ref=e1508]:
+        - img [ref=e1509]
+        - text: "Hotline: 1900-xxxx"

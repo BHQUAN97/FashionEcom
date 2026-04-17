@@ -22,15 +22,32 @@ export function LoginForm() {
     setError('');
     setLoading(true);
 
-    // Mock login — luon thanh cong
-    setTimeout(() => {
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4300/api';
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.message || 'Email hoặc mật khẩu không đúng');
+      }
+
+      const json = await res.json();
+      const { user: u, accessToken } = json.data;
       setAuth(
-        { id: 'user-1', email, name: 'Nguyen Van A', role: 0 },
-        'mock-access-token',
+        { id: u.sys_user_id, email: u.sys_user_email, name: u.sys_user_name || '', role: u.sys_user_role ?? 0 },
+        accessToken,
       );
-      setLoading(false);
       router.push(ROUTES.ACCOUNT);
-    }, 800);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Đã xảy ra lỗi');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -72,6 +89,7 @@ export function LoginForm() {
           placeholder="Mật khẩu"
           className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition pr-11"
           required
+          minLength={8}
         />
         <button
           type="button"

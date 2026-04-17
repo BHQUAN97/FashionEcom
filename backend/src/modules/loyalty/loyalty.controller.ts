@@ -16,7 +16,7 @@ export class LoyaltyController {
 
   @Get('balance')
   @UseGuards(JwtAuthGuard)
-  async getBalance(@CurrentUser('sub') customerId: string) {
+  async getBalance(@CurrentUser('userId') customerId: string) {
     const data = await this.loyaltyService.getBalance(customerId);
     return { data, message: 'OK' };
   }
@@ -24,7 +24,7 @@ export class LoyaltyController {
   @Get('transactions')
   @UseGuards(JwtAuthGuard)
   async getTransactions(
-    @CurrentUser('sub') customerId: string,
+    @CurrentUser('userId') customerId: string,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
@@ -35,7 +35,7 @@ export class LoyaltyController {
   @UseGuards(JwtAuthGuard)
   async redeem(
     @Body() dto: RedeemPointsDto,
-    @CurrentUser('sub') customerId: string,
+    @CurrentUser('userId') customerId: string,
   ) {
     const data = await this.loyaltyService.redeem(dto, customerId);
     return { data, message: 'OK' };
@@ -85,7 +85,7 @@ export class AdminLoyaltyController {
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
   async adjustPoints(
     @Body() dto: AdjustPointsDto,
-    @CurrentUser('sub') adminId: string,
+    @CurrentUser('userId') adminId: string,
   ) {
     const data = await this.loyaltyService.adjustPoints(dto, adminId);
     return { data, message: 'Dieu chinh diem thanh cong' };

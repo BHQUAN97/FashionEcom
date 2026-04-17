@@ -4,9 +4,10 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThanOrEqual, MoreThanOrEqual, In } from 'typeorm';
+import { Repository, LessThanOrEqual, MoreThanOrEqual, In, DataSource } from 'typeorm';
 import { DiscountCodeEntity } from './entities/discount-code.entity';
 import { DiscountUsageEntity } from './entities/discount-usage.entity';
 import { FlashSaleEntity } from './entities/flash-sale.entity';
@@ -16,6 +17,8 @@ import { CreateFlashSaleDto, UpdateFlashSaleDto, FlashSaleQueryDto } from './dto
 
 @Injectable()
 export class PromotionsService {
+  private readonly logger = new Logger(PromotionsService.name);
+
   constructor(
     @InjectRepository(DiscountCodeEntity)
     private readonly discountRepo: Repository<DiscountCodeEntity>,
@@ -25,6 +28,7 @@ export class PromotionsService {
     private readonly flashSaleRepo: Repository<FlashSaleEntity>,
     @InjectRepository(FlashSaleItemEntity)
     private readonly flashSaleItemRepo: Repository<FlashSaleItemEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   // ==================== Discount Codes ====================
@@ -60,12 +64,33 @@ export class PromotionsService {
     return discount;
   }
 
+  /**
+   * Validate gia tri discount theo type — chong tao discount bat hop ly
+   */
+  private validateDiscountValue(type: number, value: number) {
+    // Khuyen mai khong vuot qua 60% gia tri san pham
+    if (type === 1 && value > 60) {
+      throw new BadRequestException('Giam gia phan tram toi da 60%');
+    }
+    if (type === 1 && value > 50) {
+      this.logger.warn(`[SECURITY] Discount phan tram cao bat thuong: ${value}%`);
+    }
+    if (type === 2 && value > 50_000_000) {
+      throw new BadRequestException('Giam gia co dinh toi da 50,000,000 VND');
+    }
+  }
+
   async createDiscount(dto: CreateDiscountDto) {
+    // BAO MAT: Validate discount value theo type
+    this.validateDiscountValue(dto.type, dto.value);
+
     // Check trung code
     const existing = await this.discountRepo.findOne({
       where: { prmDiscountCode: dto.code.toUpperCase() },
     });
     if (existing) throw new ConflictException('Ma giam gia da ton tai');
+
+    this.logger.log(`[AUDIT] Create discount: code=${dto.code}, type=${dto.type}, value=${dto.value}`);
 
     const entity = new DiscountCodeEntity();
     entity.prmDiscountId = randomUUID();
@@ -73,7 +98,7 @@ export class PromotionsService {
     entity.prmDiscountType = dto.type;
     entity.prmDiscountValue = dto.value;
     entity.prmDiscountMaxAmount = dto.maxAmount || 0;
-    entity.prmDiscountConditionsJson = dto.conditionsJson || null;
+    entity.prmDiscountConditionsJson = dto.conditionsJson ? (dto.conditionsJson as unknown as Record<string, unknown>) : null;
     entity.prmDiscountMaxUsage = dto.maxUsage ?? null;
     entity.prmDiscountMaxPerCustomer = dto.maxPerCustomer ?? null;
     entity.prmDiscountStartDate = dto.startDate ? new Date(dto.startDate) : null;
@@ -87,7 +112,15 @@ export class PromotionsService {
   }
 
   async updateDiscount(id: string, dto: UpdateDiscountDto) {
+    // BAO MAT: Validate discount value theo type
+    const effectiveType = dto.type ?? (await this.getDiscount(id)).prmDiscountType;
+    if (dto.value !== undefined) {
+      this.validateDiscountValue(effectiveType, dto.value);
+    }
+
     const discount = await this.getDiscount(id);
+
+    this.logger.log(`[AUDIT] Update discount: id=${id}, code=${discount.prmDiscountCode}, changes=${JSON.stringify(dto)}`);
 
     // Neu doi code, check trung
     if (dto.code && dto.code.toUpperCase() !== discount.prmDiscountCode) {
@@ -102,7 +135,7 @@ export class PromotionsService {
       prmDiscountType: dto.type ?? discount.prmDiscountType,
       prmDiscountValue: dto.value ?? discount.prmDiscountValue,
       prmDiscountMaxAmount: dto.maxAmount ?? discount.prmDiscountMaxAmount,
-      prmDiscountConditionsJson: dto.conditionsJson !== undefined ? dto.conditionsJson : discount.prmDiscountConditionsJson,
+      prmDiscountConditionsJson: dto.conditionsJson !== undefined ? (dto.conditionsJson as unknown as Record<string, unknown>) : discount.prmDiscountConditionsJson,
       prmDiscountMaxUsage: dto.maxUsage !== undefined ? dto.maxUsage : discount.prmDiscountMaxUsage,
       prmDiscountMaxPerCustomer: dto.maxPerCustomer !== undefined ? dto.maxPerCustomer : discount.prmDiscountMaxPerCustomer,
       prmDiscountStartDate: dto.startDate ? new Date(dto.startDate) : discount.prmDiscountStartDate,
@@ -118,6 +151,7 @@ export class PromotionsService {
 
   async deleteDiscount(id: string) {
     const discount = await this.getDiscount(id);
+    this.logger.warn(`[AUDIT] Delete discount: id=${id}, code=${discount.prmDiscountCode}`);
     await this.discountRepo.remove(discount);
   }
 
@@ -195,22 +229,52 @@ export class PromotionsService {
     }
 
     // Step 8: Calculate discount amount
+    // BAO MAT: server-side validation — gia tri discount KHONG vuot qua gioi han
+    const discountValue = Number(discount.prmDiscountValue);
+    if (discount.prmDiscountType === 1 && (discountValue < 0 || discountValue > 60)) {
+      this.logger.error(`[SECURITY] Invalid discount value in DB: id=${discount.prmDiscountId}, type=%, value=${discountValue}`);
+      throw new BadRequestException('Gia tri khuyen mai khong hop le');
+    }
+
     let discountAmount = 0;
     if (discount.prmDiscountType === 1) {
       // Giam theo phan tram
-      discountAmount = dto.cartSubtotal * Number(discount.prmDiscountValue) / 100;
+      discountAmount = dto.cartSubtotal * discountValue / 100;
       // Cap tai max_amount
       if (Number(discount.prmDiscountMaxAmount) > 0) {
         discountAmount = Math.min(discountAmount, Number(discount.prmDiscountMaxAmount));
       }
     } else {
       // Giam co dinh
-      discountAmount = Math.min(Number(discount.prmDiscountValue), dto.cartSubtotal);
+      discountAmount = Math.min(discountValue, dto.cartSubtotal);
     }
 
-    discountAmount = Math.round(discountAmount);
+    // BAO MAT: dam bao discount khong vuot qua gia tri don hang
+    discountAmount = Math.max(0, Math.round(discountAmount));
+    if (discountAmount > dto.cartSubtotal) {
+      discountAmount = dto.cartSubtotal;
+    }
 
-    // Step 9: Return discount details
+    // Step 9: Atomic increment usage counter — chong race condition
+    // Dung raw SQL UPDATE voi WHERE clause dam bao khong vuot max usage
+    const updateResult = await this.dataSource.query(
+      `UPDATE prm_discount_code
+       SET prm_discount_usage_count = prm_discount_usage_count + 1
+       WHERE prm_discount_id = ?
+         AND (prm_discount_max_usage IS NULL OR prm_discount_usage_count < prm_discount_max_usage)`,
+      [discount.prmDiscountId],
+    );
+
+    // Kiem tra row affected — neu 0 thi da het luot (race condition caught!)
+    if (updateResult.affectedRows === 0) {
+      throw new BadRequestException('Ma giam gia da het luot su dung');
+    }
+
+    this.logger.log(
+      `[AUDIT] Discount applied: code=${discount.prmDiscountCode}, amount=${discountAmount}, customer=${dto.customerId || 'guest'}`,
+    );
+
+    // Step 10: Return discount details
     return {
       discountId: discount.prmDiscountId,
       code: discount.prmDiscountCode,
@@ -255,12 +319,29 @@ export class PromotionsService {
   }
 
   async createFlashSale(dto: CreateFlashSaleDto) {
+    this.logger.log(
+      `[AUDIT] Create flash sale: title=${dto.title}, items=${dto.items?.length || 0}, ` +
+      `start=${dto.startDate}, end=${dto.endDate}`,
+    );
+
     const entity = new FlashSaleEntity();
     entity.prmFlashSaleId = randomUUID();
     entity.prmFlashSaleTitle = dto.title;
     entity.prmFlashSaleStartDate = new Date(dto.startDate);
     entity.prmFlashSaleEndDate = new Date(dto.endDate);
     entity.prmFlashSaleStatus = dto.status || 0;
+
+    // Validate flash sale items
+    if (dto.items?.length) {
+      for (const item of dto.items) {
+        if (item.discountPct < 1 || item.discountPct > 99) {
+          throw new BadRequestException(`Phan tram giam gia phai tu 1-99%, nhan duoc: ${item.discountPct}%`);
+        }
+        if (item.maxQty < 1) {
+          throw new BadRequestException('So luong toi da phai >= 1');
+        }
+      }
+    }
 
     const savedFlashSale = await this.flashSaleRepo.save(entity);
 
@@ -282,6 +363,20 @@ export class PromotionsService {
   }
 
   async updateFlashSale(id: string, dto: UpdateFlashSaleDto) {
+    this.logger.log(`[AUDIT] Update flash sale: id=${id}, title=${dto.title}`);
+
+    // Validate flash sale items
+    if (dto.items?.length) {
+      for (const item of dto.items) {
+        if (item.discountPct < 1 || item.discountPct > 99) {
+          throw new BadRequestException(`Phan tram giam gia phai tu 1-99%, nhan duoc: ${item.discountPct}%`);
+        }
+        if (item.maxQty < 1) {
+          throw new BadRequestException('So luong toi da phai >= 1');
+        }
+      }
+    }
+
     const flashSale = await this.getFlashSale(id);
 
     flashSale.prmFlashSaleTitle = dto.title;
@@ -289,22 +384,36 @@ export class PromotionsService {
     flashSale.prmFlashSaleEndDate = new Date(dto.endDate);
     flashSale.prmFlashSaleStatus = dto.status ?? flashSale.prmFlashSaleStatus;
 
-    await this.flashSaleRepo.save(flashSale);
+    // Wrap delete+insert trong transaction de tranh mat data
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    // Xoa items cu, insert moi
-    await this.flashSaleItemRepo.delete({ prmFlashSaleId: id });
+    try {
+      await queryRunner.manager.save(flashSale);
 
-    if (dto.items?.length) {
-      const items = dto.items.map(item => {
-        const itemEntity = new FlashSaleItemEntity();
-        itemEntity.prmFlashSaleItemId = randomUUID();
-        itemEntity.prmFlashSaleId = id;
-        itemEntity.catProductId = item.productId;
-        itemEntity.prmFlashSaleItemDiscountPct = item.discountPct;
-        itemEntity.prmFlashSaleItemMaxQty = item.maxQty;
-        return itemEntity;
-      });
-      await this.flashSaleItemRepo.save(items);
+      // Xoa items cu, insert moi
+      await queryRunner.manager.delete(FlashSaleItemEntity, { prmFlashSaleId: id });
+
+      if (dto.items?.length) {
+        const items = dto.items.map(item => {
+          const itemEntity = new FlashSaleItemEntity();
+          itemEntity.prmFlashSaleItemId = randomUUID();
+          itemEntity.prmFlashSaleId = id;
+          itemEntity.catProductId = item.productId;
+          itemEntity.prmFlashSaleItemDiscountPct = item.discountPct;
+          itemEntity.prmFlashSaleItemMaxQty = item.maxQty;
+          return itemEntity;
+        });
+        await queryRunner.manager.save(items);
+      }
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
     }
 
     return this.getFlashSale(id);
@@ -312,6 +421,7 @@ export class PromotionsService {
 
   async deleteFlashSale(id: string) {
     const flashSale = await this.getFlashSale(id);
+    this.logger.warn(`[AUDIT] Delete flash sale: id=${id}, title=${flashSale.prmFlashSaleTitle}`);
     await this.flashSaleRepo.remove(flashSale);
   }
 
@@ -320,11 +430,13 @@ export class PromotionsService {
    */
   async getActiveFlashSale() {
     const now = new Date();
-    const flashSale = await this.flashSaleRepo.findOne({
-      where: { prmFlashSaleStatus: 2 },
-      relations: ['items'],
-      order: { prmFlashSaleStartDate: 'DESC' },
-    });
+    const flashSale = await this.flashSaleRepo.createQueryBuilder('fs')
+      .leftJoinAndSelect('fs.items', 'item')
+      .where('fs.prmFlashSaleStatus = 2')
+      .andWhere('fs.prmFlashSaleStartDate <= :now', { now })
+      .andWhere('fs.prmFlashSaleEndDate >= :now', { now })
+      .orderBy('fs.prmFlashSaleStartDate', 'DESC')
+      .getOne();
 
     return flashSale;
   }
@@ -340,6 +452,8 @@ export class PromotionsService {
       .innerJoin('fsi.flashSale', 'fs')
       .where('fsi.catProductId = :pid', { pid: productId })
       .andWhere('fs.prmFlashSaleStatus = 2')
+      .andWhere('fs.prmFlashSaleStartDate <= :now', { now })
+      .andWhere('fs.prmFlashSaleEndDate >= :now', { now })
       .getOne();
 
     if (!item) return null;

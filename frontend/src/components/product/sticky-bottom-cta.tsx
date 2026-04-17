@@ -71,7 +71,9 @@ export function StickyBottomCTA({
   return (
     <div
       className={cn(
-        'fixed bottom-0 inset-x-0 z-50 bg-white border-t shadow-[0_-2px_10px_rgba(0,0,0,0.1)] transition-transform duration-300',
+        'fixed inset-x-0 z-40 bg-white border-t shadow-[0_-2px_10px_rgba(0,0,0,0.1)] transition-transform duration-300',
+        // Mobile: nang len tren bottom nav (55px + safe area)
+        'bottom-[55px] md:bottom-0',
         visible ? 'translate-y-0' : 'translate-y-full',
         className,
       )}

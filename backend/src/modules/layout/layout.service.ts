@@ -13,6 +13,8 @@ import { CreateBannerDto, UpdateBannerDto } from './dto/banner.dto';
 import { MenuItemDto, UpdateMenuDto } from './dto/menu.dto';
 import { UpdateThemeConfigDto } from './dto/theme-config.dto';
 import { UpdateEmailTemplateDto } from './dto/email-template.dto';
+import { PageEntity } from './entities/page.entity';
+import { CreatePageDto, UpdatePageDto } from './dto/page.dto';
 
 @Injectable()
 export class LayoutService {
@@ -29,6 +31,8 @@ export class LayoutService {
     private readonly themeConfigRepo: Repository<ThemeConfigEntity>,
     @InjectRepository(EmailTemplateEntity)
     private readonly emailTemplateRepo: Repository<EmailTemplateEntity>,
+    @InjectRepository(PageEntity)
+    private readonly pageRepo: Repository<PageEntity>,
   ) {}
 
   // ==================== Layout Sections ====================
@@ -381,5 +385,88 @@ export class LayoutService {
       template.cmsEmailTemplateVariables = dto.variables ?? null;
     }
     return this.emailTemplateRepo.save(template);
+  }
+
+  // ==================== CMS Pages ====================
+
+  /**
+   * Lay tat ca pages, sap xep theo sort ASC
+   */
+  async getPages() {
+    return this.pageRepo.find({ order: { cmsPageSort: 'ASC' } });
+  }
+
+  /**
+   * Lay danh sach pages active (storefront sidebar)
+   */
+  async getActivePages() {
+    return this.pageRepo.find({
+      where: { cmsPageStatus: 1 },
+      select: ['cmsPageId', 'cmsPageSlug', 'cmsPageTitle', 'cmsPageSort'],
+      order: { cmsPageSort: 'ASC', createdDate: 'DESC' },
+    });
+  }
+
+  /**
+   * Lay page theo slug (storefront) — chi tra ve page active
+   */
+  async getPageBySlug(slug: string) {
+    const page = await this.pageRepo.findOne({
+      where: { cmsPageSlug: slug, cmsPageStatus: 1 },
+    });
+    if (!page) throw new NotFoundException('Trang khong ton tai');
+    return page;
+  }
+
+  /**
+   * Lay page theo id (admin) — tra ve ca draft
+   */
+  async getPageById(id: string) {
+    const page = await this.pageRepo.findOne({ where: { cmsPageId: id } });
+    if (!page) throw new NotFoundException('Trang khong ton tai');
+    return page;
+  }
+
+  /**
+   * Tao trang noi dung moi
+   */
+  async createPage(dto: CreatePageDto) {
+    const entity = new PageEntity();
+    entity.cmsPageId = randomUUID();
+    entity.cmsPageSlug = dto.slug;
+    entity.cmsPageTitle = dto.title;
+    entity.cmsPageContent = dto.content;
+    entity.cmsPageExcerpt = dto.excerpt || null;
+    entity.cmsPageThumbnail = dto.thumbnail || null;
+    entity.cmsPageSeoTitle = dto.seoTitle || null;
+    entity.cmsPageSeoDescription = dto.seoDescription || null;
+    entity.cmsPageStatus = dto.status ?? 1;
+    entity.cmsPageSort = dto.sort ?? 0;
+    return this.pageRepo.save(entity);
+  }
+
+  /**
+   * Cap nhat trang noi dung
+   */
+  async updatePage(id: string, dto: UpdatePageDto) {
+    const page = await this.getPageById(id);
+    if (dto.slug !== undefined) page.cmsPageSlug = dto.slug;
+    if (dto.title !== undefined) page.cmsPageTitle = dto.title;
+    if (dto.content !== undefined) page.cmsPageContent = dto.content;
+    if (dto.excerpt !== undefined) page.cmsPageExcerpt = dto.excerpt || null;
+    if (dto.thumbnail !== undefined) page.cmsPageThumbnail = dto.thumbnail || null;
+    if (dto.seoTitle !== undefined) page.cmsPageSeoTitle = dto.seoTitle || null;
+    if (dto.seoDescription !== undefined) page.cmsPageSeoDescription = dto.seoDescription || null;
+    if (dto.status !== undefined) page.cmsPageStatus = dto.status;
+    if (dto.sort !== undefined) page.cmsPageSort = dto.sort;
+    return this.pageRepo.save(page);
+  }
+
+  /**
+   * Xoa trang noi dung
+   */
+  async deletePage(id: string) {
+    const page = await this.getPageById(id);
+    await this.pageRepo.remove(page);
   }
 }

@@ -61,21 +61,21 @@ function Editor({ config, onChange }: SectionEditorProps) {
 
       {/* Layout */}
       <div>
-        <label className="text-xs font-medium text-gray-600 mb-1 block">So cot</label>
+        <label className="text-xs font-medium text-gray-600 mb-1 block">Số cột</label>
         <select value={(config.layout as string) || '3-column'} onChange={(e) => onChange({ ...config, layout: e.target.value })} className="w-full text-sm border rounded-md px-2.5 py-1.5">
-          <option value="2-column">2 cot</option>
-          <option value="3-column">3 cot</option>
-          <option value="4-column">4 cot</option>
+          <option value="2-column">2 cột</option>
+          <option value="3-column">3 cột</option>
+          <option value="4-column">4 cột</option>
         </select>
       </div>
 
       {/* Card style */}
       <div>
-        <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wide mb-2">Kieu the</label>
+        <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wide mb-2">Kiểu thẻ</label>
         <div className="grid grid-cols-3 gap-2">
           {[
             { value: 'overlay', label: 'Overlay', icon: '▮' },
-            { value: 'below', label: 'Ben duoi', icon: '▯' },
+            { value: 'below', label: 'Bên dưới', icon: '▯' },
             { value: 'hover', label: 'Hover', icon: '◈' },
           ].map(s => (
             <button key={s.value} type="button" onClick={() => onChange({ ...config, card_style: s.value })}
@@ -90,20 +90,20 @@ function Editor({ config, onChange }: SectionEditorProps) {
       {/* Items */}
       <div className="border-t pt-3">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Hinh anh ({items.length})</span>
-          <button onClick={() => onChange({ ...config, items: [...items, { image: '', label: '', link: '', hotspots: [] }] })} className="text-xs text-orange-600">+ Them</button>
+          <span className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Hình ảnh ({items.length})</span>
+          <button onClick={() => onChange({ ...config, items: [...items, { image: '', label: '', link: '', hotspots: [] }] })} className="text-xs text-orange-600">+ Thêm</button>
         </div>
         <div className="space-y-2">
           {items.map((item, i) => (
             <div key={i} className="border rounded-lg p-2.5 space-y-1.5">
               <div className="flex justify-between">
-                <span className="text-[10px] text-gray-400">Hinh {i + 1}</span>
-                <button onClick={() => onChange({ ...config, items: items.filter((_, j) => j !== i) })} className="text-[10px] text-red-400 hover:text-red-600">Xoa</button>
+                <span className="text-[10px] text-gray-400">Hình {i + 1}</span>
+                <button onClick={() => onChange({ ...config, items: items.filter((_, j) => j !== i) })} className="text-[10px] text-red-400 hover:text-red-600">Xóa</button>
               </div>
               {item.image && <img src={item.image} alt="" className="w-full h-16 object-cover rounded" />}
-              <input value={item.image} onChange={(e) => updateItem(i, 'image', e.target.value)} placeholder="URL anh" className="w-full text-xs border rounded-md px-2 py-1.5" />
-              <input value={item.label} onChange={(e) => updateItem(i, 'label', e.target.value)} placeholder="Nhan / ten outfit" className="w-full text-xs border rounded-md px-2 py-1.5" />
-              <input value={item.link} onChange={(e) => updateItem(i, 'link', e.target.value)} placeholder="Link san pham" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={item.image} onChange={(e) => updateItem(i, 'image', e.target.value)} placeholder="URL ảnh" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={item.label} onChange={(e) => updateItem(i, 'label', e.target.value)} placeholder="Nhãn / tên outfit" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={item.link} onChange={(e) => updateItem(i, 'link', e.target.value)} placeholder="Link sản phẩm" className="w-full text-xs border rounded-md px-2 py-1.5" />
             </div>
           ))}
         </div>
@@ -112,7 +112,7 @@ function Editor({ config, onChange }: SectionEditorProps) {
       {/* CTA */}
       <div className="border-t pt-3 space-y-2">
         <label className="flex items-center justify-between cursor-pointer">
-          <span className="text-xs text-gray-700">Hien nut CTA</span>
+          <span className="text-xs text-gray-700">Hiện nút CTA</span>
           <button type="button" onClick={() => onChange({ ...config, show_cta: !config.show_cta })}
             className={`relative w-9 h-5 rounded-full transition ${config.show_cta ? 'bg-orange-500' : 'bg-gray-300'}`}>
             <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${config.show_cta ? 'translate-x-4' : ''}`} />
@@ -183,7 +183,7 @@ function Renderer({ config }: SectionRendererProps) {
       {/* CTA bottom */}
       <div className="text-center mt-5">
         <button className="px-6 py-2 border border-gray-800 text-gray-800 text-xs font-medium tracking-wide hover:bg-gray-800 hover:text-white transition">
-          XEM THEM
+          XEM THÊM
         </button>
       </div>
     </div>
@@ -197,7 +197,7 @@ export const lookbookDefinition: SectionDefinition = {
   group: 'media',
   defaultConfig: {
     title: 'Mix & Match',
-    subtitle: 'Goi y phoi do tu chuyen gia',
+    subtitle: 'Gợi ý phối đồ từ chuyên gia',
     display_mode: 'grid',
     layout: '3-column',
     items: [],

@@ -18,8 +18,9 @@ interface FeaturedProductsProps {
 
 /**
  * SAN PHAM NOI BAT — Torano style
- * Tabbed product grid: "SAN PHAM NOI BAT", "DO THU DONG", "DO CONG SO", "DO THE THAO"
- * 5-column grid (2xl breakpoint), nut "XEM TAT CA" ben duoi
+ * Section title: 37px desktop, centered
+ * Tabs: underline animation tu width 0 → 100%
+ * 5-column grid, nut "XEM TAT CA" btn-sweep-light
  */
 export function FeaturedProducts({ tabs, className }: FeaturedProductsProps) {
   const [activeTab, setActiveTab] = useState(0);
@@ -27,35 +28,35 @@ export function FeaturedProducts({ tabs, className }: FeaturedProductsProps) {
   if (tabs.length === 0) return null;
 
   return (
-    <section className={cn('py-8 md:py-12 px-4 md:px-6 max-w-7xl mx-auto', className)}>
-      {/* Tab headers */}
-      <div className="flex items-center justify-center gap-4 md:gap-8 mb-6 md:mb-8 overflow-x-auto scrollbar-hide">
-        {tabs.map((tab, i) => (
-          <button
-            key={tab.label}
-            onClick={() => setActiveTab(i)}
-            className={cn(
-              'text-sm md:text-base font-semibold tracking-wide whitespace-nowrap pb-2 border-b-2 transition-colors',
-              i === activeTab
-                ? 'text-black border-black'
-                : 'text-gray-400 border-transparent hover:text-gray-600',
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
+    <section className={cn('py-10 md:py-20 px-4 md:px-6 max-w-container mx-auto', className)}>
+      {/* Section title — Torano: centered tabs with underline animation */}
+      <div className="section-title-torano">
+        <div className="flex items-center justify-center gap-5 md:gap-8 overflow-x-auto scrollbar-hide">
+          {tabs.map((tab, i) => (
+            <button
+              key={tab.label}
+              onClick={() => setActiveTab(i)}
+              className={cn(
+                'tab-title-torano whitespace-nowrap',
+                i === activeTab && 'active',
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Product grid */}
       <ProductGrid products={tabs[activeTab].products} columns={5} />
 
       {/* CTA */}
-      <div className="text-center mt-6 md:mt-8">
+      <div className="text-center mt-6 md:mt-10">
         <Link
           href="/san-pham"
-          className="inline-block border-2 border-black px-8 py-2.5 text-sm font-semibold hover:bg-black hover:text-white transition tracking-wide"
+          className="btn-sweep btn-sweep-light inline-block md:min-w-[400px]"
         >
-          XEM TAT CA SAN PHAM NOI BAT
+          XEM TẤT CẢ SẢN PHẨM NỔI BẬT
         </Link>
       </div>
     </section>

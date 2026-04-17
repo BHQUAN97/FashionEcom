@@ -11,13 +11,27 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ReorderCategoryDto } from './dto/reorder-category.dto';
 import { createSlug } from '@/common/utils/slug.util';
+import { BaseService } from '@/common/services/base.service';
 
+/**
+ * CategoriesService — ke thua BaseService de tai su dung CRUD chuan
+ * (findOne, createEntity, updateEntity, deleteEntity).
+ * Method rieng: getTree (tree build), create/update/remove (co business rule rieng),
+ * reorder (batch update).
+ */
 @Injectable()
-export class CategoriesService {
+export class CategoriesService extends BaseService<CategoryEntity> {
   constructor(
     @InjectRepository(CategoryEntity)
-    private readonly categoryRepo: Repository<CategoryEntity>,
-  ) {}
+    categoryRepo: Repository<CategoryEntity>,
+  ) {
+    super(categoryRepo, 'catCategoryId', 'Danh muc');
+  }
+
+  /** Alias ro nghia trong module — dung lai repo do BaseService giu */
+  private get categoryRepo(): Repository<CategoryEntity> {
+    return this.repo;
+  }
 
   /**
    * Lay tree danh muc — recursive query, tra ve nested structure
@@ -58,19 +72,15 @@ export class CategoriesService {
   }
 
   /**
-   * Chi tiet danh muc
+   * Chi tiet danh muc — override BaseService.findOne de tra kem relation children
+   * (API contract khong doi: nhan id, tra CategoryEntity hoac throw NotFound)
    */
-  async findOne(id: string) {
-    const category = await this.categoryRepo.findOne({
-      where: { catCategoryId: id },
-      relations: ['children'],
-    });
-    if (!category) throw new NotFoundException('Danh muc khong ton tai');
-    return category;
+  async findOne(id: string, relations?: string[]): Promise<CategoryEntity> {
+    return super.findOne(id, relations ?? ['children']);
   }
 
   /**
-   * Tao danh muc moi
+   * Tao danh muc moi — co business rule rieng (check code, auto slug)
    */
   async create(dto: CreateCategoryDto) {
     const exists = await this.categoryRepo.findOne({
@@ -94,17 +104,23 @@ export class CategoriesService {
   }
 
   /**
-   * Cap nhat danh muc
+   * Cap nhat danh muc — co business rule (circular check, auto slug theo ten)
    */
   async update(id: string, dto: UpdateCategoryDto) {
-    const category = await this.categoryRepo.findOne({ where: { catCategoryId: id } });
-    if (!category) throw new NotFoundException('Danh muc khong ton tai');
+    // Dung helper findOne cua BaseService de bat NotFound chuan
+    const category = await super.findOne(id);
 
     if (dto.name !== undefined) {
       category.catCategoryName = dto.name;
       if (!dto.slug) category.catCategorySlug = createSlug(dto.name);
     }
-    if (dto.parentId !== undefined) category.catCategoryParentId = dto.parentId;
+    if (dto.parentId !== undefined) {
+      // Chong circular reference — khong cho set parentId = chinh minh
+      if (dto.parentId === id) {
+        throw new ConflictException('Danh muc khong the la danh muc cha cua chinh no');
+      }
+      category.catCategoryParentId = dto.parentId;
+    }
     if (dto.slug !== undefined) category.catCategorySlug = dto.slug;
     if (dto.description !== undefined) category.catCategoryDescription = dto.description;
     if (dto.icon !== undefined) category.catCategoryIcon = dto.icon;
@@ -115,7 +131,8 @@ export class CategoriesService {
   }
 
   /**
-   * Xoa danh muc (chi xoa khi khong co san pham)
+   * Xoa danh muc (chi xoa khi khong co danh muc con)
+   * KHONG dung deleteEntity cua BaseService vi can load kem children + check
    */
   async remove(id: string) {
     const category = await this.categoryRepo.findOne({

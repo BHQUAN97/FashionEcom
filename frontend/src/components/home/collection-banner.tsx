@@ -46,7 +46,7 @@ export function CollectionBanner({
             </h2>
             <Link
               href={ctaLink}
-              className="mt-4 md:mt-6 inline-block border-2 border-white text-white px-8 py-2.5 text-sm font-semibold hover:bg-white hover:text-black transition tracking-wide"
+              className="btn-sweep btn-sweep-light inline-block mt-4 md:mt-6"
             >
               {ctaText}
             </Link>

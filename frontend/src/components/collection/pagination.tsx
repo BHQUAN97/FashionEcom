@@ -47,21 +47,22 @@ export function Pagination({ currentPage, totalPages, onPageChange, className }:
   const pages = getPageNumbers();
 
   return (
-    <div className={cn('flex items-center justify-center gap-1 mt-8', className)}>
-      {/* Nut trang truoc */}
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage <= 1}
-        className="w-9 h-9 flex items-center justify-center rounded-full text-sm hover:bg-gray-100 transition disabled:opacity-30 disabled:cursor-not-allowed"
-        aria-label="Trang truoc"
-      >
-        <ChevronLeft className="w-4 h-4" />
-      </button>
+    <div className={cn('flex items-center justify-center gap-2 mt-8', className)}>
+      {/* Nut trang truoc — an khi o trang 1 */}
+      {currentPage > 1 && (
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 text-sm transition"
+          aria-label="Trang trước"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+      )}
 
-      {/* So trang */}
+      {/* So trang — Torano style: active=black fill, inactive=border only */}
       {pages.map((page, idx) =>
         page === '...' ? (
-          <span key={`ellipsis-${idx}`} className="w-9 h-9 flex items-center justify-center text-sm text-gray-400">
+          <span key={`ellipsis-${idx}`} className="w-10 h-10 flex items-center justify-center text-sm text-gray-400">
             ...
           </span>
         ) : (
@@ -69,10 +70,10 @@ export function Pagination({ currentPage, totalPages, onPageChange, className }:
             key={page}
             onClick={() => onPageChange(page)}
             className={cn(
-              'w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium transition',
+              'w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition',
               page === currentPage
                 ? 'bg-black text-white'
-                : 'hover:bg-gray-100 text-gray-700'
+                : 'border border-gray-200 hover:border-gray-400 text-gray-700'
             )}
             aria-current={page === currentPage ? 'page' : undefined}
           >
@@ -81,15 +82,16 @@ export function Pagination({ currentPage, totalPages, onPageChange, className }:
         )
       )}
 
-      {/* Nut trang sau */}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage >= totalPages}
-        className="w-9 h-9 flex items-center justify-center rounded-full text-sm hover:bg-gray-100 transition disabled:opacity-30 disabled:cursor-not-allowed"
-        aria-label="Trang sau"
-      >
-        <ChevronRight className="w-4 h-4" />
-      </button>
+      {/* Nut trang sau — ">" khong co border */}
+      {currentPage < totalPages && (
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 text-sm transition"
+          aria-label="Trang sau"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 }

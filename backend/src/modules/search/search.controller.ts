@@ -23,8 +23,8 @@ export class SearchController {
     const data = await this.searchService.search(q || '', {
       filters,
       sort: sort ? sort.split(',') : undefined,
-      page: page || 1,
-      limit: limit || 20,
+      page: Math.max(1, page || 1),
+      limit: Math.min(Math.max(1, limit || 20), 100),
     });
     return { data, message: 'OK' };
   }

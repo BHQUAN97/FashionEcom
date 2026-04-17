@@ -1,0 +1,332 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - paragraph [ref=e4]: "Mien phi giao hang cho don tu 500.000d | Hotline: 1900-xxxx"
+    - banner [ref=e5]:
+      - generic [ref=e7]:
+        - link "FASHION" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e9]:
+          - link "SAN PHAM MOI" [ref=e10] [cursor=pointer]:
+            - /url: /san-pham
+          - link "AO NAM" [ref=e12] [cursor=pointer]:
+            - /url: /danh-muc/ao-nam
+          - link "QUAN NAM" [ref=e14] [cursor=pointer]:
+            - /url: /danh-muc/quan-nam
+          - link "PHU KIEN" [ref=e16] [cursor=pointer]:
+            - /url: /danh-muc/phu-kien
+          - link "SALE" [ref=e17] [cursor=pointer]:
+            - /url: /danh-muc/sale
+        - generic [ref=e18]:
+          - link "Tim kiem" [ref=e19] [cursor=pointer]:
+            - /url: /tim-kiem
+            - img [ref=e20]
+          - link "Tai khoan" [ref=e22] [cursor=pointer]:
+            - /url: /tai-khoan
+            - img [ref=e23]
+          - link "Yeu thich" [ref=e25] [cursor=pointer]:
+            - /url: /tai-khoan/yeu-thich
+            - img [ref=e26]
+          - link "Gio hang" [ref=e28] [cursor=pointer]:
+            - /url: /gio-hang
+            - img [ref=e29]
+            - generic [ref=e31]: "0"
+    - main [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - navigation "Breadcrumb" [ref=e35]:
+            - list [ref=e36]:
+              - listitem [ref=e37]:
+                - link "Trang chu" [ref=e38] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e39]:
+                - img [ref=e40]
+                - link "Ao Polo" [ref=e42] [cursor=pointer]:
+                  - /url: /danh-muc/ao-polo
+              - listitem [ref=e43]:
+                - img [ref=e44]
+                - generic [ref=e46]: Ao Polo Nam Cao Cap Classic Fit
+          - generic [ref=e47]:
+            - generic [ref=e49]:
+              - generic [ref=e50]:
+                - button "Ao Polo chinh dien" [ref=e51] [cursor=pointer]:
+                  - img "Ao Polo chinh dien" [ref=e52]
+                - button "Ao Polo mat ben" [ref=e53] [cursor=pointer]:
+                  - img "Ao Polo mat ben" [ref=e54]
+                - button "Ao Polo mat sau" [ref=e55] [cursor=pointer]:
+                  - img "Ao Polo mat sau" [ref=e56]
+                - button "Chi tiet co ao" [ref=e57] [cursor=pointer]:
+                  - img "Chi tiet co ao" [ref=e58]
+              - generic [ref=e61]:
+                - img "Ao Polo chinh dien" [ref=e64]
+                - img "Ao Polo mat ben" [ref=e67]
+                - img "Ao Polo mat sau" [ref=e70]
+                - img "Chi tiet co ao" [ref=e73]
+            - generic [ref=e74]:
+              - generic [ref=e75]:
+                - generic [ref=e76]: "-21%"
+                - generic [ref=e77]: NEW
+              - heading "Ao Polo Nam Cao Cap Classic Fit" [level=1] [ref=e78]
+              - generic [ref=e79]:
+                - generic [ref=e80]:
+                  - img [ref=e81]
+                  - img [ref=e83]
+                  - img [ref=e85]
+                  - img [ref=e87]
+                  - img [ref=e89]
+                - generic [ref=e91]: (28 danh gia)
+              - generic [ref=e92]:
+                - generic [ref=e93]: 590.000 ₫
+                - generic [ref=e94]: 750.000 ₫
+              - paragraph [ref=e95]: Ao Polo nam cotton 100% cao cap, form classic fit, co cung, thoang mat.
+              - generic [ref=e96]:
+                - generic [ref=e97]: "Mau sac: Den"
+                - generic [ref=e98]:
+                  - button "Mau Den" [pressed] [ref=e99] [cursor=pointer]:
+                    - img [ref=e100]
+                  - button "Mau Xanh Navy" [ref=e102] [cursor=pointer]
+                  - button "Mau Trang" [ref=e103] [cursor=pointer]
+              - generic [ref=e104]:
+                - generic [ref=e105]: "Kich thuoc: Chon size"
+                - generic [ref=e106]:
+                  - button "Size M" [ref=e107] [cursor=pointer]: M
+                  - button "Size L" [ref=e108] [cursor=pointer]: L
+                  - button "Size XL" [ref=e109] [cursor=pointer]: XL
+              - generic [ref=e110]:
+                - generic [ref=e111]: So luong
+                - generic [ref=e112]:
+                  - button "Giam so luong" [disabled] [ref=e113]:
+                    - img [ref=e114]
+                  - generic [ref=e115]: "1"
+                  - button "Tang so luong" [ref=e116] [cursor=pointer]:
+                    - img [ref=e117]
+              - generic [ref=e118]:
+                - button "THEM VAO GIO" [disabled] [ref=e119]
+                - button "MUA NGAY" [disabled] [ref=e120]
+              - button "Them yeu thich" [ref=e121] [cursor=pointer]:
+                - img [ref=e122]
+                - text: Them yeu thich
+              - generic [ref=e124]:
+                - generic [ref=e125]: ✓ Mien phi giao hang tu 500K
+                - generic [ref=e126]: ✓ Hang chinh hang 100%
+                - generic [ref=e127]: ✓ Doi tra 7 ngay
+                - generic [ref=e128]: ✓ Ho tro 24/7
+          - generic [ref=e129]:
+            - tablist [ref=e130]:
+              - tab "Mo ta" [selected] [ref=e131] [cursor=pointer]
+              - tab "Danh gia (28)" [ref=e132] [cursor=pointer]
+              - tab "Chinh sach" [ref=e133] [cursor=pointer]
+            - tabpanel "Mo ta" [ref=e134]:
+              - generic [ref=e137]:
+                - heading "Mo ta san pham" [level=3] [ref=e138]
+                - paragraph [ref=e139]: Ao Polo nam cao cap voi chat lieu cotton 100% mem mai, thoang mat. Thiet ke classic fit phu hop moi voc dang. Duong may ti mi, co ao cung cap giu form tot.
+                - list [ref=e140]:
+                  - listitem [ref=e141]: "Chat lieu: Cotton 100% - mem mai, thoang khi"
+                  - listitem [ref=e142]: "Form: Classic fit - thoai mai, khong bo"
+                  - listitem [ref=e143]: "Co: Co be, canh 3cm, cung cap"
+                  - listitem [ref=e144]: "Nut: 3 nut, chat lieu nhua cao cap"
+                  - listitem [ref=e145]: "Giau ao: Bo rib co gian"
+                - heading "Huong dan bao quan" [level=3] [ref=e146]
+                - list [ref=e147]:
+                  - listitem [ref=e148]: Giat may o nhiet do duoi 40 do
+                  - listitem [ref=e149]: Khong dung thuoc tay
+                  - listitem [ref=e150]: La ui nhiet do thap
+          - generic [ref=e151]:
+            - heading "SAN PHAM LIEN QUAN" [level=3] [ref=e152]
+            - generic [ref=e153]:
+              - generic [ref=e155]:
+                - generic [ref=e157] [cursor=pointer]:
+                  - generic [ref=e158]: "-21%"
+                  - img "Ao Polo Nam Cao Cap Classic Fit" [ref=e159]
+                  - img "Ao Polo Nam Cao Cap Classic Fit - 2" [ref=e160]
+                  - button "Them yeu thich" [ref=e161]:
+                    - img [ref=e162]
+                  - generic [ref=e164]:
+                    - button "THEM VAO GIO" [ref=e165]:
+                      - img [ref=e166]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e169]:
+                      - img [ref=e170]
+                - generic [ref=e173]:
+                  - generic [ref=e174]: +1 Mau sac
+                  - generic [ref=e175]: +3 Kich thuoc
+                - link "Ao Polo Nam Cao Cap Classic Fit" [ref=e176] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-1
+                  - heading "Ao Polo Nam Cao Cap Classic Fit" [level=3] [ref=e177]
+                - generic [ref=e178]:
+                  - generic [ref=e179]: 590.000 ₫
+                  - generic [ref=e180]: 750.000 ₫
+              - generic [ref=e182]:
+                - generic [ref=e184] [cursor=pointer]:
+                  - generic [ref=e185]: NEW
+                  - img "Ao So Mi Nam Slim Fit Oxford" [ref=e186]
+                  - img "Ao So Mi Nam Slim Fit Oxford - 2" [ref=e187]
+                  - button "Them yeu thich" [ref=e188]:
+                    - img [ref=e189]
+                  - generic [ref=e191]:
+                    - button "THEM VAO GIO" [ref=e192]:
+                      - img [ref=e193]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e196]:
+                      - img [ref=e197]
+                - generic [ref=e200]:
+                  - generic [ref=e201]: +2 Mau sac
+                  - generic [ref=e202]: +4 Kich thuoc
+                - link "Ao So Mi Nam Slim Fit Oxford" [ref=e203] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-2
+                  - heading "Ao So Mi Nam Slim Fit Oxford" [level=3] [ref=e204]
+                - generic [ref=e205]:
+                  - generic [ref=e206]: 450.000 ₫
+                  - generic [ref=e207]: 590.000 ₫
+              - generic [ref=e209]:
+                - generic [ref=e211] [cursor=pointer]:
+                  - generic [ref=e212]: NEW
+                  - img "Quan Tay Nam Lich Lam Wool Blend" [ref=e213]
+                  - img "Quan Tay Nam Lich Lam Wool Blend - 2" [ref=e214]
+                  - button "Them yeu thich" [ref=e215]:
+                    - img [ref=e216]
+                  - generic [ref=e218]:
+                    - button "THEM VAO GIO" [ref=e219]:
+                      - img [ref=e220]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e223]:
+                      - img [ref=e224]
+                - generic [ref=e227]:
+                  - generic [ref=e228]: +3 Mau sac
+                  - generic [ref=e229]: +3 Kich thuoc
+                - link "Quan Tay Nam Lich Lam Wool Blend" [ref=e230] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-3
+                  - heading "Quan Tay Nam Lich Lam Wool Blend" [level=3] [ref=e231]
+                - generic [ref=e232]:
+                  - generic [ref=e233]: 890.000 ₫
+                  - generic [ref=e234]: 1.190.000 ₫
+              - generic [ref=e236]:
+                - generic [ref=e238] [cursor=pointer]:
+                  - generic [ref=e239]: "-18%"
+                  - img "Quan Jeans Nam Straight Fit" [ref=e240]
+                  - img "Quan Jeans Nam Straight Fit - 2" [ref=e241]
+                  - button "Them yeu thich" [ref=e242]:
+                    - img [ref=e243]
+                  - generic [ref=e245]:
+                    - button "THEM VAO GIO" [ref=e246]:
+                      - img [ref=e247]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e250]:
+                      - img [ref=e251]
+                - generic [ref=e254]:
+                  - generic [ref=e255]: +1 Mau sac
+                  - generic [ref=e256]: +4 Kich thuoc
+                - link "Quan Jeans Nam Straight Fit" [ref=e257] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-4
+                  - heading "Quan Jeans Nam Straight Fit" [level=3] [ref=e258]
+                - generic [ref=e259]:
+                  - generic [ref=e260]: 650.000 ₫
+                  - generic [ref=e261]: 790.000 ₫
+              - generic [ref=e263]:
+                - generic [ref=e265] [cursor=pointer]:
+                  - img "Ao Khoac Blazer Nam 2 Lop" [ref=e266]
+                  - img "Ao Khoac Blazer Nam 2 Lop - 2" [ref=e267]
+                  - button "Them yeu thich" [ref=e268]:
+                    - img [ref=e269]
+                  - generic [ref=e271]:
+                    - button "THEM VAO GIO" [ref=e272]:
+                      - img [ref=e273]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e276]:
+                      - img [ref=e277]
+                - generic [ref=e280]:
+                  - generic [ref=e281]: +2 Mau sac
+                  - generic [ref=e282]: +3 Kich thuoc
+                - link "Ao Khoac Blazer Nam 2 Lop" [ref=e283] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-5
+                  - heading "Ao Khoac Blazer Nam 2 Lop" [level=3] [ref=e284]
+                - generic [ref=e285]:
+                  - generic [ref=e286]: 1.290.000 ₫
+                  - generic [ref=e287]: 1.590.000 ₫
+        - generic [ref=e289]:
+          - generic [ref=e290]:
+            - img [ref=e291]
+            - generic [ref=e296]: Mien phi giao hang
+            - generic [ref=e297]: Don tu 500.000d
+          - generic [ref=e298]:
+            - img [ref=e299]
+            - generic [ref=e301]: Hang chinh hang
+            - generic [ref=e302]: 100% authentic
+          - generic [ref=e303]:
+            - img [ref=e304]
+            - generic [ref=e309]: Doi tra 7 ngay
+            - generic [ref=e310]: Mien phi doi tra
+          - generic [ref=e311]:
+            - img [ref=e312]
+            - generic [ref=e314]: Ho tro 24/7
+            - generic [ref=e315]: "Hotline: 1900-xxxx"
+    - contentinfo [ref=e316]:
+      - generic [ref=e317]:
+        - generic [ref=e318]:
+          - heading "Thoi trang nam FASHION" [level=3] [ref=e319]
+          - paragraph [ref=e320]: He thong thoi trang cho phai manh hang dau Viet Nam, huong toi phong cach nam tinh, lich lam va tre trung.
+          - generic [ref=e321]:
+            - link "f" [ref=e322] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e323]: f
+            - link "t" [ref=e324] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e325]: t
+            - link "i" [ref=e326] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e327]: i
+            - link "t" [ref=e328] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e329]: t
+            - link "y" [ref=e330] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e331]: "y"
+          - heading "Phuong thuc thanh toan" [level=4] [ref=e332]
+          - generic [ref=e333]:
+            - generic [ref=e334]: VNPAY
+            - generic [ref=e335]: ZaloPay
+            - generic [ref=e336]: MoMo
+            - generic [ref=e337]: COD
+            - generic [ref=e338]: VISA
+        - generic [ref=e339]:
+          - heading "Thong tin lien he" [level=4] [ref=e340]
+          - list [ref=e341]:
+            - listitem [ref=e342]: "Dia chi: 123 Nguyen Hue, Quan 1, TP. Ho Chi Minh"
+            - listitem [ref=e343]: "Dien thoai: 1900-xxxx"
+            - listitem [ref=e344]: "Email: support@fashionecom.vn"
+          - heading "Phuong thuc van chuyen" [level=4] [ref=e345]
+          - generic [ref=e346]:
+            - generic [ref=e347]: GHN
+            - generic [ref=e348]: GHTK
+            - generic [ref=e349]: J&T
+            - generic [ref=e350]: Ninja Van
+        - generic [ref=e351]:
+          - heading "Nhom lien ket" [level=4] [ref=e352]
+          - list [ref=e353]:
+            - listitem [ref=e354]:
+              - link "Tim kiem" [ref=e355] [cursor=pointer]:
+                - /url: /tim-kiem
+            - listitem [ref=e356]:
+              - link "Gioi thieu" [ref=e357] [cursor=pointer]:
+                - /url: /gioi-thieu
+            - listitem [ref=e358]:
+              - link "Chinh sach doi tra" [ref=e359] [cursor=pointer]:
+                - /url: /chinh-sach/doi-tra
+            - listitem [ref=e360]:
+              - link "Chinh sach bao mat" [ref=e361] [cursor=pointer]:
+                - /url: /chinh-sach/bao-mat
+            - listitem [ref=e362]:
+              - link "Tuyen dung" [ref=e363] [cursor=pointer]:
+                - /url: /tuyen-dung
+            - listitem [ref=e364]:
+              - link "Lien he" [ref=e365] [cursor=pointer]:
+                - /url: /lien-he
+        - generic [ref=e366]:
+          - heading "Dang ky nhan tin" [level=4] [ref=e367]
+          - paragraph [ref=e368]: De cap nhat nhung san pham moi, nhan thong tin uu dai dac biet va thong tin giam gia khac.
+          - generic [ref=e369]:
+            - generic [ref=e370]:
+              - img [ref=e371]
+              - textbox "Nhap email cua ban" [ref=e373]
+            - button "DANG KY" [ref=e374] [cursor=pointer]
+      - generic [ref=e376]: Copyright © 2026 Fashion Ecom. All rights reserved.
+  - alert [ref=e377]

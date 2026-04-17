@@ -16,12 +16,12 @@ export function AnnouncementBarEditor({ config, onChange }: SectionEditorProps) 
       <h4 className="font-medium text-sm">Messages</h4>
       {messages.map((msg, i) => (
         <div key={i} className="flex gap-2">
-          <input value={msg.text} onChange={(e) => updateMessage(i, 'text', e.target.value)} placeholder="Noi dung" className="flex-1 text-sm border rounded px-2 py-1" />
+          <input value={msg.text} onChange={(e) => updateMessage(i, 'text', e.target.value)} placeholder="Nội dung" className="flex-1 text-sm border rounded px-2 py-1" />
           <input value={msg.link} onChange={(e) => updateMessage(i, 'link', e.target.value)} placeholder="Link" className="w-28 text-sm border rounded px-2 py-1" />
           <button onClick={() => onChange({ ...config, messages: messages.filter((_, j) => j !== i) })} className="text-red-500 text-xs">X</button>
         </div>
       ))}
-      <button onClick={() => onChange({ ...config, messages: [...messages, { text: '', link: '' }] })} className="text-xs px-2 py-1 border rounded">+ Them</button>
+      <button onClick={() => onChange({ ...config, messages: [...messages, { text: '', link: '' }] })} className="text-xs px-2 py-1 border rounded">+ Thêm</button>
 
       <div className="grid grid-cols-2 gap-2 pt-2 border-t">
         <label className="text-xs">Mau nen</label>

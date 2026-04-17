@@ -1,4 +1,4 @@
-import { IsString, IsOptional, MaxLength, IsUUID } from 'class-validator';
+import { IsString, IsOptional, MaxLength, Matches } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
@@ -9,7 +9,7 @@ export class CreateCategoryDto {
   @MaxLength(255)
   name!: string;
 
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   @IsOptional()
   parentId?: string;
 

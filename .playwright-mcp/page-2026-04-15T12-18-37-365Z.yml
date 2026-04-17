@@ -1,0 +1,453 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - paragraph [ref=e4]: "Miễn phí giao hàng cho đơn từ 500.000đ | Hotline: 1900-xxxx"
+    - banner [ref=e5]:
+      - generic [ref=e7]:
+        - link "Torano" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - img "Torano" [ref=e9]
+        - navigation [ref=e10]:
+          - link "Sản phẩm mới" [ref=e12] [cursor=pointer]:
+            - /url: /san-pham
+          - link "Áo nam" [ref=e14] [cursor=pointer]:
+            - /url: /danh-muc/ao-nam
+            - text: Áo nam
+            - img [ref=e15]
+          - link "Quần nam" [ref=e18] [cursor=pointer]:
+            - /url: /danh-muc/quan-nam
+            - text: Quần nam
+            - img [ref=e19]
+          - link "Phụ kiện" [ref=e22] [cursor=pointer]:
+            - /url: /danh-muc/phu-kien
+            - text: Phụ kiện
+            - img [ref=e23]
+          - link "Sale" [ref=e26] [cursor=pointer]:
+            - /url: /danh-muc/sale
+        - generic [ref=e27]:
+          - button "Tìm kiếm" [ref=e28] [cursor=pointer]:
+            - img [ref=e29]
+          - link "Tài khoản" [ref=e31] [cursor=pointer]:
+            - /url: /tai-khoan
+            - img [ref=e32]
+          - link "Yêu thích" [ref=e34] [cursor=pointer]:
+            - /url: /tai-khoan/yeu-thich
+            - img [ref=e35]
+          - button "Giỏ hàng" [ref=e37] [cursor=pointer]:
+            - img [ref=e38]
+    - main [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - navigation "Breadcrumb" [ref=e43]:
+            - list [ref=e44]:
+              - listitem [ref=e45]:
+                - link "Trang chủ" [ref=e46] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e47]:
+                - img [ref=e48]
+                - link "Áo Polo" [ref=e50] [cursor=pointer]:
+                  - /url: /danh-muc/ao-polo
+              - listitem [ref=e51]:
+                - img [ref=e52]
+                - generic [ref=e54]: Áo polo kẻ bo tay GSTP068
+          - generic [ref=e55]:
+            - generic [ref=e57]:
+              - generic [ref=e58]:
+                - button "Áo Polo GSTP068 chính diện" [ref=e59] [cursor=pointer]:
+                  - img "Áo Polo GSTP068 chính diện" [ref=e60]
+                - button "Áo Polo GSTP068 mặt bên" [ref=e61] [cursor=pointer]:
+                  - img "Áo Polo GSTP068 mặt bên" [ref=e62]
+                - button "Áo Polo GSTP068 chi tiết cổ" [ref=e63] [cursor=pointer]:
+                  - img "Áo Polo GSTP068 chi tiết cổ" [ref=e64]
+                - button "Áo Polo GSTP068 chi tiết bo tay" [ref=e65] [cursor=pointer]:
+                  - img "Áo Polo GSTP068 chi tiết bo tay" [ref=e66]
+                - button "Áo Polo GSTP068 chi tiết vải" [ref=e67] [cursor=pointer]:
+                  - img "Áo Polo GSTP068 chi tiết vải" [ref=e68]
+              - generic [ref=e71]:
+                - img "Áo Polo GSTP068 chính diện" [ref=e74]
+                - img "Áo Polo GSTP068 mặt bên" [ref=e77]
+                - img "Áo Polo GSTP068 chi tiết cổ" [ref=e80]
+                - img "Áo Polo GSTP068 chi tiết bo tay" [ref=e83]
+                - img "Áo Polo GSTP068 chi tiết vải" [ref=e86]
+            - generic [ref=e87]:
+              - generic [ref=e89]: NEW
+              - heading "Áo polo kẻ bo tay GSTP068" [level=1] [ref=e90]
+              - generic [ref=e91]:
+                - generic [ref=e92]:
+                  - img [ref=e93]
+                  - img [ref=e95]
+                  - img [ref=e97]
+                  - img [ref=e99]
+                  - img [ref=e101]
+                - generic [ref=e103]: (34 đánh giá)
+              - generic [ref=e105]: 550.000 ₫
+              - paragraph [ref=e106]: Áo Polo nam Torano dệt kẻ, bo tay phối màu, form regular fit, cotton pha co giãn thoải mái.
+              - generic [ref=e107]:
+                - generic [ref=e108]: "Màu sắc: Xanh Navy"
+                - generic [ref=e109]:
+                  - button "Màu Xanh Navy" [pressed] [ref=e110] [cursor=pointer]:
+                    - img [ref=e111]
+                  - button "Màu Đen" [ref=e113] [cursor=pointer]
+                  - button "Màu Xám" [ref=e114] [cursor=pointer]
+              - generic [ref=e115]:
+                - generic [ref=e116]:
+                  - generic [ref=e117]: "Kích thước: Chọn size"
+                  - button "Hướng dẫn chọn size" [ref=e118] [cursor=pointer]:
+                    - img [ref=e119]
+                    - text: Hướng dẫn chọn size
+                - generic [ref=e121]:
+                  - button "Size M" [ref=e122] [cursor=pointer]: M
+                  - button "Size L" [ref=e123] [cursor=pointer]: L
+                  - button "Size XL" [ref=e124] [cursor=pointer]: XL
+              - generic [ref=e125]:
+                - generic [ref=e126]: Số lượng
+                - generic [ref=e127]:
+                  - button "Giảm số lượng" [disabled] [ref=e128]:
+                    - img [ref=e129]
+                  - generic [ref=e130]: "1"
+                  - button "Tăng số lượng" [ref=e131] [cursor=pointer]:
+                    - img [ref=e132]
+              - generic [ref=e133]:
+                - button "THÊM VÀO GIỎ" [disabled] [ref=e134]
+                - button "MUA NGAY" [disabled] [ref=e135]
+              - button "Thêm yêu thích" [ref=e136] [cursor=pointer]:
+                - img [ref=e137]
+                - text: Thêm yêu thích
+              - generic [ref=e139]:
+                - generic [ref=e140]: ✓ Miễn phí giao hàng từ 500K
+                - generic [ref=e141]: ✓ Hàng chính hãng 100%
+                - generic [ref=e142]: ✓ Đổi trả 7 ngày
+                - generic [ref=e143]: ✓ Hỗ trợ 24/7
+          - generic [ref=e144]:
+            - tablist [ref=e145]:
+              - tab "Mô tả sản phẩm" [selected] [ref=e146] [cursor=pointer]
+              - tab "Đánh giá (34)" [ref=e147] [cursor=pointer]
+              - tab "Chính sách đổi trả" [ref=e148] [cursor=pointer]
+              - tab "Chính sách bảo mật" [ref=e149] [cursor=pointer]
+              - tab "Câu hỏi thường gặp" [ref=e150] [cursor=pointer]
+            - tabpanel [ref=e151]:
+              - generic [ref=e154]: "Mô tả sản phẩm Áo Polo nam Torano mã GSTP068 với kiểu dệt kẻ tinh tế, bo tay phối màu nổi bật. Chất liệu cotton pha polyester co giãn thoải mái, form regular fit phù hợp mọi vóc dáng. Chất liệu: Cotton pha Polyester — mềm mại, thoáng khí, co giãn nhẹ Form: Regular fit — thoải mái, không bó sát Cổ: Cổ bẻ dệt kẻ, cứng cáp giữ form tốt Bo tay: Dệt kẻ phối màu, chi tiết tinh tế Logo: Thêu logo Torano ở ngực trái Gấu áo: Bo rib co giãn, dáng cong thời trang Hướng dẫn bảo quản Giặt máy ở nhiệt độ dưới 40°C Không dùng thuốc tẩy Là ủi nhiệt độ thấp, không là trực tiếp lên hình in/thêu Phơi nơi thoáng mát, tránh ánh nắng trực tiếp"
+          - generic [ref=e155]:
+            - generic [ref=e156]:
+              - heading "SẢN PHẨM LIÊN QUAN" [level=3] [ref=e157]
+              - generic [ref=e158]:
+                - button "Trượt trái" [ref=e159] [cursor=pointer]:
+                  - img [ref=e160]
+                - button "Trượt phải" [ref=e162] [cursor=pointer]:
+                  - img [ref=e163]
+            - generic [ref=e165]:
+              - generic [ref=e168]:
+                - generic [ref=e169] [cursor=pointer]:
+                  - generic [ref=e170]: NEW
+                  - generic [ref=e171]:
+                    - img "Áo polo kẻ bo tay GSTP068" [ref=e172]
+                    - img "Áo polo kẻ bo tay GSTP068 - hover" [ref=e173]
+                  - link "Áo polo kẻ bo tay GSTP068" [ref=e174]:
+                    - /url: /san-pham/ao-polo-ke-bo-tay-3-gstp068
+                  - button "Thêm yêu thích" [ref=e175]:
+                    - img [ref=e176]
+                - generic [ref=e178]:
+                  - generic [ref=e179]:
+                    - generic [ref=e180]: +3 Màu sắc
+                    - generic [ref=e181]: +5 Kích thước
+                  - link "Áo polo kẻ bo tay GSTP068" [ref=e182] [cursor=pointer]:
+                    - /url: /san-pham/ao-polo-ke-bo-tay-3-gstp068
+                    - heading "Áo polo kẻ bo tay GSTP068" [level=3] [ref=e183]
+                  - generic [ref=e185]: 550.000 ₫
+              - generic [ref=e188]:
+                - generic [ref=e189] [cursor=pointer]:
+                  - generic [ref=e190]: NEW
+                  - generic [ref=e191]:
+                    - img "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e192]
+                    - img "Áo polo trơn bo kẻ thêu logo ngực GSTP643 - hover" [ref=e193]
+                  - link "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e194]:
+                    - /url: /san-pham/ao-polo-tron-bo-ke-theu-logo-nguc-4-gstp643
+                  - button "Thêm yêu thích" [ref=e195]:
+                    - img [ref=e196]
+                - generic [ref=e198]:
+                  - generic [ref=e199]:
+                    - generic [ref=e200]: +3 Màu sắc
+                    - generic [ref=e201]: +5 Kích thước
+                  - link "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [ref=e202] [cursor=pointer]:
+                    - /url: /san-pham/ao-polo-tron-bo-ke-theu-logo-nguc-4-gstp643
+                    - heading "Áo polo trơn bo kẻ thêu logo ngực GSTP643" [level=3] [ref=e203]
+                  - generic [ref=e205]: 550.000 ₫
+              - generic [ref=e208]:
+                - generic [ref=e209] [cursor=pointer]:
+                  - generic [ref=e210]: NEW
+                  - generic [ref=e211]:
+                    - img "Áo polo kẻ bo tay phối màu GSTP042" [ref=e212]
+                    - img "Áo polo kẻ bo tay phối màu GSTP042 - hover" [ref=e213]
+                  - link "Áo polo kẻ bo tay phối màu GSTP042" [ref=e214]:
+                    - /url: /san-pham/ao-polo-ke-bo-tay-phoi-mau-2-gstp042
+                  - button "Thêm yêu thích" [ref=e215]:
+                    - img [ref=e216]
+                - generic [ref=e218]:
+                  - generic [ref=e219]:
+                    - generic [ref=e220]: +3 Màu sắc
+                    - generic [ref=e221]: +5 Kích thước
+                  - link "Áo polo kẻ bo tay phối màu GSTP042" [ref=e222] [cursor=pointer]:
+                    - /url: /san-pham/ao-polo-ke-bo-tay-phoi-mau-2-gstp042
+                    - heading "Áo polo kẻ bo tay phối màu GSTP042" [level=3] [ref=e223]
+                  - generic [ref=e225]: 550.000 ₫
+              - generic [ref=e228]:
+                - generic [ref=e229] [cursor=pointer]:
+                  - generic [ref=e230]: "-38%"
+                  - generic [ref=e231]:
+                    - img "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e232]
+                    - img "Áo Polo trơn basic thêu logo ngực ESTP038 - hover" [ref=e233]
+                  - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e234]:
+                    - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+                  - button "Thêm yêu thích" [ref=e235]:
+                    - img [ref=e236]
+                - generic [ref=e238]:
+                  - generic [ref=e239]:
+                    - generic [ref=e240]: +4 Màu sắc
+                    - generic [ref=e241]: +5 Kích thước
+                  - link "Áo Polo trơn basic thêu logo ngực ESTP038" [ref=e242] [cursor=pointer]:
+                    - /url: /san-pham/ao-polo-tron-basic-den-theu-logo-nguc-estp038
+                    - heading "Áo Polo trơn basic thêu logo ngực ESTP038" [level=3] [ref=e243]
+                  - generic [ref=e244]:
+                    - generic [ref=e245]: 249.000 ₫
+                    - generic [ref=e246]: 400.000 ₫
+              - generic [ref=e249]:
+                - generic [ref=e250] [cursor=pointer]:
+                  - generic [ref=e251]: "-38%"
+                  - generic [ref=e252]:
+                    - img "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e253]
+                    - img "Áo polo can phối thêu logo đại bàng GSTP047 - hover" [ref=e254]
+                  - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e255]:
+                    - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+                  - button "Thêm yêu thích" [ref=e256]:
+                    - img [ref=e257]
+                - generic [ref=e259]:
+                  - generic [ref=e260]:
+                    - generic [ref=e261]: +2 Màu sắc
+                    - generic [ref=e262]: +5 Kích thước
+                  - link "Áo polo can phối thêu logo đại bàng GSTP047" [ref=e263] [cursor=pointer]:
+                    - /url: /san-pham/ao-polo-can-phoi-theu-logo-nguc-3-gstp047
+                    - heading "Áo polo can phối thêu logo đại bàng GSTP047" [level=3] [ref=e264]
+                  - generic [ref=e265]:
+                    - generic [ref=e266]: 299.000 ₫
+                    - generic [ref=e267]: 480.000 ₫
+              - generic [ref=e270]:
+                - generic [ref=e271] [cursor=pointer]:
+                  - generic [ref=e272]: NEW
+                  - generic [ref=e273]:
+                    - img "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e274]
+                    - img "Áo Polo dài tay basic thêu logo ngực GWTP502 - hover" [ref=e275]
+                  - link "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e276]:
+                    - /url: /san-pham/ao-polo-dai-tay-basic-theu-logo-nguc-3-gwtp502
+                  - button "Thêm yêu thích" [ref=e277]:
+                    - img [ref=e278]
+                - generic [ref=e280]:
+                  - generic [ref=e281]:
+                    - generic [ref=e282]: +3 Màu sắc
+                    - generic [ref=e283]: +5 Kích thước
+                  - link "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e284] [cursor=pointer]:
+                    - /url: /san-pham/ao-polo-dai-tay-basic-theu-logo-nguc-3-gwtp502
+                    - heading "Áo Polo dài tay basic thêu logo ngực GWTP502" [level=3] [ref=e285]
+                  - generic [ref=e287]: 699.000 ₫
+              - generic [ref=e290]:
+                - generic [ref=e291] [cursor=pointer]:
+                  - generic [ref=e292]: "-29%"
+                  - generic [ref=e293]:
+                    - img "Áo T shirt trơn in thể thao GSTS018" [ref=e294]
+                    - img "Áo T shirt trơn in thể thao GSTS018 - hover" [ref=e295]
+                  - link "Áo T shirt trơn in thể thao GSTS018" [ref=e296]:
+                    - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+                  - button "Thêm yêu thích" [ref=e297]:
+                    - img [ref=e298]
+                - generic [ref=e300]:
+                  - generic [ref=e301]:
+                    - generic [ref=e302]: +3 Màu sắc
+                    - generic [ref=e303]: +5 Kích thước
+                  - link "Áo T shirt trơn in thể thao GSTS018" [ref=e304] [cursor=pointer]:
+                    - /url: /san-pham/ao-t-shirt-tron-in-phan-quang-3-gsts018
+                    - heading "Áo T shirt trơn in thể thao GSTS018" [level=3] [ref=e305]
+                  - generic [ref=e306]:
+                    - generic [ref=e307]: 249.000 ₫
+                    - generic [ref=e308]: 349.000 ₫
+              - generic [ref=e311]:
+                - generic [ref=e312] [cursor=pointer]:
+                  - generic [ref=e313]: "-29%"
+                  - generic [ref=e314]:
+                    - img "Áo T shirt trơn in thể thao GSTS017" [ref=e315]
+                    - img "Áo T shirt trơn in thể thao GSTS017 - hover" [ref=e316]
+                  - link "Áo T shirt trơn in thể thao GSTS017" [ref=e317]:
+                    - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+                  - button "Thêm yêu thích" [ref=e318]:
+                    - img [ref=e319]
+                - generic [ref=e321]:
+                  - generic [ref=e322]:
+                    - generic [ref=e323]: +2 Màu sắc
+                    - generic [ref=e324]: +5 Kích thước
+                  - link "Áo T shirt trơn in thể thao GSTS017" [ref=e325] [cursor=pointer]:
+                    - /url: /san-pham/ao-t-shirt-tron-in-logo-phan-quang-4-gsts017
+                    - heading "Áo T shirt trơn in thể thao GSTS017" [level=3] [ref=e326]
+                  - generic [ref=e327]:
+                    - generic [ref=e328]: 249.000 ₫
+                    - generic [ref=e329]: 349.000 ₫
+              - generic [ref=e332]:
+                - generic [ref=e333] [cursor=pointer]:
+                  - generic [ref=e334]:
+                    - img "Áo T shirt trơn in logo ngực GSTS006" [ref=e335]
+                    - img "Áo T shirt trơn in logo ngực GSTS006 - hover" [ref=e336]
+                  - link "Áo T shirt trơn in logo ngực GSTS006" [ref=e337]:
+                    - /url: /san-pham/ao-t-shirt-tron-in-logo-nguc-2-gsts006
+                  - button "Thêm yêu thích" [ref=e338]:
+                    - img [ref=e339]
+                - generic [ref=e341]:
+                  - generic [ref=e342]:
+                    - generic [ref=e343]: +3 Màu sắc
+                    - generic [ref=e344]: +5 Kích thước
+                  - link "Áo T shirt trơn in logo ngực GSTS006" [ref=e345] [cursor=pointer]:
+                    - /url: /san-pham/ao-t-shirt-tron-in-logo-nguc-2-gsts006
+                    - heading "Áo T shirt trơn in logo ngực GSTS006" [level=3] [ref=e346]
+                  - generic [ref=e348]: 279.000 ₫
+              - generic [ref=e351]:
+                - generic [ref=e352] [cursor=pointer]:
+                  - generic [ref=e353]: "-40%"
+                  - generic [ref=e354]:
+                    - img "Áo T shirt thể thao basic FSTS002" [ref=e355]
+                    - img "Áo T shirt thể thao basic FSTS002 - hover" [ref=e356]
+                  - link "Áo T shirt thể thao basic FSTS002" [ref=e357]:
+                    - /url: /san-pham/ao-t-shirt-the-thao-basic-5-fsts002
+                  - button "Thêm yêu thích" [ref=e358]:
+                    - img [ref=e359]
+                - generic [ref=e361]:
+                  - generic [ref=e362]:
+                    - generic [ref=e363]: +2 Màu sắc
+                    - generic [ref=e364]: +5 Kích thước
+                  - link "Áo T shirt thể thao basic FSTS002" [ref=e365] [cursor=pointer]:
+                    - /url: /san-pham/ao-t-shirt-the-thao-basic-5-fsts002
+                    - heading "Áo T shirt thể thao basic FSTS002" [level=3] [ref=e366]
+                  - generic [ref=e367]:
+                    - generic [ref=e368]: 149.000 ₫
+                    - generic [ref=e369]: 250.000 ₫
+        - generic [ref=e371]:
+          - generic [ref=e372]:
+            - img [ref=e373]
+            - generic [ref=e378]: Miễn phí giao hàng
+            - generic [ref=e379]: Đơn từ 500.000đ
+          - generic [ref=e380]:
+            - img [ref=e381]
+            - generic [ref=e383]: Hàng chính hãng
+            - generic [ref=e384]: 100% authentic
+          - generic [ref=e385]:
+            - img [ref=e386]
+            - generic [ref=e391]: Đổi trả 7 ngày
+            - generic [ref=e392]: Miễn phí đổi trả
+          - generic [ref=e393]:
+            - img [ref=e394]
+            - generic [ref=e396]: Hỗ trợ 24/7
+            - generic [ref=e397]: "Hotline: 1900-xxxx"
+        - generic [ref=e400]:
+          - img "Áo polo kẻ bo tay GSTP068" [ref=e402]
+          - generic [ref=e403]: 550.000 ₫
+          - generic [ref=e404]:
+            - generic [ref=e405]: "Màu sắc:"
+            - generic [ref=e406]:
+              - button "Xanh Navy" [ref=e407] [cursor=pointer]
+              - button "Đen" [ref=e408] [cursor=pointer]
+              - button "Xám" [ref=e409] [cursor=pointer]
+          - generic [ref=e410]:
+            - generic [ref=e411]: "Kích thước:"
+            - combobox [ref=e412]:
+              - option "Chọn" [disabled] [selected]
+              - option "M"
+              - option "L"
+              - option "XL"
+          - generic [ref=e413]:
+            - button [disabled] [ref=e414]:
+              - img [ref=e415]
+            - generic [ref=e416]: "1"
+            - button [ref=e417] [cursor=pointer]:
+              - img [ref=e418]
+          - button "MUA NGAY" [disabled] [ref=e419]
+    - contentinfo [ref=e420]:
+      - generic [ref=e421]:
+        - generic [ref=e422]:
+          - img "Torano" [ref=e424]
+          - paragraph [ref=e425]: Hệ thống thời trang cho phái mạnh hàng đầu Việt Nam, hướng tới phong cách nam tính, lịch lãm và trẻ trung.
+          - generic [ref=e426]:
+            - link "f" [ref=e427] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e428]: f
+            - link "t" [ref=e429] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e430]: t
+            - link "i" [ref=e431] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e432]: i
+            - link "t" [ref=e433] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e434]: t
+            - link "y" [ref=e435] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e436]: "y"
+          - heading "Phương thức thanh toán" [level=4] [ref=e437]
+          - generic [ref=e438]:
+            - generic [ref=e439]: VNPAY
+            - generic [ref=e440]: ZaloPay
+            - generic [ref=e441]: MoMo
+            - generic [ref=e442]: COD
+            - generic [ref=e443]: VISA
+        - generic [ref=e444]:
+          - heading "Thông tin liên hệ" [level=4] [ref=e445]
+          - list [ref=e446]:
+            - listitem [ref=e447]: "Địa chỉ: 123 Nguyễn Huệ, Quận 1, TP. HCM"
+            - listitem [ref=e448]: "Điện thoại: 1900-xxxx"
+            - listitem [ref=e449]: "Email: support@fashionecom.vn"
+          - heading "Phương thức vận chuyển" [level=4] [ref=e450]
+          - generic [ref=e451]:
+            - generic [ref=e452]: GHN
+            - generic [ref=e453]: GHTK
+            - generic [ref=e454]: J&T
+            - generic [ref=e455]: Ninja Van
+        - generic [ref=e456]:
+          - heading "Nhóm liên kết" [level=4] [ref=e457]
+          - list [ref=e458]:
+            - listitem [ref=e459]:
+              - link "Tìm kiếm" [ref=e460] [cursor=pointer]:
+                - /url: /tim-kiem
+            - listitem [ref=e461]:
+              - link "Giới thiệu" [ref=e462] [cursor=pointer]:
+                - /url: /gioi-thieu
+            - listitem [ref=e463]:
+              - link "Chính sách đổi trả" [ref=e464] [cursor=pointer]:
+                - /url: /chinh-sach/doi-tra
+            - listitem [ref=e465]:
+              - link "Chính sách bảo mật" [ref=e466] [cursor=pointer]:
+                - /url: /chinh-sach/bao-mat
+            - listitem [ref=e467]:
+              - link "Tuyển dụng" [ref=e468] [cursor=pointer]:
+                - /url: /tuyen-dung
+            - listitem [ref=e469]:
+              - link "Liên hệ" [ref=e470] [cursor=pointer]:
+                - /url: /lien-he
+        - generic [ref=e471]:
+          - heading "Đăng ký nhận tin" [level=4] [ref=e472]
+          - paragraph [ref=e473]: Để cập nhật những sản phẩm mới, nhận thông tin ưu đãi đặc biệt và thông tin giảm giá khác.
+          - generic [ref=e474]:
+            - img [ref=e475]
+            - textbox "Nhập email của bạn" [ref=e477]
+            - button "ĐĂNG KÝ" [ref=e478] [cursor=pointer]
+      - generic [ref=e480]: Copyright © 2026 Torano. All rights reserved.
+    - generic [ref=e481]:
+      - generic [ref=e482]:
+        - heading "Giỏ hàng" [level=2] [ref=e483]
+        - button "Đóng giỏ hàng" [ref=e484] [cursor=pointer]:
+          - img [ref=e485]
+      - generic [ref=e488]:
+        - img [ref=e490]:
+          - generic [ref=e502]: ✦
+          - generic [ref=e503]: ★
+          - generic [ref=e504]: ✦
+          - generic [ref=e505]: ✦
+        - paragraph [ref=e506]: Chưa có sản phẩm trong giỏ hàng...
+        - generic [ref=e507]:
+          - link "Trở về trang sản phẩm" [ref=e508] [cursor=pointer]:
+            - /url: /san-pham
+          - link "Khuyến mãi dành cho bạn" [ref=e509] [cursor=pointer]:
+            - /url: /danh-muc/sale
+  - alert [ref=e510]

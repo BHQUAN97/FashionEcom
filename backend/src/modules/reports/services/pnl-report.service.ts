@@ -80,7 +80,16 @@ export class PnLReportService {
         COALESCE(SUM(o.sal_order_discount), 0) AS discount,
         COALESCE(SUM(oi.sal_order_item_qty * oi.sal_order_item_price), 0) - COALESCE(SUM(o.sal_order_discount), 0) AS net_revenue,
         COALESCE(SUM(oi.sal_order_item_qty * oi.sal_order_item_cost), 0) AS cogs,
-        COALESCE(SUM(o.sal_order_shipping_fee), 0) AS shipping_cost,
+        COALESCE(SUM(o.sal_order_shipping_fee), 0) AS shipping_revenue,
+        COALESCE(SUM(o.sal_order_shipping_cost_actual), 0) AS shipping_cost,
+        COALESCE(SUM(o.sal_order_shipping_fee), 0) - COALESCE(SUM(o.sal_order_shipping_cost_actual), 0) AS shipping_profit,
+        COALESCE(SUM(o.sal_order_shipping_extra_cost), 0) AS shipping_extra_cost,
+        SUM(CASE WHEN o.sal_order_free_ship = 1 THEN 1 ELSE 0 END) AS free_ship_count,
+        SUM(CASE WHEN o.sal_order_has_incident = 1 THEN 1 ELSE 0 END) AS incident_count,
+        COALESCE((SELECT SUM(si.sal_shipping_incident_product_loss) FROM sal_shipping_incident si
+          WHERE si.sal_order_id = o.sal_order_id), 0) AS incident_product_loss,
+        COALESCE((SELECT SUM(si.sal_shipping_incident_carrier_compensation) FROM sal_shipping_incident si
+          WHERE si.sal_order_id = o.sal_order_id), 0) AS incident_compensation,
         COUNT(DISTINCT o.sal_order_id) AS order_count
         ${selectGroup}
       FROM sal_order o
@@ -133,9 +142,15 @@ export class PnLReportService {
       const netRevenue = Number(row.net_revenue);
       const cogs = Number(row.cogs);
       const grossProfit = netRevenue - cogs;
+      const shippingRevenue = Number(row.shipping_revenue);
       const shippingCost = Number(row.shipping_cost);
+      const shippingProfit = Number(row.shipping_profit);
+      const shippingExtraCost = Number(row.shipping_extra_cost || 0);
+      const incidentProductLoss = Number(row.incident_product_loss || 0);
+      const incidentCompensation = Number(row.incident_compensation || 0);
       const paymentFees = totalPaymentFees;
-      const netProfit = grossProfit - shippingCost - paymentFees;
+      // Net profit = gross_profit - ship cost - ship extra - product loss + compensation - payment fees
+      const netProfit = grossProfit - shippingCost - shippingExtraCost - incidentProductLoss + incidentCompensation - paymentFees;
 
       return {
         group_name: row.group_name || 'Tong hop',
@@ -146,7 +161,14 @@ export class PnLReportService {
         cogs,
         gross_profit: grossProfit,
         gross_margin: netRevenue > 0 ? (grossProfit / netRevenue) * 100 : 0,
+        shipping_revenue: shippingRevenue,
         shipping_cost: shippingCost,
+        shipping_extra_cost: shippingExtraCost,
+        shipping_profit: shippingProfit,
+        free_ship_count: Number(row.free_ship_count || 0),
+        incident_product_loss: incidentProductLoss,
+        incident_compensation: incidentCompensation,
+        incident_count: Number(row.incident_count || 0),
         payment_fees: paymentFees,
         net_profit: netProfit,
         net_margin: netRevenue > 0 ? (netProfit / netRevenue) * 100 : 0,

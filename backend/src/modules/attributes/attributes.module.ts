@@ -5,9 +5,10 @@ import { SizesController } from './sizes.controller';
 import { AttributesService } from './attributes.service';
 import { ColorEntity } from './entities/color.entity';
 import { SizeGroupEntity } from './entities/size-group.entity';
+import { SizeEntity } from './entities/size.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ColorEntity, SizeGroupEntity])],
+  imports: [TypeOrmModule.forFeature([ColorEntity, SizeGroupEntity, SizeEntity])],
   controllers: [ColorsController, SizesController],
   providers: [AttributesService],
   exports: [AttributesService],

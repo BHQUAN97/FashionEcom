@@ -39,4 +39,38 @@ export class SizesController {
     await this.attributesService.removeSizeGroup(id);
     return { data: null, message: 'Xoa nhom size thanh cong' };
   }
+
+  // --- Size values trong nhom ---
+
+  /** Lay tat ca size values cua 1 nhom */
+  @Get(':groupId/values')
+  async findSizesByGroup(@Param('groupId') groupId: string) {
+    const data = await this.attributesService.findSizesByGroup(groupId);
+    return { data, message: 'OK' };
+  }
+
+  /** Sync sizes tu JSON values cua nhom (tao moi cai chua co) */
+  @Post(':groupId/sync')
+  async syncSizes(@Param('groupId') groupId: string) {
+    const data = await this.attributesService.syncSizesFromGroup(groupId);
+    return { data, message: 'Sync sizes thanh cong' };
+  }
+
+  /** Tao 1 size value moi trong nhom */
+  @Post(':groupId/values')
+  async createSize(
+    @Param('groupId') groupId: string,
+    @Body() body: { value: string; sort?: number },
+  ) {
+    const data = await this.attributesService.createSize(groupId, body.value, body.sort);
+    return { data, message: 'Tao size thanh cong' };
+  }
+
+  /** Xoa 1 size value */
+  @Delete('values/:sizeId')
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+  async removeSize(@Param('sizeId') sizeId: string) {
+    await this.attributesService.removeSize(sizeId);
+    return { data: null, message: 'Xoa size thanh cong' };
+  }
 }

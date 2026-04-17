@@ -20,7 +20,7 @@ export default function OrderDetailPage() {
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-black mb-4"
       >
         <ArrowLeft className="w-4 h-4" />
-        Quay lai don hang
+        Quay lại đơn hàng
       </Link>
       <OrderDetail order={order} />
     </div>

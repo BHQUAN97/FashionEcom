@@ -1,0 +1,52 @@
+- generic [ref=e1]:
+  - alert [ref=e13]
+  - generic [ref=e14]:
+    - complementary [ref=e15]:
+      - generic [ref=e17]: ADMIN
+      - navigation [ref=e18]:
+        - link "Dashboard" [ref=e19] [cursor=pointer]:
+          - /url: /admin
+        - link "Đơn hàng" [active] [ref=e20] [cursor=pointer]:
+          - /url: /admin/don-hang
+        - link "Sản phẩm" [ref=e21] [cursor=pointer]:
+          - /url: /admin/san-pham
+        - link "Danh mục" [ref=e22] [cursor=pointer]:
+          - /url: /admin/danh-muc
+        - link "Tồn kho" [ref=e23] [cursor=pointer]:
+          - /url: /admin/ton-kho
+        - link "Khách hàng" [ref=e24] [cursor=pointer]:
+          - /url: /admin/khach-hang
+        - link "Khuyến mãi" [ref=e25] [cursor=pointer]:
+          - /url: /admin/khuyen-mai
+        - link "Layout Builder" [ref=e26] [cursor=pointer]:
+          - /url: /admin/layout-builder
+        - link "Báo cáo" [ref=e27] [cursor=pointer]:
+          - /url: /admin/bao-cao
+        - link "Media" [ref=e28] [cursor=pointer]:
+          - /url: /admin/media
+        - link "Người dùng" [ref=e29] [cursor=pointer]:
+          - /url: /admin/nguoi-dung
+        - link "Cài đặt" [ref=e30] [cursor=pointer]:
+          - /url: /admin/cai-dat
+        - link "Nhật ký" [ref=e31] [cursor=pointer]:
+          - /url: /admin/nhat-ky
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]: FashionEcom Admin
+        - button "Thông báo" [ref=e36] [cursor=pointer]:
+          - img [ref=e37]
+      - main [ref=e40]:
+        - generic [ref=e325]:
+          - heading "Đơn hàng" [level=1] [ref=e327]
+          - table [ref=e329]:
+            - rowgroup [ref=e330]:
+              - row "Mã đơn Khách hàng Trạng thái Tổng tiền Thanh toán Ngày tạo" [ref=e331]:
+                - columnheader "Mã đơn" [ref=e332]
+                - columnheader "Khách hàng" [ref=e333]
+                - columnheader "Trạng thái" [ref=e334]
+                - columnheader "Tổng tiền" [ref=e335]
+                - columnheader "Thanh toán" [ref=e336]
+                - columnheader "Ngày tạo" [ref=e337]
+            - rowgroup [ref=e338]:
+              - row "Chưa có đơn hàng nào" [ref=e339]:
+                - cell "Chưa có đơn hàng nào" [ref=e340]

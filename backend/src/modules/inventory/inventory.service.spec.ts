@@ -68,7 +68,9 @@ describe('InventoryService', () => {
     const dto = { variantId: 'variant-1', warehouseId: 'wh-1', qty: 10, reason: 'import' };
 
     it('nen tao inventory level moi neu chua co', async () => {
-      queryRunnerManager.findOne.mockResolvedValue(null);
+      queryRunnerManager.findOne
+        .mockResolvedValueOnce({ invWarehouseId: 'wh-1' }) // warehouse exists
+        .mockResolvedValueOnce(null); // no existing level
 
       await service.adjust(dto, 'user-1');
 
@@ -87,7 +89,9 @@ describe('InventoryService', () => {
         invInventoryLevelAvailable: 50,
         invInventoryLevelLocked: 0,
       };
-      queryRunnerManager.findOne.mockResolvedValue(existingLevel);
+      queryRunnerManager.findOne
+        .mockResolvedValueOnce({ invWarehouseId: 'wh-1' }) // warehouse exists
+        .mockResolvedValueOnce(existingLevel);
 
       await service.adjust(dto, 'user-1');
 
@@ -101,7 +105,9 @@ describe('InventoryService', () => {
         invInventoryLevelAvailable: 5,
         invInventoryLevelLocked: 0,
       };
-      queryRunnerManager.findOne.mockResolvedValue(existingLevel);
+      queryRunnerManager.findOne
+        .mockResolvedValueOnce({ invWarehouseId: 'wh-1' }) // warehouse exists
+        .mockResolvedValueOnce(existingLevel);
 
       await expect(
         service.adjust({ ...dto, qty: -10 }, 'user-1'),
@@ -113,7 +119,9 @@ describe('InventoryService', () => {
     });
 
     it('nen dung pessimistic_write lock', async () => {
-      queryRunnerManager.findOne.mockResolvedValue(null);
+      queryRunnerManager.findOne
+        .mockResolvedValueOnce({ invWarehouseId: 'wh-1' }) // warehouse exists
+        .mockResolvedValueOnce(null); // no existing level
 
       await service.adjust(dto, 'user-1');
 

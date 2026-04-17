@@ -23,7 +23,7 @@ export function Toolbar() {
           onClick={undo}
           disabled={!canUndo}
           className="p-1.5 rounded hover:bg-gray-100 disabled:opacity-30 transition"
-          title="Hoan tac (Ctrl+Z)"
+          title="Hoàn tác (Ctrl+Z)"
         >
           <Undo2 className="w-4 h-4 text-gray-500" />
         </button>
@@ -31,7 +31,7 @@ export function Toolbar() {
           onClick={redo}
           disabled={!canRedo}
           className="p-1.5 rounded hover:bg-gray-100 disabled:opacity-30 transition"
-          title="Lam lai (Ctrl+Shift+Z)"
+          title="Làm lại (Ctrl+Shift+Z)"
         >
           <Redo2 className="w-4 h-4 text-gray-500" />
         </button>

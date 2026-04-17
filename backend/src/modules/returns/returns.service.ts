@@ -3,6 +3,8 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +12,7 @@ import { ReturnRequestEntity } from './entities/return-request.entity';
 import { ReturnRequestItemEntity } from './entities/return-request-item.entity';
 import { ReturnRequestMediaEntity } from './entities/return-request-media.entity';
 import { OrderEntity } from '../orders/entities/order.entity';
+import { OrderItemEntity } from '../orders/entities/order-item.entity';
 import { CreateReturnDto, UpdateReturnStatusDto, ReturnQueryDto } from './dto/return-request.dto';
 import { StateMachine } from '@/common/patterns/state-machine';
 import { generateEntityCode } from '@/common/utils/code-generation.util';
@@ -20,9 +23,9 @@ import { BaseService } from '@/common/services/base.service';
  *             4=Refunding, 5=Refunded, 6=Exchanging, 7=Exchanged
  */
 const RMA_STATUS_LABELS: Record<number, string> = {
-  0: 'Yeu cau', 1: 'Dang xem xet', 2: 'Da duyet',
-  3: 'Tu choi', 4: 'Dang hoan tien', 5: 'Da hoan tien',
-  6: 'Dang doi hang', 7: 'Da doi hang',
+  0: 'Yêu cầu', 1: 'Đang xem xét', 2: 'Đã duyệt',
+  3: 'Từ chối', 4: 'Đang hoàn tiền', 5: 'Đã hoàn tiền',
+  6: 'Đang đổi hàng', 7: 'Đã đổi hàng',
 };
 
 // State machine cho RMA — reuse pattern chung
@@ -41,6 +44,8 @@ const rmaMachine = new StateMachine<number>({
 
 @Injectable()
 export class ReturnsService extends BaseService<ReturnRequestEntity> {
+  private readonly logger = new Logger(ReturnsService.name);
+
   constructor(
     @InjectRepository(ReturnRequestEntity)
     private readonly returnRepo: Repository<ReturnRequestEntity>,
@@ -50,8 +55,10 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
     private readonly mediaRepo: Repository<ReturnRequestMediaEntity>,
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
+    @InjectRepository(OrderItemEntity)
+    private readonly orderItemRepo: Repository<OrderItemEntity>,
   ) {
-    super(returnRepo, 'salReturnRequestId', 'Yeu cau doi tra');
+    super(returnRepo, 'salReturnRequestId', 'Yêu cầu đổi trả');
   }
 
   /**
@@ -61,17 +68,17 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
     const order = await this.orderRepo.findOne({
       where: { salOrderId: dto.orderId, sysCustomerId: customerId },
     });
-    if (!order) throw new NotFoundException('Don hang khong ton tai');
+    if (!order) throw new NotFoundException('Đơn hàng không tồn tại');
 
     // Chi cho phep RMA khi don da giao thanh cong
     if (order.salOrderStatus !== 4) {
-      throw new BadRequestException('Chi co the doi tra don hang da giao thanh cong');
+      throw new BadRequestException('Chỉ có thể đổi trả đơn hàng đã giao thành công');
     }
 
     // Kiem tra thoi han 7 ngay
     const daysSinceDelivered = (Date.now() - new Date(order.modifiedDate || order.createdDate).getTime()) / (1000 * 60 * 60 * 24);
     if (daysSinceDelivered > 7) {
-      throw new BadRequestException('Da qua thoi han 7 ngay de yeu cau doi tra');
+      throw new BadRequestException('Đã quá thời hạn 7 ngày để yêu cầu đổi trả');
     }
 
     // Tao ma RMA
@@ -90,13 +97,30 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
     });
     await this.returnRepo.save(returnRequest);
 
-    // Tao items
+    // Tao items — lookup order item de lay dung variant ID
     for (const item of dto.items) {
+      const orderItem = await this.orderItemRepo.findOne({
+        where: { salOrderItemId: item.orderItemId },
+      });
+      if (!orderItem) {
+        throw new BadRequestException(`Order item ${item.orderItemId} khong ton tai`);
+      }
+
+      // Validate so luong doi tra khong vuot qua so luong da mua
+      if (item.qty > Number(orderItem.salOrderItemQty)) {
+        throw new BadRequestException(
+          `So luong doi tra (${item.qty}) vuot qua so luong da mua (${orderItem.salOrderItemQty})`,
+        );
+      }
+      if (item.qty <= 0) {
+        throw new BadRequestException('So luong doi tra phai lon hon 0');
+      }
+
       const returnItem = this.itemRepo.create({
         salReturnRequestItemId: randomUUID(),
         salReturnRequestId: returnRequest.salReturnRequestId,
         salOrderItemId: item.orderItemId,
-        catProductVariantId: item.orderItemId, // Se duoc map chinh xac tu order_item
+        catProductVariantId: orderItem.catProductVariantId,
         salReturnRequestItemQty: item.qty,
         salReturnRequestItemExchangeVariantId: item.exchangeVariantId || null,
       });
@@ -115,7 +139,7 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
     // Validate transition bang state machine
     if (!rmaMachine.canTransition(rma.salReturnRequestStatus, dto.status)) {
       throw new BadRequestException(
-        `Khong the chuyen tu "${RMA_STATUS_LABELS[rma.salReturnRequestStatus]}" sang "${RMA_STATUS_LABELS[dto.status]}"`,
+        `Không thể chuyển từ "${RMA_STATUS_LABELS[rma.salReturnRequestStatus]}" sang "${RMA_STATUS_LABELS[dto.status]}"`,
       );
     }
 
@@ -124,7 +148,22 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
     rma.salReturnRequestStatus = dto.status;
     rma.sysUserId = userId;
     if (dto.staffNotes) rma.salReturnRequestStaffNotes = dto.staffNotes;
-    if (dto.refundAmount) rma.salReturnRequestRefundAmount = dto.refundAmount;
+
+    // BAO MAT: validate refund amount khong vuot order total
+    if (dto.refundAmount !== undefined) {
+      const order = await this.orderRepo.findOne({
+        where: { salOrderId: rma.salOrderId },
+      });
+      if (order && dto.refundAmount > Number(order.salOrderTotal)) {
+        throw new BadRequestException(
+          `So tien hoan tra (${dto.refundAmount.toLocaleString()}) khong duoc vuot tong don hang (${Number(order.salOrderTotal).toLocaleString()})`,
+        );
+      }
+      rma.salReturnRequestRefundAmount = dto.refundAmount;
+      this.logger.warn(
+        `[AUDIT] Refund amount set: rma=${id}, amount=${dto.refundAmount}, by=${userId}`,
+      );
+    }
 
     await this.returnRepo.save(rma);
 
@@ -166,6 +205,17 @@ export class ReturnsService extends BaseService<ReturnRequestEntity> {
    */
   async findOne(id: string) {
     return super.findOne(id, ['items', 'media']);
+  }
+
+  /**
+   * BAO MAT: Chi cho customer xem RMA cua chinh minh — chong IDOR
+   */
+  async findOneWithOwnerCheck(id: string, customerId: string) {
+    const rma = await this.findOne(id);
+    if (rma.sysCustomerId !== customerId) {
+      throw new ForbiddenException('Khong co quyen xem yeu cau doi tra nay');
+    }
+    return rma;
   }
 
   /**

@@ -19,7 +19,7 @@ export function GridToggle({ columns, onChange, className }: GridToggleProps) {
           'p-1.5 rounded transition',
           columns === 2 ? 'bg-black text-white' : 'text-gray-400 hover:text-gray-600',
         )}
-        aria-label="2 cot"
+        aria-label="2 cột"
       >
         <Grid2X2 className="w-4 h-4" />
       </button>
@@ -29,7 +29,7 @@ export function GridToggle({ columns, onChange, className }: GridToggleProps) {
           'p-1.5 rounded transition',
           columns === 4 ? 'bg-black text-white' : 'text-gray-400 hover:text-gray-600',
         )}
-        aria-label="4 cot"
+        aria-label="4 cột"
       >
         <Grid3X3 className="w-4 h-4" />
       </button>

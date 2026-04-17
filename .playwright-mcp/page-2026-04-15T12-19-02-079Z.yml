@@ -1,0 +1,192 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - paragraph [ref=e4]: "Miễn phí giao hàng cho đơn từ 500.000đ | Hotline: 1900-xxxx"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - button "Menu" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+        - link "Torano" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img "Torano" [ref=e11]
+        - button "Giỏ hàng" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+      - generic [ref=e16] [cursor=pointer]:
+        - searchbox "Tìm kiếm sản phẩm..." [ref=e17]
+        - generic:
+          - img
+    - main [ref=e18]:
+      - generic [ref=e19]:
+        - paragraph [ref=e20]: Vui lòng đăng nhập để tiếp tục thanh toán.
+        - link "ĐĂNG NHẬP" [ref=e21] [cursor=pointer]:
+          - /url: /dang-nhap
+    - contentinfo [ref=e22]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - img "Torano" [ref=e26]
+          - paragraph [ref=e27]: Hệ thống thời trang cho phái mạnh hàng đầu Việt Nam, hướng tới phong cách nam tính, lịch lãm và trẻ trung.
+          - generic [ref=e28]:
+            - link "f" [ref=e29] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e30]: f
+            - link "t" [ref=e31] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e32]: t
+            - link "i" [ref=e33] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e34]: i
+            - link "t" [ref=e35] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e36]: t
+            - link "y" [ref=e37] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e38]: "y"
+          - heading "Phương thức thanh toán" [level=4] [ref=e39]
+          - generic [ref=e40]:
+            - generic [ref=e41]: VNPAY
+            - generic [ref=e42]: ZaloPay
+            - generic [ref=e43]: MoMo
+            - generic [ref=e44]: COD
+            - generic [ref=e45]: VISA
+        - generic [ref=e46]:
+          - heading "Thông tin liên hệ" [level=4] [ref=e47] [cursor=pointer]
+          - list [ref=e48]:
+            - listitem [ref=e49]: "Địa chỉ: 123 Nguyễn Huệ, Quận 1, TP. HCM"
+            - listitem [ref=e50]: "Điện thoại: 1900-xxxx"
+            - listitem [ref=e51]: "Email: support@fashionecom.vn"
+          - heading "Phương thức vận chuyển" [level=4] [ref=e52] [cursor=pointer]
+          - generic [ref=e53]:
+            - generic [ref=e54]: GHN
+            - generic [ref=e55]: GHTK
+            - generic [ref=e56]: J&T
+            - generic [ref=e57]: Ninja Van
+        - generic [ref=e58]:
+          - heading "Nhóm liên kết" [level=4] [ref=e59] [cursor=pointer]
+          - list [ref=e60]:
+            - listitem [ref=e61]:
+              - link "Tìm kiếm" [ref=e62] [cursor=pointer]:
+                - /url: /tim-kiem
+            - listitem [ref=e63]:
+              - link "Giới thiệu" [ref=e64] [cursor=pointer]:
+                - /url: /gioi-thieu
+            - listitem [ref=e65]:
+              - link "Chính sách đổi trả" [ref=e66] [cursor=pointer]:
+                - /url: /chinh-sach/doi-tra
+            - listitem [ref=e67]:
+              - link "Chính sách bảo mật" [ref=e68] [cursor=pointer]:
+                - /url: /chinh-sach/bao-mat
+            - listitem [ref=e69]:
+              - link "Tuyển dụng" [ref=e70] [cursor=pointer]:
+                - /url: /tuyen-dung
+            - listitem [ref=e71]:
+              - link "Liên hệ" [ref=e72] [cursor=pointer]:
+                - /url: /lien-he
+        - generic [ref=e73]:
+          - heading "Đăng ký nhận tin" [level=4] [ref=e74] [cursor=pointer]
+          - paragraph [ref=e75]: Để cập nhật những sản phẩm mới, nhận thông tin ưu đãi đặc biệt và thông tin giảm giá khác.
+          - generic [ref=e76]:
+            - img [ref=e77]
+            - textbox "Nhập email của bạn" [ref=e79]
+            - button "ĐĂNG KÝ" [ref=e80] [cursor=pointer]
+      - generic [ref=e82]: Copyright © 2026 Torano. All rights reserved.
+    - generic [ref=e83]:
+      - generic [ref=e84]:
+        - heading "Giỏ hàng" [level=2] [ref=e85]
+        - button "Đóng giỏ hàng" [ref=e86] [cursor=pointer]:
+          - img [ref=e87]
+      - generic [ref=e90]:
+        - img [ref=e92]:
+          - generic [ref=e104]: ✦
+          - generic [ref=e105]: ★
+          - generic [ref=e106]: ✦
+          - generic [ref=e107]: ✦
+        - paragraph [ref=e108]: Chưa có sản phẩm trong giỏ hàng...
+        - generic [ref=e109]:
+          - link "Trở về trang sản phẩm" [ref=e110] [cursor=pointer]:
+            - /url: /san-pham
+          - link "Khuyến mãi dành cho bạn" [ref=e111] [cursor=pointer]:
+            - /url: /danh-muc/sale
+    - navigation [ref=e112]:
+      - generic [ref=e113]:
+        - link "Trang chủ" [ref=e114] [cursor=pointer]:
+          - /url: /
+          - img [ref=e116]
+          - generic [ref=e118]: Trang chủ
+        - link "Danh mục" [ref=e119] [cursor=pointer]:
+          - /url: /danh-muc/ao-nam
+          - img [ref=e121]
+          - generic [ref=e123]: Danh mục
+        - button "Tìm kiếm" [ref=e124] [cursor=pointer]:
+          - img [ref=e126]
+          - generic [ref=e128]: Tìm kiếm
+        - link "Yêu thích" [ref=e129] [cursor=pointer]:
+          - /url: /tai-khoan/yeu-thich
+          - img [ref=e131]
+          - generic [ref=e133]: Yêu thích
+        - link "Tài khoản" [ref=e134] [cursor=pointer]:
+          - /url: /tai-khoan
+          - img [ref=e136]
+          - generic [ref=e138]: Tài khoản
+    - generic [ref=e139]:
+      - generic [ref=e140]:
+        - link "Torano" [ref=e141] [cursor=pointer]:
+          - /url: /
+          - img "Torano" [ref=e142]
+        - button "Đóng menu" [ref=e143] [cursor=pointer]:
+          - img [ref=e144]
+      - generic [ref=e148]:
+        - link "ĐĂNG NHẬP" [ref=e149] [cursor=pointer]:
+          - /url: /dang-nhap
+        - link "ĐĂNG KÝ" [ref=e150] [cursor=pointer]:
+          - /url: /dang-ky
+      - generic [ref=e151]:
+        - link "Sản phẩm mới" [ref=e154] [cursor=pointer]:
+          - /url: /san-pham
+        - generic [ref=e155]:
+          - generic [ref=e156]:
+            - link "Áo nam" [ref=e157] [cursor=pointer]:
+              - /url: /danh-muc/ao-nam
+            - button "Mở danh mục Áo nam" [ref=e158] [cursor=pointer]:
+              - img [ref=e159]
+          - generic [ref=e161]:
+            - link "Áo Polo" [ref=e162] [cursor=pointer]:
+              - /url: /danh-muc/ao-polo
+            - link "Áo Thun" [ref=e163] [cursor=pointer]:
+              - /url: /danh-muc/ao-thun
+            - link "Áo Sơ Mi" [ref=e164] [cursor=pointer]:
+              - /url: /danh-muc/ao-so-mi
+            - link "Áo Blazer" [ref=e165] [cursor=pointer]:
+              - /url: /danh-muc/ao-blazer
+            - link "Áo Khoác" [ref=e166] [cursor=pointer]:
+              - /url: /danh-muc/ao-khoac
+        - generic [ref=e167]:
+          - generic [ref=e168]:
+            - link "Quần nam" [ref=e169] [cursor=pointer]:
+              - /url: /danh-muc/quan-nam
+            - button "Mở danh mục Quần nam" [ref=e170] [cursor=pointer]:
+              - img [ref=e171]
+          - generic [ref=e173]:
+            - link "Quần Tây" [ref=e174] [cursor=pointer]:
+              - /url: /danh-muc/quan-tay
+            - link "Quần Jeans" [ref=e175] [cursor=pointer]:
+              - /url: /danh-muc/quan-jeans
+            - link "Quần Short" [ref=e176] [cursor=pointer]:
+              - /url: /danh-muc/quan-short
+        - generic [ref=e177]:
+          - generic [ref=e178]:
+            - link "Phụ kiện" [ref=e179] [cursor=pointer]:
+              - /url: /danh-muc/phu-kien
+            - button "Mở danh mục Phụ kiện" [ref=e180] [cursor=pointer]:
+              - img [ref=e181]
+          - link "Thắt Lưng" [ref=e184] [cursor=pointer]:
+            - /url: /danh-muc/that-lung
+        - link "Sale" [ref=e187] [cursor=pointer]:
+          - /url: /danh-muc/sale
+      - generic [ref=e188]:
+        - link "Sản phẩm yêu thích" [ref=e189] [cursor=pointer]:
+          - /url: /tai-khoan/yeu-thich
+          - img [ref=e190]
+          - text: Sản phẩm yêu thích
+        - generic [ref=e192]:
+          - img [ref=e193]
+          - text: "Hotline: 1900-xxxx"
+  - alert [ref=e195]

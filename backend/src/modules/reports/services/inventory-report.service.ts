@@ -79,12 +79,23 @@ export class InventoryReportService {
       conditions += ' AND il.inv_inventory_level_available = 0';
     }
 
+    // Filter theo mau sac / kich thuoc
+    if (query.color_id) {
+      conditions += ' AND v.cat_color_id = ?';
+      params.push(query.color_id);
+    }
+    if (query.size_id) {
+      conditions += ' AND v.cat_size_id = ?';
+      params.push(query.size_id);
+    }
+
     const sql = `
       SELECT
         p.cat_product_name AS product_name,
         v.cat_product_variant_sku AS sku,
-        v.cat_product_variant_color AS color,
-        v.cat_product_variant_size AS size,
+        COALESCE(clr.cat_color_name, v.cat_product_variant_color) AS color,
+        COALESCE(clr.cat_color_hex, NULL) AS color_hex,
+        COALESCE(sz.cat_size_value, v.cat_product_variant_size) AS size,
         il.inv_inventory_level_available AS available,
         il.inv_inventory_level_locked AS locked,
         v.cat_product_variant_cost AS cost,
@@ -93,6 +104,8 @@ export class InventoryReportService {
       FROM inv_inventory_level il
       JOIN cat_product_variant v ON v.cat_product_variant_id = il.cat_product_variant_id
       JOIN cat_product p ON p.cat_product_id = v.cat_product_id
+      LEFT JOIN cat_color clr ON clr.cat_color_id = v.cat_color_id
+      LEFT JOIN cat_size sz ON sz.cat_size_id = v.cat_size_id
       LEFT JOIN (
         SELECT oi.cat_product_variant_id,
                COALESCE(SUM(oi.sal_order_item_qty), 0) AS qty_sold
@@ -112,6 +125,8 @@ export class InventoryReportService {
       FROM inv_inventory_level il
       JOIN cat_product_variant v ON v.cat_product_variant_id = il.cat_product_variant_id
       JOIN cat_product p ON p.cat_product_id = v.cat_product_id
+      LEFT JOIN cat_color clr ON clr.cat_color_id = v.cat_color_id
+      LEFT JOIN cat_size sz ON sz.cat_size_id = v.cat_size_id
       ${conditions}
     `;
 
@@ -144,8 +159,9 @@ export class InventoryReportService {
         v.cat_product_variant_id,
         v.cat_product_variant_sku AS sku,
         p.cat_product_name AS product_name,
-        v.cat_product_variant_color AS color,
-        v.cat_product_variant_size AS size,
+        COALESCE(clr.cat_color_name, v.cat_product_variant_color) AS color,
+        COALESCE(clr.cat_color_hex, NULL) AS color_hex,
+        COALESCE(sz.cat_size_value, v.cat_product_variant_size) AS size,
         il.inv_inventory_level_available AS available,
         v.cat_product_variant_cost AS cost,
         (il.inv_inventory_level_available * v.cat_product_variant_cost) AS dead_value,
@@ -153,6 +169,8 @@ export class InventoryReportService {
       FROM cat_product_variant v
       JOIN inv_inventory_level il ON il.cat_product_variant_id = v.cat_product_variant_id
       JOIN cat_product p ON p.cat_product_id = v.cat_product_id
+      LEFT JOIN cat_color clr ON clr.cat_color_id = v.cat_color_id
+      LEFT JOIN cat_size sz ON sz.cat_size_id = v.cat_size_id
       LEFT JOIN sal_order_item oi ON oi.cat_product_variant_id = v.cat_product_variant_id
       LEFT JOIN sal_order o ON o.sal_order_id = oi.sal_order_id AND o.sal_order_status = 4
       WHERE il.inv_inventory_level_available > 0

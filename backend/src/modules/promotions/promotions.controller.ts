@@ -2,7 +2,9 @@ import {
   Controller, Get, Post, Put, Delete,
   Body, Param, Query, UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { PromotionsService } from './promotions.service';
+import { SaleCampaignService } from './sale-campaign.service';
 import { CreateDiscountDto, UpdateDiscountDto, ApplyDiscountDto, DiscountQueryDto } from './dto/discount.dto';
 import { CreateFlashSaleDto, UpdateFlashSaleDto, FlashSaleQueryDto } from './dto/flash-sale.dto';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
@@ -87,12 +89,17 @@ export class PromotionsAdminController {
 
 @Controller('promotions')
 export class PromotionsPublicController {
-  constructor(private readonly promotionsService: PromotionsService) {}
+  constructor(
+    private readonly promotionsService: PromotionsService,
+    private readonly saleCampaignService: SaleCampaignService,
+  ) {}
 
   /**
    * Storefront: apply discount code vao cart
+   * Rate limit: 10 req/min — chong brute-force coupon code
    */
   @Post('discounts/apply')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   async applyDiscount(@Body() dto: ApplyDiscountDto) {
     const data = await this.promotionsService.applyDiscount(dto);
     return { data, message: 'OK' };
@@ -104,6 +111,30 @@ export class PromotionsPublicController {
   @Get('flash-sales/active')
   async getActiveFlashSale() {
     const data = await this.promotionsService.getActiveFlashSale();
+    return { data, message: 'OK' };
+  }
+
+  /**
+   * Storefront: lay gia sale tot nhat cho 1 variant
+   */
+  @Get('sale-price/:variantId')
+  async getSalePrice(@Param('variantId') variantId: string) {
+    const data = await this.saleCampaignService.getBestSalePrice(variantId);
+    return { data, message: 'OK' };
+  }
+
+  /**
+   * Storefront: batch lay gia sale cho nhieu variant
+   * Query: ?ids=uuid1,uuid2,uuid3
+   */
+  @Get('sale-prices')
+  async getSalePrices(@Query('ids') ids: string) {
+    const variantIds = (ids || '').split(',').filter(Boolean);
+    if (variantIds.length === 0) return { data: {}, message: 'OK' };
+
+    const priceMap = await this.saleCampaignService.getBestSalePricesBatch(variantIds);
+    const data: Record<string, unknown> = {};
+    priceMap.forEach((val: unknown, key: string) => { data[key] = val; });
     return { data, message: 'OK' };
   }
 }

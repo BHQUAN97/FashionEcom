@@ -5,7 +5,7 @@ import { test, expect, Page } from '@playwright/test';
  * 3 steps: review -> shipping -> payment
  */
 
-/** Seed 1 san pham vao cart qua localStorage (giong cart.spec.ts) */
+/** Seed 2 san pham vao cart qua localStorage */
 async function seedCart(page: Page) {
   await page.goto('/san-pham');
   await page.evaluate(() => {
@@ -55,21 +55,17 @@ async function seedCart(page: Page) {
 /* ------------------------------------------------------------------ */
 test.describe('Checkout — Gio hang trong', () => {
   test('hien thong bao khi gio hang trong', async ({ page }) => {
-    // Clear localStorage truoc khi vao trang thanh toan
     await page.goto('/san-pham');
     await page.evaluate(() => localStorage.clear());
-
     await page.goto('/thanh-toan');
-    await expect(page.getByText(/Gio hang trong/i)).toBeVisible();
+    await expect(page.getByText(/Giỏ hàng trống/i)).toBeVisible();
   });
 
   test('khong hien form shipping khi gio hang trong', async ({ page }) => {
     await page.goto('/san-pham');
     await page.evaluate(() => localStorage.clear());
-
     await page.goto('/thanh-toan');
-    // Form shipping khong xuat hien
-    await expect(page.getByText(/Thong tin giao hang/i)).not.toBeVisible();
+    await expect(page.getByText(/Thông tin giao hàng/i)).not.toBeVisible();
   });
 });
 
@@ -83,15 +79,14 @@ test.describe('Checkout — Review step', () => {
 
   test('hien heading "Thanh toan"', async ({ page }) => {
     await page.goto('/thanh-toan');
-    await expect(page.getByRole('heading', { level: 1, name: /Thanh toan/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /Thanh toán/i })).toBeVisible();
   });
 
   test('hien order summary voi san pham tu cart', async ({ page }) => {
     await page.goto('/thanh-toan');
-    // Review step hien thi so san pham trong accordion
-    const accordion = page.getByRole('button', { name: /Don hang.*2 san pham/i });
+    // Accordion trigger "Đơn hàng (2 sản phẩm)"
+    const accordion = page.locator('button', { hasText: /sản phẩm/ });
     await expect(accordion).toBeVisible();
-    // Click expand accordion de xem chi tiet
     await accordion.click();
     // Hien ten san pham ben trong
     await expect(page.getByText('Ao Polo Nam Cao Cap')).toBeVisible();
@@ -100,19 +95,18 @@ test.describe('Checkout — Review step', () => {
 
   test('hien thi mau sac va size cua san pham', async ({ page }) => {
     await page.goto('/thanh-toan');
-    // Expand accordion truoc
-    await page.getByRole('button', { name: /Don hang.*san pham/i }).click();
+    // Expand accordion
+    await page.locator('button', { hasText: /sản phẩm/ }).click();
     await expect(page.getByText(/Den.*L/)).toBeVisible();
     await expect(page.getByText(/Xam.*M/)).toBeVisible();
   });
 
   test('co nut TIEP TUC de chuyen sang shipping', async ({ page }) => {
     await page.goto('/thanh-toan');
-    const nextBtn = page.getByRole('button', { name: /TIEP TUC/i });
+    const nextBtn = page.getByRole('button', { name: /TIẾP TỤC/i });
     await expect(nextBtn).toBeVisible();
     await nextBtn.click();
-    // Sau khi click, hien form shipping
-    await expect(page.getByText(/Thong tin giao hang/i)).toBeVisible();
+    await expect(page.getByText(/Thông tin giao hàng/i)).toBeVisible();
   });
 });
 
@@ -123,73 +117,58 @@ test.describe('Checkout — Shipping step', () => {
   test.beforeEach(async ({ page }) => {
     await seedCart(page);
     await page.goto('/thanh-toan');
-    // Click TIEP TUC de vao shipping step
-    await page.getByRole('button', { name: /TIEP TUC/i }).click();
-    await expect(page.getByText(/Thong tin giao hang/i)).toBeVisible();
+    await page.getByRole('button', { name: /TIẾP TỤC/i }).click();
+    await expect(page.getByText(/Thông tin giao hàng/i)).toBeVisible();
   });
 
   test('hien day du form fields: ten, SDT, dia chi', async ({ page }) => {
-    // Ho ten
-    await expect(page.getByPlaceholder('Nguyen Van A')).toBeVisible();
-    // So dien thoai
+    await expect(page.getByPlaceholder('Nguyễn Văn A')).toBeVisible();
     await expect(page.getByPlaceholder('0901234567')).toBeVisible();
-    // Tinh/Thanh pho (select)
-    await expect(page.getByText('Tinh/Thanh pho *')).toBeVisible();
-    // Quan/Huyen (select)
-    await expect(page.getByText('Quan/Huyen *')).toBeVisible();
-    // Phuong/Xa (select)
-    await expect(page.getByText('Phuong/Xa *')).toBeVisible();
-    // Dia chi cu the
-    await expect(page.getByPlaceholder(/So nha, ten duong/)).toBeVisible();
-    // Ghi chu (khong bat buoc)
-    await expect(page.getByPlaceholder(/Ghi chu cho don hang/)).toBeVisible();
+    await expect(page.getByText(/Tỉnh\/Thành phố/)).toBeVisible();
+    await expect(page.getByText(/Quận\/Huyện/)).toBeVisible();
+    await expect(page.getByText(/Phường\/Xã/)).toBeVisible();
+    await expect(page.getByPlaceholder(/Số nhà, tên đường/)).toBeVisible();
+    await expect(page.getByPlaceholder(/Ghi chú cho đơn hàng/)).toBeVisible();
   });
 
   test('nut CHON THANH TOAN bi disabled khi chua dien du thong tin', async ({ page }) => {
-    // Nut next hien thi "CHON THANH TOAN" va bi disabled
-    const nextBtn = page.getByRole('button', { name: /CHON THANH TOAN/i });
+    const nextBtn = page.getByRole('button', { name: /CHỌN THANH TOÁN/i });
     await expect(nextBtn).toBeVisible();
     await expect(nextBtn).toBeDisabled();
   });
 
   test('co nut QUAY LAI de quay ve review', async ({ page }) => {
-    const backBtn = page.getByRole('button', { name: /QUAY LAI/i });
+    const backBtn = page.getByRole('button', { name: /QUAY LẠI/i });
     await expect(backBtn).toBeVisible();
     await backBtn.click();
-    // Quay lai review step — hien lai danh sach san pham
-    await expect(page.getByText(/2 san pham/i)).toBeVisible();
+    // Quay lai review — accordion "sản phẩm" hien lai
+    await expect(page.locator('button', { hasText: /sản phẩm/ })).toBeVisible();
   });
 
   test('dien form shipping va enable nut next', async ({ page }) => {
-    // Dien ho ten
-    await page.getByPlaceholder('Nguyen Van A').fill('Tran Van B');
-    // Dien SDT
+    await page.getByPlaceholder('Nguyễn Văn A').fill('Tran Van B');
     await page.getByPlaceholder('0901234567').fill('0987654321');
-    // Chon tinh/thanh pho: Ho Chi Minh
     await page.locator('select').nth(0).selectOption('79');
-    // Cho quan/huyen load, chon Quan 1
     await page.locator('select').nth(1).waitFor({ state: 'attached' });
     await page.locator('select').nth(1).selectOption('760');
-    // Dien dia chi cu the
-    await page.getByPlaceholder(/So nha, ten duong/).fill('123 Nguyen Hue');
+    await page.getByPlaceholder(/Số nhà, tên đường/).fill('123 Nguyen Hue');
 
-    // Nut CHON THANH TOAN phai enabled
-    const nextBtn = page.getByRole('button', { name: /CHON THANH TOAN/i });
+    const nextBtn = page.getByRole('button', { name: /CHỌN THANH TOÁN/i });
     await expect(nextBtn).toBeEnabled();
   });
 
   test('dien form day du va chuyen sang payment step', async ({ page }) => {
-    await page.getByPlaceholder('Nguyen Van A').fill('Tran Van B');
+    await page.getByPlaceholder('Nguyễn Văn A').fill('Tran Van B');
     await page.getByPlaceholder('0901234567').fill('0987654321');
     await page.locator('select').nth(0).selectOption('79');
     await page.locator('select').nth(1).waitFor({ state: 'attached' });
     await page.locator('select').nth(1).selectOption('760');
-    await page.getByPlaceholder(/So nha, ten duong/).fill('123 Nguyen Hue');
+    await page.getByPlaceholder(/Số nhà, tên đường/).fill('123 Nguyen Hue');
 
-    await page.getByRole('button', { name: /CHON THANH TOAN/i }).click();
+    await page.getByRole('button', { name: /CHỌN THANH TOÁN/i }).click();
 
-    // Payment step — co nut DAT HANG
-    await expect(page.getByRole('button', { name: /DAT HANG/i })).toBeVisible();
+    // Payment step — co nut ĐẶT HÀNG
+    await expect(page.getByRole('button', { name: /ĐẶT HÀNG/i })).toBeVisible();
   });
 });
 
@@ -200,9 +179,7 @@ test.describe('Checkout — Order summary panel', () => {
   test('hien tong don hang tren desktop', async ({ page }) => {
     await seedCart(page);
     await page.goto('/thanh-toan');
-
-    // OrderSummaryPanel chi hien tren md+ (hidden md:block)
-    // Playwright Desktop Chrome du rong de hien
-    await expect(page.getByText(/Tong don hang/i)).toBeVisible();
+    // Desktop sidebar "Tổng đơn hàng" — dung last() vi first la mobile (hidden)
+    await expect(page.getByRole('heading', { name: /Tổng đơn hàng/i }).last()).toBeVisible();
   });
 });

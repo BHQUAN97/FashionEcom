@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CustomerEntity } from './entities/customer.entity';
@@ -6,6 +6,7 @@ import { CustomerAddressEntity } from './entities/customer-address.entity';
 import { OrderEntity } from '../orders/entities/order.entity';
 import { CustomerQueryDto } from './dto/customer-query.dto';
 import { BaseService } from '@/common/services/base.service';
+import { safeSortField, safeSortOrder } from '@/common/utils/safe-sort.util';
 
 @Injectable()
 export class CustomersService extends BaseService<CustomerEntity> {
@@ -18,6 +19,21 @@ export class CustomersService extends BaseService<CustomerEntity> {
     private readonly orderRepo: Repository<OrderEntity>,
   ) {
     super(customerRepo, 'sysCustomerId', 'Khach hang');
+  }
+
+  /**
+   * Tao khach hang — kiem tra trung so dien thoai
+   */
+  override async createEntity(data: Partial<CustomerEntity>): Promise<CustomerEntity> {
+    if (data.sysCustomerMobile) {
+      const existing = await this.customerRepo.findOne({
+        where: { sysCustomerMobile: data.sysCustomerMobile },
+      });
+      if (existing) {
+        throw new ConflictException('So dien thoai da duoc su dung');
+      }
+    }
+    return super.createEntity(data);
   }
 
   /**
@@ -40,8 +56,8 @@ export class CustomersService extends BaseService<CustomerEntity> {
       qb.andWhere('c.sysCustomerTier = :tier', { tier: query.tier });
     }
 
-    const sortField = query.sort || 'sysCustomerName';
-    const sortOrder = query.order || 'ASC';
+    const sortField = safeSortField(query.sort, 'customer', 'sysCustomerName');
+    const sortOrder = safeSortOrder(query.order);
     qb.orderBy(`c.${sortField}`, sortOrder);
 
     const total = await qb.getCount();

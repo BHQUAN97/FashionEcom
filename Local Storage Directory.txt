@@ -1,0 +1,12 @@
+/storage/
+├── products/                   # Ảnh sản phẩm
+│   ├── 2024/
+│   │   ├── 04/                 # Tháng 4
+│   │   │   ├── 8f3a...webp     # Tên file phải được rename thành UUID + đuôi webp
+│   │   │   └── 9c1b...webp
+│   │   └── 05/                 # Tháng 5
+├── reviews/                    # Ảnh comment do khách upload
+│   ├── 2024/
+│   │   └── 05/
+├── categories/                 # Ảnh thumbnail danh mục
+└── system/                     # Logo, Banner, Watermark...

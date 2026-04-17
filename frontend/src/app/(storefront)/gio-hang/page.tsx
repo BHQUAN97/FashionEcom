@@ -10,14 +10,27 @@ import { FreeShipBar } from '@/components/cart/free-ship-bar';
 import { CouponInput } from '@/components/cart/coupon-input';
 import { RelatedProducts } from '@/components/product/related-products';
 import { MOCK_PRODUCTS } from '@/lib/mock/data';
+import { useStoreHydrated } from '@/lib/hooks/use-store-hydrated';
+import { formatVND } from '@/lib/utils/format';
 
 /**
  * Cart page — /gio-hang
  * Item list, qty stepper, freeship bar, coupon, summary, upsell
  */
 export default function CartPage() {
+  const hydrated = useStoreHydrated();
   const { items, updateQty, removeItem, getSubtotal } = useCartStore();
   const subtotal = getSubtotal();
+
+  // Doi Zustand hydrate xong truoc khi render — tranh SSR mismatch
+  if (!hydrated) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 text-center">
+        <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto animate-pulse" />
+        <div className="h-5 w-40 bg-gray-100 rounded mx-auto mt-4 animate-pulse" />
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -82,13 +95,17 @@ export default function CartPage() {
       {/* Upsell — san pham goi y */}
       <RelatedProducts products={MOCK_PRODUCTS.slice(8, 13)} className="mt-8" />
 
-      {/* Sticky CTA — mobile */}
-      <div className="fixed bottom-14 inset-x-0 z-40 bg-white border-t px-4 py-3 md:hidden">
+      {/* Sticky CTA — mobile: tong tien + so luong + nut thanh toan, lock o bottom */}
+      <div className="fixed bottom-[55px] inset-x-0 z-40 bg-white border-t shadow-[0_-2px_10px_rgba(0,0,0,0.08)] px-4 py-3 md:hidden">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-gray-500">Tổng ({items.length} SP)</span>
+          <span className="text-base font-bold text-red-600">{formatVND(subtotal)}</span>
+        </div>
         <Link
           href={ROUTES.CHECKOUT}
           className="block text-center w-full py-3 bg-red-600 text-white font-semibold rounded-lg"
         >
-          THANH TOÁN ({items.length} SP)
+          TIẾN HÀNH THANH TOÁN
         </Link>
       </div>
     </div>

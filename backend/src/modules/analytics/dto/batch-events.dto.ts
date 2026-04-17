@@ -1,4 +1,4 @@
-import { IsArray, IsString, IsOptional, IsEnum, ValidateNested, IsObject } from 'class-validator';
+import { IsArray, IsString, IsOptional, IsEnum, ValidateNested, IsObject, ArrayMaxSize } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
@@ -48,6 +48,7 @@ export class CreateEventDto {
 
 export class BatchEventsDto {
   @IsArray()
+  @ArrayMaxSize(100, { message: 'Toi da 100 events moi batch' })
   @ValidateNested({ each: true })
   @Type(() => CreateEventDto)
   events!: CreateEventDto[];

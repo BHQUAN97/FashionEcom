@@ -11,7 +11,7 @@ import { useAuthStore } from '@/lib/stores/auth.store';
 export function RegisterForm() {
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirm: '' });
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState('');
@@ -27,21 +27,45 @@ export function RegisterForm() {
       setError('Mật khẩu xác nhận không khớp');
       return;
     }
-    if (form.password.length < 6) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự');
+    if (form.password.length < 8 || !/^(?=.*[A-Z])(?=.*\d)/.test(form.password)) {
+      setError('Mật khẩu phải có ít nhất 8 ký tự, 1 chữ hoa và 1 số');
+      return;
+    }
+    if (form.phone && !/^(0|\+84)[0-9]{9,10}$/.test(form.phone)) {
+      setError('Số điện thoại không hợp lệ');
       return;
     }
 
     setLoading(true);
-    // Mock register
-    setTimeout(() => {
+
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4300/api';
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ email: form.email, password: form.password }),
+      });
+
+      // TODO: Khi co customer auth API rieng, doi sang endpoint do
+      // Hien tai dung admin auth de test flow, se tach rieng sau
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.message || 'Không thể tạo tài khoản');
+      }
+
+      const json = await res.json();
+      const { user: u, accessToken } = json.data;
       setAuth(
-        { id: 'user-new', email: form.email, name: form.name, role: 0 },
-        'mock-access-token',
+        { id: u.sys_user_id, email: u.sys_user_email, name: u.sys_user_name || form.name, role: u.sys_user_role ?? 0 },
+        accessToken,
       );
-      setLoading(false);
       router.push(ROUTES.ACCOUNT);
-    }, 800);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Đã xảy ra lỗi');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,6 +95,7 @@ export function RegisterForm() {
           placeholder="Họ tên"
           className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition"
           required
+          maxLength={100}
         />
       </div>
 
@@ -86,15 +111,28 @@ export function RegisterForm() {
         />
       </div>
 
+      {/* So dien thoai */}
+      <div>
+        <input
+          type="tel"
+          value={form.phone}
+          onChange={(e) => update('phone', e.target.value)}
+          placeholder="Số điện thoại (tuỳ chọn)"
+          pattern="^(0|\+84)[0-9]{9,10}$"
+          className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition"
+        />
+      </div>
+
       {/* Mat khau */}
       <div className="relative">
         <input
           type={showPw ? 'text' : 'password'}
           value={form.password}
           onChange={(e) => update('password', e.target.value)}
-          placeholder="Mật khẩu"
+          placeholder="Mật khẩu (ít nhất 8 ký tự, 1 chữ hoa, 1 số)"
           className="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition pr-11"
           required
+          minLength={8}
         />
         <button
           type="button"

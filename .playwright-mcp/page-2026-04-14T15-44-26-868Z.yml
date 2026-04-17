@@ -1,0 +1,614 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e9]:
+          - text: "Hotline mua hàng:"
+          - link "0964942121" [ref=e10] [cursor=pointer]:
+            - /url: tel:0964942121
+          - text: (8:30-21:30, Tất cả các ngày trong tuần)
+        - link "Liên hệ" [ref=e13] [cursor=pointer]:
+          - /url: /pages/lien-he
+      - generic [ref=e17] [cursor=pointer]:
+        - img [ref=e18]
+        - generic [ref=e23]: "0"
+        - text: Thông báo của tôi
+    - banner [ref=e24]:
+      - generic [ref=e28]:
+        - link "Torano" [ref=e31] [cursor=pointer]:
+          - /url: https://torano.vn
+          - img "Torano" [ref=e32]
+        - navigation [ref=e34]:
+          - list [ref=e35]:
+            - listitem [ref=e36]:
+              - link "Sản phẩm mới" [ref=e37] [cursor=pointer]:
+                - /url: /collections/new-1
+            - listitem [ref=e38]:
+              - link "Danh mục sale" [ref=e39] [cursor=pointer]:
+                - /url: /collections/onsale
+            - listitem [ref=e40]:
+              - link "Áo nam" [ref=e41] [cursor=pointer]:
+                - /url: /collections/ao-nam
+                - text: Áo nam
+                - img [ref=e42]
+            - listitem [ref=e45]:
+              - link "Quần nam" [ref=e46] [cursor=pointer]:
+                - /url: /collections/quan-nam
+                - text: Quần nam
+                - img [ref=e47]
+            - listitem [ref=e50]:
+              - link "Phụ kiện" [ref=e51] [cursor=pointer]:
+                - /url: /collections/phu-kien
+                - text: Phụ kiện
+                - img [ref=e52]
+            - listitem [ref=e55]:
+              - link "Hệ thống cửa hàng" [ref=e56] [cursor=pointer]:
+                - /url: /pages/he-thong-cua-hang
+            - listitem [ref=e57]:
+              - link "CẢNH BÁO LỪA ĐẢO" [ref=e58] [cursor=pointer]:
+                - /url: /pages/canhbaoluadao
+        - generic [ref=e60]:
+          - button "Tìm kiếm" [ref=e63] [cursor=pointer]:
+            - img [ref=e65]
+          - button "Tài khoản" [ref=e69] [cursor=pointer]:
+            - img [ref=e71]
+          - button "Giỏ hàng" [ref=e75] [cursor=pointer]:
+            - generic [ref=e76]:
+              - img [ref=e77]
+              - generic [ref=e79]: "0"
+    - main [ref=e80]:
+      - generic [ref=e81]:
+        - list [ref=e86]:
+          - listitem [ref=e87]:
+            - link "Trang chủ" [ref=e88] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e89]:
+            - text: /
+            - strong [ref=e91]: Áo nam
+        - generic [ref=e94]:
+          - generic [ref=e98]:
+            - paragraph [ref=e100]: Bộ lọc
+            - generic [ref=e101]:
+              - generic [ref=e103]:
+                - generic [ref=e104] [cursor=pointer]: Danh mục sản phẩm
+                - list [ref=e107]:
+                  - listitem [ref=e108]:
+                    - link "Sản phẩm mới" [ref=e109] [cursor=pointer]:
+                      - /url: /collections/new-1
+                  - listitem [ref=e110]:
+                    - link "Danh mục sale" [ref=e111] [cursor=pointer]:
+                      - /url: /collections/onsale
+                  - listitem [ref=e112]:
+                    - link "Áo nam" [ref=e113] [cursor=pointer]:
+                      - /url: javascript:void(0)
+                      - text: Áo nam
+                      - img [ref=e115]
+                  - listitem [ref=e118]:
+                    - link "Quần nam" [ref=e119] [cursor=pointer]:
+                      - /url: javascript:void(0)
+                      - text: Quần nam
+                      - img [ref=e121]
+                  - listitem [ref=e124]:
+                    - link "Phụ kiện" [ref=e125] [cursor=pointer]:
+                      - /url: javascript:void(0)
+                      - text: Phụ kiện
+                      - img [ref=e127]
+                  - listitem [ref=e130]:
+                    - link "Hệ thống cửa hàng" [ref=e131] [cursor=pointer]:
+                      - /url: /pages/he-thong-cua-hang
+                  - listitem [ref=e132]:
+                    - link "CẢNH BÁO LỪA ĐẢO" [ref=e133] [cursor=pointer]:
+                      - /url: /pages/canhbaoluadao
+              - generic [ref=e135]:
+                - generic [ref=e136] [cursor=pointer]: Khoảng giá
+                - generic [ref=e139]:
+                  - generic [ref=e140]:
+                    - slider [ref=e143]:
+                      - generic [ref=e145]: 0đ
+                    - slider [ref=e146]:
+                      - generic [ref=e148]: 3,000,000đ
+                  - generic [ref=e149]:
+                    - generic [ref=e151]: 0đ
+                    - generic [ref=e153]: 3,000,000đ
+              - generic [ref=e155]:
+                - generic [ref=e156] [cursor=pointer]: Màu sắc
+                - generic [ref=e157]:
+                  - list
+              - generic [ref=e159]:
+                - generic [ref=e160] [cursor=pointer]: Size
+                - list [ref=e162]:
+                  - listitem [ref=e163] [cursor=pointer]:
+                    - generic [ref=e164]: S
+                  - listitem [ref=e165] [cursor=pointer]:
+                    - generic [ref=e166]: M
+                  - listitem [ref=e167] [cursor=pointer]:
+                    - generic [ref=e168]: L
+                  - listitem [ref=e169] [cursor=pointer]:
+                    - generic [ref=e170]: XL
+                  - listitem [ref=e171] [cursor=pointer]:
+                    - generic [ref=e172]: XXL
+                  - listitem [ref=e173] [cursor=pointer]:
+                    - generic [ref=e174]: "36"
+                  - listitem [ref=e175] [cursor=pointer]:
+                    - generic [ref=e176]: "37"
+                  - listitem [ref=e177] [cursor=pointer]:
+                    - generic [ref=e178]: "38"
+                  - listitem [ref=e179] [cursor=pointer]:
+                    - generic [ref=e180]: "39"
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]:
+                - heading "Áo nam" [level=1] [ref=e184]
+                - generic [ref=e186]: 126 sản phẩm
+              - generic [ref=e188]:
+                - text: Sắp xếp theo
+                - generic [ref=e189]: Sản phẩm nổi bật
+                - img [ref=e191]
+            - generic [ref=e194]:
+              - generic [ref=e196]:
+                - generic [ref=e197]:
+                  - generic [ref=e198]:
+                    - img "Áo khoác 3 lớp lót bông mũ rời nhám dính cổ tay GWCP303" [ref=e200]
+                    - img "Áo khoác 3 lớp lót bông mũ rời nhám dính cổ tay GWCP303" [ref=e202]
+                  - link "Áo khoác 3 lớp lót bông mũ rời nhám dính cổ tay GWCP303" [ref=e203] [cursor=pointer]:
+                    - /url: /products/ao-khoac-3-lop-lot-bong-mu-roi-nham-dinh-co-tay-2-gwcp303
+                - generic [ref=e204]:
+                  - generic [ref=e205]:
+                    - generic [ref=e206]: +2 Màu sắc
+                    - generic [ref=e207]: +4 Kích thước
+                  - heading "Áo khoác 3 lớp lót bông mũ rời nhám dính cổ tay GWCP303" [level=3] [ref=e208]:
+                    - link "Áo khoác 3 lớp lót bông mũ rời nhám dính cổ tay GWCP303" [ref=e209] [cursor=pointer]:
+                      - /url: /products/ao-khoac-3-lop-lot-bong-mu-roi-nham-dinh-co-tay-2-gwcp303
+                  - paragraph [ref=e210]: 1,399,000₫
+              - generic [ref=e212]:
+                - generic [ref=e213]:
+                  - generic [ref=e214]:
+                    - img "Áo khoác phao 3 lớp lót bông GWCF901" [ref=e216]
+                    - img "Áo khoác phao 3 lớp lót bông GWCF901" [ref=e218]
+                  - link "Áo khoác phao 3 lớp lót bông GWCF901" [ref=e219] [cursor=pointer]:
+                    - /url: /products/ao-phao-3-lop-lot-bong-3-gwcf901
+                - generic [ref=e220]:
+                  - generic [ref=e221]:
+                    - generic [ref=e222]: +3 Màu sắc
+                    - generic [ref=e223]: +4 Kích thước
+                  - heading "Áo khoác phao 3 lớp lót bông GWCF901" [level=3] [ref=e224]:
+                    - link "Áo khoác phao 3 lớp lót bông GWCF901" [ref=e225] [cursor=pointer]:
+                      - /url: /products/ao-phao-3-lop-lot-bong-3-gwcf901
+                  - paragraph [ref=e226]: 1,299,000₫
+              - generic [ref=e228]:
+                - generic [ref=e229]:
+                  - generic [ref=e230]:
+                    - img "Áo khoác 2 lớp lót lông GWCU055" [ref=e232]
+                    - img "Áo khoác 2 lớp lót lông GWCU055" [ref=e234]
+                  - generic:
+                    - generic [ref=e236]: "-33%"
+                    - link "Áo khoác 2 lớp lót lông GWCU055" [ref=e237] [cursor=pointer]:
+                      - /url: /products/ao-khoac-2-lop-lot-long-4-gwcu055
+                - generic [ref=e238]:
+                  - generic [ref=e239]:
+                    - generic [ref=e240]: +5 Màu sắc
+                    - generic [ref=e241]: +4 Kích thước
+                  - heading "Áo khoác 2 lớp lót lông GWCU055" [level=3] [ref=e242]:
+                    - link "Áo khoác 2 lớp lót lông GWCU055" [ref=e243] [cursor=pointer]:
+                      - /url: /products/ao-khoac-2-lop-lot-long-4-gwcu055
+                  - paragraph [ref=e244]: 599,000₫ 899,000₫
+              - generic [ref=e246]:
+                - generic [ref=e247]:
+                  - generic [ref=e248]:
+                    - img "Áo khoác phao 3 lớp chần bông mũ liền GWCF303" [ref=e250]
+                    - img "Áo khoác phao 3 lớp chần bông mũ liền GWCF303" [ref=e252]
+                  - link "Áo khoác phao 3 lớp chần bông mũ liền GWCF303" [ref=e253] [cursor=pointer]:
+                    - /url: /products/ao-khoac-phao-3-lop-tron-chan-bong-mu-roi-4-gwcf303
+                - generic [ref=e254]:
+                  - generic [ref=e255]:
+                    - generic [ref=e256]: +4 Màu sắc
+                    - generic [ref=e257]: +4 Kích thước
+                  - heading "Áo khoác phao 3 lớp chần bông mũ liền GWCF303" [level=3] [ref=e258]:
+                    - link "Áo khoác phao 3 lớp chần bông mũ liền GWCF303" [ref=e259] [cursor=pointer]:
+                      - /url: /products/ao-khoac-phao-3-lop-tron-chan-bong-mu-roi-4-gwcf303
+                  - paragraph [ref=e260]: 1,399,000₫
+              - generic [ref=e262]:
+                - generic [ref=e263]:
+                  - generic [ref=e264]:
+                    - img "Áo khoác phao 3 lớp trơn chần bông cổ cao GWCF302" [ref=e266]
+                    - img "Áo khoác phao 3 lớp trơn chần bông cổ cao GWCF302" [ref=e268]
+                  - link "Áo khoác phao 3 lớp trơn chần bông cổ cao GWCF302" [ref=e269] [cursor=pointer]:
+                    - /url: /products/ao-khoac-phao-3-lop-tron-chan-bong-co-cao-5-gwcf302
+                - generic [ref=e270]:
+                  - generic [ref=e271]:
+                    - generic [ref=e272]: +5 Màu sắc
+                    - generic [ref=e273]: +4 Kích thước
+                  - heading "Áo khoác phao 3 lớp trơn chần bông cổ cao GWCF302" [level=3] [ref=e274]:
+                    - link "Áo khoác phao 3 lớp trơn chần bông cổ cao GWCF302" [ref=e275] [cursor=pointer]:
+                      - /url: /products/ao-khoac-phao-3-lop-tron-chan-bong-co-cao-5-gwcf302
+                  - paragraph [ref=e276]: 1,399,000₫
+              - generic [ref=e278]:
+                - generic [ref=e279]:
+                  - generic [ref=e280]:
+                    - img "Áo khoác phao 3 lớp lót bông mũ rời GWCP302" [ref=e282]
+                    - img "Áo khoác phao 3 lớp lót bông mũ rời GWCP302" [ref=e284]
+                  - link "Áo khoác phao 3 lớp lót bông mũ rời GWCP302" [ref=e285] [cursor=pointer]:
+                    - /url: /products/ao-khoac-3-lop-lot-bong-mu-roi-may-mac-det-2-gwcp302
+                - generic [ref=e286]:
+                  - generic [ref=e287]:
+                    - generic [ref=e288]: +2 Màu sắc
+                    - generic [ref=e289]: +4 Kích thước
+                  - heading "Áo khoác phao 3 lớp lót bông mũ rời GWCP302" [level=3] [ref=e290]:
+                    - link "Áo khoác phao 3 lớp lót bông mũ rời GWCP302" [ref=e291] [cursor=pointer]:
+                      - /url: /products/ao-khoac-3-lop-lot-bong-mu-roi-may-mac-det-2-gwcp302
+                  - paragraph [ref=e292]: 1,399,000₫
+              - generic [ref=e294]:
+                - generic [ref=e295]:
+                  - generic [ref=e296]:
+                    - img "Áo khoác 3 lớp lót bông GWCP901" [ref=e298]
+                    - img "Áo khoác 3 lớp lót bông GWCP901" [ref=e300]
+                  - link "Áo khoác 3 lớp lót bông GWCP901" [ref=e301] [cursor=pointer]:
+                    - /url: /products/ao-khoac-3-lop-lot-bong-3-gwcp901
+                - generic [ref=e302]:
+                  - generic [ref=e303]:
+                    - generic [ref=e304]: +3 Màu sắc
+                    - generic [ref=e305]: +4 Kích thước
+                  - heading "Áo khoác 3 lớp lót bông GWCP901" [level=3] [ref=e306]:
+                    - link "Áo khoác 3 lớp lót bông GWCP901" [ref=e307] [cursor=pointer]:
+                      - /url: /products/ao-khoac-3-lop-lot-bong-3-gwcp901
+                  - paragraph [ref=e308]: 1,299,000₫
+              - generic [ref=e310]:
+                - generic [ref=e311]:
+                  - generic [ref=e312]:
+                    - img "Áo khoác da lộn basic cổ bẻ cúc dập logo GWCL502" [ref=e314]
+                    - img "Áo khoác da lộn basic cổ bẻ cúc dập logo GWCL502" [ref=e316]
+                  - link "Áo khoác da lộn basic cổ bẻ cúc dập logo GWCL502" [ref=e317] [cursor=pointer]:
+                    - /url: /products/ao-khoac-da-lon-basic-co-be-cuc-dap-logo-3-gwcl502
+                - generic [ref=e318]:
+                  - generic [ref=e319]:
+                    - generic [ref=e320]: +3 Màu sắc
+                    - generic [ref=e321]: +4 Kích thước
+                  - heading "Áo khoác da lộn basic cổ bẻ cúc dập logo GWCL502" [level=3] [ref=e322]:
+                    - link "Áo khoác da lộn basic cổ bẻ cúc dập logo GWCL502" [ref=e323] [cursor=pointer]:
+                      - /url: /products/ao-khoac-da-lon-basic-co-be-cuc-dap-logo-3-gwcl502
+                  - paragraph [ref=e324]: 1,299,000₫
+              - generic [ref=e326]:
+                - generic [ref=e327]:
+                  - generic [ref=e328]:
+                    - img "Áo khoác bomber lót lông thêu logo ngực GWCU052" [ref=e330]
+                    - img "Áo khoác bomber lót lông thêu logo ngực GWCU052" [ref=e332]
+                  - generic:
+                    - generic [ref=e334]: "-33%"
+                    - link "Áo khoác bomber lót lông thêu logo ngực GWCU052" [ref=e335] [cursor=pointer]:
+                      - /url: /products/ao-khoac-bomber-lot-long-theu-logo-nguc-5-gwcu052
+                - generic [ref=e336]:
+                  - generic [ref=e337]:
+                    - generic [ref=e338]: +5 Màu sắc
+                    - generic [ref=e339]: +4 Kích thước
+                  - heading "Áo khoác bomber lót lông thêu logo ngực GWCU052" [level=3] [ref=e340]:
+                    - link "Áo khoác bomber lót lông thêu logo ngực GWCU052" [ref=e341] [cursor=pointer]:
+                      - /url: /products/ao-khoac-bomber-lot-long-theu-logo-nguc-5-gwcu052
+                  - paragraph [ref=e342]: 599,000₫ 899,000₫
+              - generic [ref=e344]:
+                - generic [ref=e345]:
+                  - generic [ref=e346]:
+                    - img "Áo khoác 2 lớp dạ cổ bẻ thêu logo tay GWCT891" [ref=e348]
+                    - img "Áo khoác 2 lớp dạ cổ bẻ thêu logo tay GWCT891" [ref=e350]
+                  - link "Áo khoác 2 lớp dạ cổ bẻ thêu logo tay GWCT891" [ref=e351] [cursor=pointer]:
+                    - /url: /products/ao-khoac-2-lop-da-co-be-theu-logo-tay-4-gwct891
+                - generic [ref=e352]:
+                  - generic [ref=e353]:
+                    - generic [ref=e354]: +4 Màu sắc
+                    - generic [ref=e355]: +4 Kích thước
+                  - heading "Áo khoác 2 lớp dạ cổ bẻ thêu logo tay GWCT891" [level=3] [ref=e356]:
+                    - link "Áo khoác 2 lớp dạ cổ bẻ thêu logo tay GWCT891" [ref=e357] [cursor=pointer]:
+                      - /url: /products/ao-khoac-2-lop-da-co-be-theu-logo-tay-4-gwct891
+                  - paragraph [ref=e358]: 1,299,000₫
+              - generic [ref=e360]:
+                - generic [ref=e361]:
+                  - generic [ref=e362]:
+                    - img "Áo khoác bộ gió 2 lớp can phối cổ cao GWCW203 - GWBW203" [ref=e364]
+                    - img "Áo khoác bộ gió 2 lớp can phối cổ cao GWCW203 - GWBW203" [ref=e366]
+                  - link "Áo khoác bộ gió 2 lớp can phối cổ cao GWCW203 - GWBW203" [ref=e367] [cursor=pointer]:
+                    - /url: /products/ao-khoac-gio-2-lop-can-phoi-co-cao-theu-logo-2-gwcw203
+                - generic [ref=e368]:
+                  - generic [ref=e369]:
+                    - generic [ref=e370]: +2 Màu sắc
+                    - generic [ref=e371]: +4 Kích thước
+                  - heading "Áo khoác bộ gió 2 lớp can phối cổ cao GWCW203 - GWBW203" [level=3] [ref=e372]:
+                    - link "Áo khoác bộ gió 2 lớp can phối cổ cao GWCW203 - GWBW203" [ref=e373] [cursor=pointer]:
+                      - /url: /products/ao-khoac-gio-2-lop-can-phoi-co-cao-theu-logo-2-gwcw203
+                  - paragraph [ref=e374]: 799,000₫
+              - generic [ref=e376]:
+                - generic [ref=e377]:
+                  - generic [ref=e378]:
+                    - img "Áo nỉ họa tiết thêu logo ngựa GWTW823" [ref=e380]
+                    - img "Áo nỉ họa tiết thêu logo ngựa GWTW823" [ref=e382]
+                  - link "Áo nỉ họa tiết thêu logo ngựa GWTW823" [ref=e383] [cursor=pointer]:
+                    - /url: /products/ao-ni-hoa-tiet-theu-logo-ngua-2-gwtw823
+                - generic [ref=e384]:
+                  - generic [ref=e385]:
+                    - generic [ref=e386]: +2 Màu sắc
+                    - generic [ref=e387]: +4 Kích thước
+                  - heading "Áo nỉ họa tiết thêu logo ngựa GWTW823" [level=3] [ref=e388]:
+                    - link "Áo nỉ họa tiết thêu logo ngựa GWTW823" [ref=e389] [cursor=pointer]:
+                      - /url: /products/ao-ni-hoa-tiet-theu-logo-ngua-2-gwtw823
+                  - paragraph [ref=e390]: 599,000₫
+              - generic [ref=e392]:
+                - generic [ref=e393]:
+                  - generic [ref=e394]:
+                    - img "Áo nỉ họa tiết thêu hình Unbridled ambition GWTW826" [ref=e396]
+                    - img "Áo nỉ họa tiết thêu hình Unbridled ambition GWTW826" [ref=e398]
+                  - link "Áo nỉ họa tiết thêu hình Unbridled ambition GWTW826" [ref=e399] [cursor=pointer]:
+                    - /url: /products/ao-ni-hoa-tiet-theu-hinh-unbridled-ambition-3-gwtw826
+                - generic [ref=e400]:
+                  - generic [ref=e401]:
+                    - generic [ref=e402]: +3 Màu sắc
+                    - generic [ref=e403]: +4 Kích thước
+                  - heading "Áo nỉ họa tiết thêu hình Unbridled ambition GWTW826" [level=3] [ref=e404]:
+                    - link "Áo nỉ họa tiết thêu hình Unbridled ambition GWTW826" [ref=e405] [cursor=pointer]:
+                      - /url: /products/ao-ni-hoa-tiet-theu-hinh-unbridled-ambition-3-gwtw826
+                  - paragraph [ref=e406]: 599,000₫
+              - generic [ref=e408]:
+                - generic [ref=e409]:
+                  - generic [ref=e410]:
+                    - img "Áo nỉ họa tiết in tràn GWTW824" [ref=e412]
+                    - img "Áo nỉ họa tiết in tràn GWTW824" [ref=e414]
+                  - link "Áo nỉ họa tiết in tràn GWTW824" [ref=e415] [cursor=pointer]:
+                    - /url: /products/ao-ni-hoa-tiet-in-tran-3-gwtw824
+                - generic [ref=e416]:
+                  - generic [ref=e417]:
+                    - generic [ref=e418]: +3 Màu sắc
+                    - generic [ref=e419]: +4 Kích thước
+                  - heading "Áo nỉ họa tiết in tràn GWTW824" [level=3] [ref=e420]:
+                    - link "Áo nỉ họa tiết in tràn GWTW824" [ref=e421] [cursor=pointer]:
+                      - /url: /products/ao-ni-hoa-tiet-in-tran-3-gwtw824
+                  - paragraph [ref=e422]: 599,000₫
+              - generic [ref=e424]:
+                - generic [ref=e425]:
+                  - generic [ref=e426]:
+                    - img "Áo khoác 3 lớp lót bông mũ liền GWCP301" [ref=e428]
+                    - img "Áo khoác 3 lớp lót bông mũ liền GWCP301" [ref=e430]
+                  - link "Áo khoác 3 lớp lót bông mũ liền GWCP301" [ref=e431] [cursor=pointer]:
+                    - /url: /products/ao-khoac-3-lop-lot-bong-mu-lien-dinh-patch-cao-su-tay-ao-3-gwcp301
+                - generic [ref=e432]:
+                  - generic [ref=e433]:
+                    - generic [ref=e434]: +3 Màu sắc
+                    - generic [ref=e435]: +4 Kích thước
+                  - heading "Áo khoác 3 lớp lót bông mũ liền GWCP301" [level=3] [ref=e436]:
+                    - link "Áo khoác 3 lớp lót bông mũ liền GWCP301" [ref=e437] [cursor=pointer]:
+                      - /url: /products/ao-khoac-3-lop-lot-bong-mu-lien-dinh-patch-cao-su-tay-ao-3-gwcp301
+                  - paragraph [ref=e438]: 1,299,000₫
+              - generic [ref=e440]:
+                - generic [ref=e441]:
+                  - generic [ref=e442]:
+                    - img "Áo khoác gió 2 lớp cổ bẻ thêu logo GWCW505" [ref=e444]
+                    - img "Áo khoác gió 2 lớp cổ bẻ thêu logo GWCW505" [ref=e446]
+                  - link "Áo khoác gió 2 lớp cổ bẻ thêu logo GWCW505" [ref=e447] [cursor=pointer]:
+                    - /url: /products/ao-khoac-gio-2-lop-co-be-theu-logo-1-gwcw505
+                - generic [ref=e448]:
+                  - generic [ref=e449]:
+                    - generic [ref=e450]: +1 Màu sắc
+                    - generic [ref=e451]: +4 Kích thước
+                  - heading "Áo khoác gió 2 lớp cổ bẻ thêu logo GWCW505" [level=3] [ref=e452]:
+                    - link "Áo khoác gió 2 lớp cổ bẻ thêu logo GWCW505" [ref=e453] [cursor=pointer]:
+                      - /url: /products/ao-khoac-gio-2-lop-co-be-theu-logo-1-gwcw505
+                  - paragraph [ref=e454]: 899,000₫
+              - generic [ref=e456]:
+                - generic [ref=e457]:
+                  - generic [ref=e458]:
+                    - img "Áo khoác gió 2 lớp cổ cao thêu logo ngực GWCW503" [ref=e460]
+                    - img "Áo khoác gió 2 lớp cổ cao thêu logo ngực GWCW503" [ref=e462]
+                  - link "Áo khoác gió 2 lớp cổ cao thêu logo ngực GWCW503" [ref=e463] [cursor=pointer]:
+                    - /url: /products/ao-khoac-gio-2-lop-co-cao-theu-logo-nguc-1-gwcw503
+                - generic [ref=e464]:
+                  - generic [ref=e465]:
+                    - generic [ref=e466]: +1 Màu sắc
+                    - generic [ref=e467]: +4 Kích thước
+                  - heading "Áo khoác gió 2 lớp cổ cao thêu logo ngực GWCW503" [level=3] [ref=e468]:
+                    - link "Áo khoác gió 2 lớp cổ cao thêu logo ngực GWCW503" [ref=e469] [cursor=pointer]:
+                      - /url: /products/ao-khoac-gio-2-lop-co-cao-theu-logo-nguc-1-gwcw503
+                  - paragraph [ref=e470]: 999,000₫
+              - generic [ref=e472]:
+                - generic [ref=e473]:
+                  - generic [ref=e474]:
+                    - img "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e476]
+                    - img "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e478]
+                  - link "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e479] [cursor=pointer]:
+                    - /url: /products/ao-polo-dai-tay-basic-theu-logo-nguc-3-gwtp502
+                - generic [ref=e480]:
+                  - generic [ref=e481]:
+                    - generic [ref=e482]: +3 Màu sắc
+                    - generic [ref=e483]: +4 Kích thước
+                  - heading "Áo Polo dài tay basic thêu logo ngực GWTP502" [level=3] [ref=e484]:
+                    - link "Áo Polo dài tay basic thêu logo ngực GWTP502" [ref=e485] [cursor=pointer]:
+                      - /url: /products/ao-polo-dai-tay-basic-theu-logo-nguc-3-gwtp502
+                  - paragraph [ref=e486]: 699,000₫
+              - generic [ref=e488]:
+                - generic [ref=e489]:
+                  - generic [ref=e490]:
+                    - img "Áo khoác nỉ cổ cao thêu logo ngực GWCS503" [ref=e492]
+                    - img "Áo khoác nỉ cổ cao thêu logo ngực GWCS503" [ref=e494]
+                  - link "Áo khoác nỉ cổ cao thêu logo ngực GWCS503" [ref=e495] [cursor=pointer]:
+                    - /url: /products/ao-khoac-ni-co-cao-theu-logo-nguc-2-gwcs503
+                - generic [ref=e496]:
+                  - generic [ref=e497]:
+                    - generic [ref=e498]: +2 Màu sắc
+                    - generic [ref=e499]: +4 Kích thước
+                  - heading "Áo khoác nỉ cổ cao thêu logo ngực GWCS503" [level=3] [ref=e500]:
+                    - link "Áo khoác nỉ cổ cao thêu logo ngực GWCS503" [ref=e501] [cursor=pointer]:
+                      - /url: /products/ao-khoac-ni-co-cao-theu-logo-nguc-2-gwcs503
+                  - paragraph [ref=e502]: 1,099,000₫
+              - generic [ref=e504]:
+                - generic [ref=e505]:
+                  - generic [ref=e506]:
+                    - img "Áo khoác da lộn basic cổ bẻ cúc khắc logo GWCL501" [ref=e508]
+                    - img "Áo khoác da lộn basic cổ bẻ cúc khắc logo GWCL501" [ref=e510]
+                  - link "Áo khoác da lộn basic cổ bẻ cúc khắc logo GWCL501" [ref=e511] [cursor=pointer]:
+                    - /url: /products/ao-khoac-da-lon-basic-co-be-cuc-khac-logo-1-gwcl501
+                - generic [ref=e512]:
+                  - generic [ref=e513]:
+                    - generic [ref=e514]: +1 Màu sắc
+                    - generic [ref=e515]: +4 Kích thước
+                  - heading "Áo khoác da lộn basic cổ bẻ cúc khắc logo GWCL501" [level=3] [ref=e516]:
+                    - link "Áo khoác da lộn basic cổ bẻ cúc khắc logo GWCL501" [ref=e517] [cursor=pointer]:
+                      - /url: /products/ao-khoac-da-lon-basic-co-be-cuc-khac-logo-1-gwcl501
+                  - paragraph [ref=e518]: 1,299,000₫
+            - generic [ref=e521]:
+              - link "pagination-item-1" [ref=e522] [cursor=pointer]:
+                - /url: javascript:void(0)
+                - text: "1"
+              - link "pagination-item-2" [ref=e523] [cursor=pointer]:
+                - /url: /collections/ao-nam?page=2
+                - text: "2"
+              - link "pagination-item-3" [ref=e524] [cursor=pointer]:
+                - /url: /collections/ao-nam?page=3
+                - text: "3"
+              - link "pagination-item-…" [ref=e525] [cursor=pointer]:
+                - /url: javascript:void(0)
+                - text: …
+              - link "pagination-item-7" [ref=e526] [cursor=pointer]:
+                - /url: /collections/ao-nam?page=7
+                - text: "7"
+              - link "pagination-next" [ref=e527] [cursor=pointer]:
+                - /url: /collections/ao-nam?page=2
+    - contentinfo [ref=e528]:
+      - generic [ref=e530]:
+        - generic [ref=e532]:
+          - generic [ref=e533]:
+            - heading "Thời trang nam TORANO" [level=2] [ref=e534]
+            - generic [ref=e536]:
+              - paragraph [ref=e537]: Hệ thống thời trang cho phái mạnh hàng đầu Việt Nam, hướng tới phong cách nam tính, lịch lãm và trẻ trung.
+              - list [ref=e538]:
+                - listitem [ref=e539]:
+                  - link "Facebook" [ref=e540] [cursor=pointer]:
+                    - /url: https://www.facebook.com/Torano.vn
+                    - img [ref=e541]
+                - listitem [ref=e545]:
+                  - link "Twitter" [ref=e546] [cursor=pointer]:
+                    - /url: /
+                    - img [ref=e547]
+                - listitem [ref=e552]:
+                  - link "Instagram" [ref=e553] [cursor=pointer]:
+                    - /url: https://www.instagram.com/torano.vn/
+                    - img [ref=e554]
+                - listitem [ref=e559]:
+                  - link "TikTok" [ref=e560] [cursor=pointer]:
+                    - /url: https://www.tiktok.com/@torano.vn
+                    - img [ref=e561]
+                - listitem [ref=e565]:
+                  - link "Youtube" [ref=e566] [cursor=pointer]:
+                    - /url: https://www.youtube.com/@torano1287
+                    - img [ref=e567]
+              - generic [ref=e572]:
+                - generic [ref=e573]: Phương thức thanh toán
+                - list [ref=e574]:
+                  - listitem [ref=e575]:
+                    - img "Vnpay" [ref=e576]
+                  - listitem [ref=e577]:
+                    - img "Zalopay" [ref=e578]
+                  - listitem [ref=e579]:
+                    - img "Moca" [ref=e580]
+                  - listitem [ref=e581]:
+                    - img "Kredivo" [ref=e582]
+                  - listitem [ref=e583]:
+                    - img "Napas" [ref=e584]
+                  - listitem [ref=e585]:
+                    - img "Visa" [ref=e586]
+          - generic [ref=e587]:
+            - heading "Thông tin liên hệ" [level=2] [ref=e588]
+            - generic [ref=e589]:
+              - list [ref=e591]:
+                - listitem [ref=e592]: "Địa chỉ: Tầng 8, Tòa nhà 311-313 Trường Chinh, Phường Phương Liệt, Thành phố Hà Nội, Việt Nam"
+                - listitem [ref=e593]: "Điện thoại: 0964942121"
+                - listitem [ref=e594]: "Fax: 0904636356"
+                - listitem [ref=e595]: "Email: cskh@torano.vn"
+              - generic [ref=e596]:
+                - generic [ref=e597]: Phương thức vận chuyển
+                - list [ref=e598]:
+                  - listitem [ref=e599]:
+                    - img "GHN" [ref=e600]
+                  - listitem [ref=e601]:
+                    - img "Ninjavan" [ref=e602]
+                  - listitem [ref=e603]:
+                    - img "Ahamove" [ref=e604]
+                  - listitem [ref=e605]:
+                    - img "J&T" [ref=e606]
+          - generic [ref=e607]:
+            - heading "Nhóm liên kết" [level=2] [ref=e608]
+            - list [ref=e610]:
+              - listitem [ref=e611]:
+                - link "Tìm kiếm" [ref=e612] [cursor=pointer]:
+                  - /url: /search
+              - listitem [ref=e613]:
+                - link "Giới thiệu" [ref=e614] [cursor=pointer]:
+                  - /url: /pages/about-us
+              - listitem [ref=e615]:
+                - link "Chính sách đổi trả" [ref=e616] [cursor=pointer]:
+                  - /url: /pages/chinh-sach-doi-tra
+              - listitem [ref=e617]:
+                - link "Chính sách bảo mật" [ref=e618] [cursor=pointer]:
+                  - /url: /pages/chinh-sach-bao-mat
+              - listitem [ref=e619]:
+                - link "Tuyển dụng" [ref=e620] [cursor=pointer]:
+                  - /url: /pages/dieu-khoan-dich-vu
+              - listitem [ref=e621]:
+                - link "Liên hệ" [ref=e622] [cursor=pointer]:
+                  - /url: /pages/lien-he
+          - generic [ref=e623]:
+            - heading "Đăng ký nhận tin" [level=2] [ref=e624]
+            - generic [ref=e625]:
+              - paragraph [ref=e626]: Để cập nhật những sản phẩm mới, nhận thông tin ưu đãi đặc biệt và thông tin giảm giá khác.
+              - generic [ref=e627]:
+                - generic [ref=e629]:
+                  - img [ref=e631]
+                  - textbox "Email Address" [ref=e636]:
+                    - /placeholder: Nhập email của bạn
+                  - button "Đăng ký" [ref=e637] [cursor=pointer]
+                - paragraph [ref=e638]
+              - link "Bộ Công Thương" [ref=e640] [cursor=pointer]:
+                - /url: http://online.gov.vn/Home/WebDetails/47936
+                - img "Bộ Công Thương" [ref=e641]
+        - paragraph [ref=e644]:
+          - text: Copyright © 2026
+          - link "Torano" [ref=e645] [cursor=pointer]:
+            - /url: https://torano.vn
+          - text: .
+          - link "Powered by Haravan" [ref=e646] [cursor=pointer]:
+            - /url: https://www.haravan.com
+  - generic:
+    - generic [ref=e648]:
+      - paragraph [ref=e650]: Giỏ hàng
+      - generic [ref=e658]:
+        - img "Giỏ hàng của bạn đang trống" [ref=e659]
+        - paragraph [ref=e660]: Chưa có sản phẩm trong giỏ hàng...
+        - generic [ref=e661]:
+          - link "Trở về trang sản phẩm" [ref=e662] [cursor=pointer]:
+            - /url: /collections/all
+          - generic [ref=e663] [cursor=pointer]: Khuyến mãi dành cho bạn
+    - generic [ref=e665]:
+      - paragraph [ref=e667]: Danh mục
+      - generic [ref=e673]:
+        - paragraph [ref=e674]: Bạn cần hỗ trợ?
+        - link "0964.942.121" [ref=e679] [cursor=pointer]:
+          - /url: tel:0964942121
+        - link "cskh@torano.vn" [ref=e686] [cursor=pointer]:
+          - /url: mailto:cskh@torano.vn
+    - paragraph [ref=e690]: Thông báo
+    - paragraph [ref=e697]: Combo ưu đãi
+  - generic [ref=e703]:
+    - link "Torano" [ref=e706] [cursor=pointer]:
+      - /url: https://torano.vn
+      - img "Torano" [ref=e707]
+    - generic [ref=e708]:
+      - generic [ref=e709]:
+        - textbox "Tìm kiếm sản phẩm..." [ref=e711]
+        - button "button search" [ref=e712] [cursor=pointer]:
+          - img [ref=e713]
+      - list [ref=e718]:
+        - listitem [ref=e719]: Polo, Short Đũi, TShirt
+        - listitem [ref=e720]:
+          - link "Text 1," [ref=e721] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e722]:
+          - link "Text 2," [ref=e723] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e724]:
+          - link "Text 3" [ref=e725] [cursor=pointer]:
+            - /url: /
+    - generic "close-search" [ref=e727] [cursor=pointer]

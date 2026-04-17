@@ -20,36 +20,36 @@ const configSchema = z.object({
 });
 
 const Editor = createSimpleEditor([
-  { key: 'title', label: 'Tieu de', type: 'text' },
-  { key: 'display_mode', label: 'Che do hien thi', type: 'radio_cards', options: [
-    { value: 'banner', label: 'Banner', icon: '🔥', description: 'Day du voi nen' },
-    { value: 'compact', label: 'Nho gon', icon: '⚡', description: 'Header nho' },
-    { value: 'minimal', label: 'Toi gian', icon: '▫', description: 'Chi countdown' },
+  { key: 'title', label: 'Tiêu đề', type: 'text' },
+  { key: 'display_mode', label: 'Chế độ hiển thị', type: 'radio_cards', options: [
+    { value: 'banner', label: 'Banner', icon: '🔥', description: 'Đầy đủ với nền' },
+    { value: 'compact', label: 'Nhỏ gọn', icon: '⚡', description: 'Header nhỏ' },
+    { value: 'minimal', label: 'Tối giản', icon: '▫', description: 'Chỉ countdown' },
   ]},
-  { key: 'timer_style', label: 'Kieu dong ho', type: 'radio_cards', options: [
-    { value: 'box', label: 'Hop', icon: '▣' },
-    { value: 'colon', label: 'Dau hai cham', icon: ':' },
-    { value: 'circle', label: 'Tron', icon: '◯' },
+  { key: 'timer_style', label: 'Kiểu đồng hồ', type: 'radio_cards', options: [
+    { value: 'box', label: 'Hộp', icon: '▣' },
+    { value: 'colon', label: 'Dấu hai chấm', icon: ':' },
+    { value: 'circle', label: 'Tròn', icon: '◯' },
   ]},
-  { key: 'section_data', label: 'Du lieu', type: 'section_header' },
-  { key: 'flash_sale_id', label: 'Flash Sale ID', type: 'text', placeholder: 'UUID cua flash sale (tu dong lay)' },
-  { key: 'max_products', label: 'So SP toi da', type: 'range', min: 4, max: 16, step: 2 },
-  { key: 'section_style', label: 'Mau sac', type: 'section_header' },
-  { key: 'bg_color', label: 'Mau nen', type: 'color' },
-  { key: 'text_color', label: 'Mau chu', type: 'color' },
-  { key: 'section_display', label: 'Hien thi', type: 'section_header' },
-  { key: 'show_progress_bar', label: 'Thanh tien trinh ban hang', type: 'toggle' },
-  { key: 'show_original_price', label: 'Hien gia goc', type: 'toggle' },
-  { key: 'show_sold_count', label: 'Hien so da ban', type: 'toggle' },
+  { key: 'section_data', label: 'Dữ liệu', type: 'section_header' },
+  { key: 'flash_sale_id', label: 'Flash Sale ID', type: 'text', placeholder: 'UUID của flash sale (tự động lấy)' },
+  { key: 'max_products', label: 'Số SP tối đa', type: 'range', min: 4, max: 16, step: 2 },
+  { key: 'section_style', label: 'Màu sắc', type: 'section_header' },
+  { key: 'bg_color', label: 'Màu nền', type: 'color' },
+  { key: 'text_color', label: 'Màu chữ', type: 'color' },
+  { key: 'section_display', label: 'Hiển thị', type: 'section_header' },
+  { key: 'show_progress_bar', label: 'Thanh tiến trình bán hàng', type: 'toggle' },
+  { key: 'show_original_price', label: 'Hiện giá gốc', type: 'toggle' },
+  { key: 'show_sold_count', label: 'Hiện số đã bán', type: 'toggle' },
 ]);
 
 /** Timer display component */
 function TimerDisplay({ style, color }: { style: string; color: string }) {
   const units = [
-    { label: 'Ngay', value: '02' },
-    { label: 'Gio', value: '14' },
-    { label: 'Phut', value: '37' },
-    { label: 'Giay', value: '52' },
+    { label: 'Ngày', value: '02' },
+    { label: 'Giờ', value: '14' },
+    { label: 'Phút', value: '37' },
+    { label: 'Giây', value: '52' },
   ];
 
   if (style === 'circle') {
@@ -170,7 +170,7 @@ function Renderer({ config }: SectionRendererProps) {
       {/* Product carousel */}
       <div className="flex gap-3 overflow-x-auto pb-2">
         {Array.from({ length: displayCount }).map((_, i) => (
-          <div key={i} className="shrink-0 w-40 bg-white rounded-lg p-2.5 shadow-sm">
+          <div key={i} className="shrink-0 w-[170px] sm:w-[200px] md:w-[240px] lg:w-[260px] xl:w-[280px] bg-white rounded-lg p-2.5 shadow-sm">
             <div className="aspect-square bg-gray-50 rounded-md mb-2 relative">
               <div className="absolute inset-0 flex items-center justify-center text-gray-300">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

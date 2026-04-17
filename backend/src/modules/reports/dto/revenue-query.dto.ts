@@ -68,6 +68,14 @@ export class InventoryQueryDto {
 
   @IsOptional()
   @IsString()
+  color_id?: string;
+
+  @IsOptional()
+  @IsString()
+  size_id?: string;
+
+  @IsOptional()
+  @IsString()
   stock_status?: 'all' | 'low' | 'out' | 'dead';
 
   @IsOptional()

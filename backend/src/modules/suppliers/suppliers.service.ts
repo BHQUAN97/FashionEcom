@@ -25,8 +25,8 @@ import { BaseService } from '@/common/services/base.service';
 /** PO Status state machine — reuse pattern */
 const poMachine = new StateMachine<number>({
   labels: {
-    0: 'Draft', 1: 'Cho duyet', 2: 'Da dat',
-    3: 'Nhan 1 phan', 4: 'Da nhan', 5: 'Hoan thanh', 6: 'Da huy',
+    0: 'Draft', 1: 'Chờ duyệt', 2: 'Đã đặt',
+    3: 'Nhận 1 phần', 4: 'Đã nhận', 5: 'Hoàn thành', 6: 'Đã hủy',
   } as Record<number, string>,
   transitions: [
     { from: 0, to: 1 }, { from: 0, to: 6 }, // Draft -> Pending/Cancel
@@ -55,7 +55,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
     @InjectRepository(InventoryLogEntity)
     private readonly invLogRepo: Repository<InventoryLogEntity>,
   ) {
-    super(supplierRepo, 'invSupplierId', 'Nha cung cap');
+    super(supplierRepo, 'invSupplierId', 'Nhà cung cấp');
   }
 
   // ==================== Suppliers CRUD ====================
@@ -154,16 +154,16 @@ export class SuppliersService extends BaseService<SupplierEntity> {
       where: { invPurchaseOrderId: id },
       relations: ['items'],
     });
-    if (!po) throw new NotFoundException('PO khong ton tai');
+    if (!po) throw new NotFoundException('PO không tồn tại');
     return po;
   }
 
   async updatePOStatus(id: string, newStatus: number, userId: string) {
     const po = await this.poRepo.findOne({ where: { invPurchaseOrderId: id } });
-    if (!po) throw new NotFoundException('PO khong ton tai');
+    if (!po) throw new NotFoundException('PO không tồn tại');
 
     if (!poMachine.canTransition(po.invPurchaseOrderStatus, newStatus)) {
-      throw new BadRequestException(`Khong the chuyen trang thai PO`);
+      throw new BadRequestException(`Không thể chuyển trạng thái PO`);
     }
 
     po.invPurchaseOrderStatus = newStatus;
@@ -179,7 +179,7 @@ export class SuppliersService extends BaseService<SupplierEntity> {
       where: { invPurchaseOrderId: poId },
       relations: ['items'],
     });
-    if (!po) throw new NotFoundException('PO khong ton tai');
+    if (!po) throw new NotFoundException('PO không tồn tại');
 
     // Tao phieu nhap kho
     const receiptCode = await generateEntityCode('GRN', this.receiptRepo);

@@ -1,4 +1,5 @@
 import { Controller, Post, Get, Put, Body, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -10,23 +11,25 @@ import { CurrentUser } from '@/common/decorators/current-user.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('login')
   async login(@Body() dto: LoginDto) {
     const result = await this.authService.login(dto);
-    return { data: result, message: 'Dang nhap thanh cong' };
+    return { data: result, message: 'Đăng nhập thành công' };
   }
 
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post('refresh')
   async refresh(@Body() dto: RefreshTokenDto) {
     const result = await this.authService.refresh(dto.refreshToken);
-    return { data: result, message: 'Token da duoc lam moi' };
+    return { data: result, message: 'Token đã được làm mới' };
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   async logout(@CurrentUser('userId') userId: string) {
     await this.authService.logout(userId);
-    return { data: null, message: 'Dang xuat thanh cong' };
+    return { data: null, message: 'Đăng xuất thành công' };
   }
 
   @Get('me')
@@ -43,6 +46,6 @@ export class AuthController {
     @Body() dto: ChangePasswordDto,
   ) {
     await this.authService.changePassword(userId, dto);
-    return { data: null, message: 'Doi mat khau thanh cong' };
+    return { data: null, message: 'Đổi mật khẩu thành công' };
   }
 }

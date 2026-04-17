@@ -3,29 +3,32 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ReviewEntity } from './entities/review.entity';
+import { OrderItemEntity } from '../orders/entities/order-item.entity';
+import { OrderEntity } from '../orders/entities/order.entity';
 import { BaseService } from '@/common/services/base.service';
 import { StateMachine } from '@/common/patterns/state-machine';
 
 /**
- * Review moderation status: 0=Cho duyet, 1=Da duyet, 2=Tu choi
+ * Review moderation status: 0=Chờ duyệt, 1=Đã duyệt, 2=Từ chối
  */
 const REVIEW_STATUS_LABELS: Record<number, string> = {
-  0: 'Cho duyet',
-  1: 'Da duyet',
-  2: 'Tu choi',
+  0: 'Chờ duyệt',
+  1: 'Đã duyệt',
+  2: 'Từ chối',
 };
 
 const reviewMachine = new StateMachine<number>({
   labels: REVIEW_STATUS_LABELS,
   transitions: [
-    { from: 0, to: 1 }, // Cho duyet -> Da duyet
-    { from: 0, to: 2 }, // Cho duyet -> Tu choi
-    { from: 2, to: 1 }, // Tu choi -> Da duyet (re-approve)
-    { from: 1, to: 2 }, // Da duyet -> Tu choi (revoke)
+    { from: 0, to: 1 }, // Chờ duyệt -> Đã duyệt
+    { from: 0, to: 2 }, // Chờ duyệt -> Từ chối
+    { from: 2, to: 1 }, // Từ chối -> Đã duyệt (re-approve)
+    { from: 1, to: 2 }, // Đã duyệt -> Từ chối (revoke)
   ],
 });
 
@@ -34,11 +37,15 @@ export class ReviewsService extends BaseService<ReviewEntity> {
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepo: Repository<ReviewEntity>,
+    @InjectRepository(OrderItemEntity)
+    private readonly orderItemRepo: Repository<OrderItemEntity>,
+    @InjectRepository(OrderEntity)
+    private readonly orderRepo: Repository<OrderEntity>,
   ) {
-    super(reviewRepo, 'salReviewId', 'Danh gia');
+    super(reviewRepo, 'salReviewId', 'Đánh giá');
   }
 
-  /** Tao review — chi KH da mua, moi order_item chi 1 lan */
+  /** Tao review — chi KH da mua, verify ownership, moi order_item chi 1 lan */
   async create(params: {
     productId: string;
     orderItemId: string;
@@ -47,12 +54,32 @@ export class ReviewsService extends BaseService<ReviewEntity> {
     content?: string;
     photos?: string[];
   }) {
+    // BAO MAT: Verify order item thuoc ve customer nay — chong IDOR/fake review
+    const orderItem = await this.orderItemRepo.findOne({
+      where: { salOrderItemId: params.orderItemId },
+    });
+    if (!orderItem) {
+      throw new BadRequestException('Order item khong ton tai');
+    }
+
+    const order = await this.orderRepo.findOne({
+      where: { salOrderId: orderItem.salOrderId },
+    });
+    if (!order || order.sysCustomerId !== params.customerId) {
+      throw new ForbiddenException('Ban khong co quyen danh gia san pham nay');
+    }
+
+    // Kiem tra don hang da giao thanh cong (status=4) moi cho review
+    if (order.salOrderStatus !== 4 && order.salOrderStatus !== 6) {
+      throw new BadRequestException('Chi co the danh gia don hang da giao thanh cong');
+    }
+
     // Kiem tra da review chua
     const existing = await this.reviewRepo.findOne({
       where: { salOrderItemId: params.orderItemId },
     });
     if (existing) {
-      throw new BadRequestException('Ban da danh gia san pham nay roi');
+      throw new BadRequestException('Bạn đã đánh giá sản phẩm này rồi');
     }
 
     const review = this.reviewRepo.create({
@@ -89,13 +116,13 @@ export class ReviewsService extends BaseService<ReviewEntity> {
     return this.paginate(data, total, page, limit);
   }
 
-  /** Duyet / Tu choi review — validate bang state machine */
+  /** Duyệt / Từ chối review — validate bằng state machine */
   async updateStatus(reviewId: string, status: number) {
     const review = await super.findOne(reviewId);
 
     if (!reviewMachine.canTransition(review.salReviewStatus, status)) {
       throw new BadRequestException(
-        `Khong the chuyen tu "${REVIEW_STATUS_LABELS[review.salReviewStatus]}" sang "${REVIEW_STATUS_LABELS[status]}"`,
+        `Không thể chuyển từ "${REVIEW_STATUS_LABELS[review.salReviewStatus]}" sang "${REVIEW_STATUS_LABELS[status]}"`,
       );
     }
 
@@ -112,7 +139,7 @@ export class ReviewsService extends BaseService<ReviewEntity> {
     return this.reviewRepo.save(review);
   }
 
-  /** Thong ke review — diem TB, phan bo sao */
+  /** Thống kê review — điểm TB, phân bố sao */
   async getStats() {
     const totalResult = await this.reviewRepo
       .createQueryBuilder('r')

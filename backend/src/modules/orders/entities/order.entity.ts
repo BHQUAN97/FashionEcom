@@ -26,6 +26,35 @@ export class OrderEntity {
   @Column({ name: 'sal_order_shipping_fee', type: 'decimal', precision: 22, scale: 4, default: 0 })
   salOrderShippingFee!: number;
 
+  /** Chi phi ship thuc te tra DVVC — dung de tinh loi nhuan */
+  @Column({ name: 'sal_order_shipping_cost_actual', type: 'decimal', precision: 22, scale: 4, default: 0 })
+  salOrderShippingCostActual!: number;
+
+  /** 1 = don duoc mien phi ship */
+  @Column({ name: 'sal_order_free_ship', type: 'tinyint', default: 0 })
+  salOrderFreeShip!: number;
+
+  /** So lan giao hang (1=binh thuong, 2+=giao lai) */
+  @Column({ name: 'sal_order_delivery_attempts', type: 'int', default: 1 })
+  salOrderDeliveryAttempts!: number;
+
+  /** Tong phu phi ship phat sinh (giao lai, luu kho) */
+  @Column({ name: 'sal_order_shipping_extra_cost', type: 'decimal', precision: 22, scale: 4, default: 0 })
+  salOrderShippingExtraCost!: number;
+
+  /** 1 = don co su co van chuyen */
+  @Column({ name: 'sal_order_has_incident', type: 'tinyint', default: 0 })
+  salOrderHasIncident!: number;
+
+  /**
+   * Trang thai van chuyen — tach biet voi order status (business flow)
+   * 0=chua_giao, 1=cho_lay_hang, 2=da_lay_hang, 3=dang_van_chuyen,
+   * 4=dang_giao, 5=giao_thanh_cong, 6=giao_that_bai, 7=dang_giao_lai,
+   * 8=hoan_hang, 9=mat_hang, 10=hu_hong
+   */
+  @Column({ name: 'sal_order_shipping_status', type: 'tinyint', default: 0 })
+  salOrderShippingStatus!: number;
+
   @Column({ name: 'sal_order_total', type: 'decimal', precision: 22, scale: 4, default: 0 })
   salOrderTotal!: number;
 
@@ -61,6 +90,10 @@ export class OrderEntity {
 
   @Column({ name: 'sal_order_tracking_code', type: 'varchar', length: 50, nullable: true })
   salOrderTrackingCode!: string | null;
+
+  /** Don vi van chuyen: GHN, GHTK, NINJA_VAN, JT */
+  @Column({ name: 'sal_order_shipping_provider', type: 'varchar', length: 20, nullable: true })
+  salOrderShippingProvider!: string | null;
 
   @Column({ name: 'sal_order_internal_note', type: 'text', nullable: true })
   salOrderInternalNote!: string | null;

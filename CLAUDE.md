@@ -3,10 +3,10 @@
 ## Quick Start
 ```bash
 # Frontend
-cd frontend && npm install && npm run dev  # http://localhost:3300
+cd frontend && npm install && npm run dev  # http://localhost:5300
 
 # Backend
-cd backend && npm install && npm run start:dev  # http://localhost:4300
+cd backend && npm install && npm run start:dev  # http://localhost:5301
 
 # Docker (production)
 docker compose -f docker-compose.prod.yml up -d
@@ -46,7 +46,7 @@ bash scripts/db-changelog.sh <vps-ip> --status  # xem trang thai
 - Convention: MISA (snake_case, prefix phan he, UUID PK, DECIMAL cho tien/so luong)
 
 ## Ports (dev)
-- Frontend: 3300
-- Backend: 4300
+- Frontend: 5300
+- Backend: 5301
 - MySQL: 3309
 - Redis: 6382

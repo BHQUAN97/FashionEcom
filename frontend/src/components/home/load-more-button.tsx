@@ -19,7 +19,7 @@ export function LoadMoreButton({ onClick, loading = false, hasMore = true, class
       <button
         onClick={onClick}
         disabled={loading}
-        className="inline-flex items-center gap-2 border-2 border-black px-8 py-2.5 text-sm font-semibold hover:bg-black hover:text-white transition disabled:opacity-50"
+        className="btn-sweep btn-sweep-light inline-flex items-center gap-2 disabled:opacity-50"
       >
         {loading ? (
           <>

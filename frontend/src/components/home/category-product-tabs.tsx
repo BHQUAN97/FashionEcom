@@ -28,7 +28,7 @@ export function CategoryProductTabs({ tabs, className }: CategoryProductTabsProp
   if (tabs.length === 0) return null;
 
   return (
-    <section className={cn('py-8 md:py-12 px-4 md:px-6 max-w-7xl mx-auto', className)}>
+    <section className={cn('py-8 md:py-12 px-4 md:px-6 max-w-container mx-auto', className)}>
       {/* Tab headers */}
       <div className="flex items-center justify-center gap-4 md:gap-8 mb-6 md:mb-8 overflow-x-auto scrollbar-hide">
         {tabs.map((tab, i) => (
@@ -54,9 +54,9 @@ export function CategoryProductTabs({ tabs, className }: CategoryProductTabsProp
       <div className="text-center mt-6 md:mt-8">
         <Link
           href={`/danh-muc/${tabs[activeTab].slug}`}
-          className="inline-block border-2 border-black px-8 py-2.5 text-sm font-semibold hover:bg-black hover:text-white transition tracking-wide"
+          className="btn-sweep btn-sweep-light inline-block"
         >
-          XEM THEM {tabs[activeTab].label.toUpperCase()}
+          XEM THÊM {tabs[activeTab].label.toUpperCase()}
         </Link>
       </div>
     </section>

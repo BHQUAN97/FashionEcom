@@ -16,7 +16,7 @@ export default function CheckoutSuccessPage() {
     <div className="max-w-md mx-auto px-4 py-12 text-center">
       <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
       <h1 className="text-2xl font-bold mt-4">Đặt hàng thành công!</h1>
-      <p className="text-gray-500 mt-2">Cảm ơn bạn đã mua hàng tại Fashion Ecom</p>
+      <p className="text-gray-500 mt-2">Cảm ơn bạn đã mua hàng tại Torano</p>
 
       <div className="bg-gray-50 rounded-lg p-4 mt-6">
         <p className="text-sm text-gray-500">Mã đơn hàng</p>

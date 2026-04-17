@@ -52,15 +52,17 @@ function SortableSection({ section, index, total }: { section: LayoutSection; in
         </span>
       </div>
 
-      {/* Giua: Preview renderer */}
+      {/* Giua: Preview renderer — overflow-hidden de ngan tran layout */}
       <div
-        className={`flex-1 min-h-[60px] border-2 transition cursor-pointer ${
+        className={`flex-1 min-w-0 min-h-[60px] border-2 transition cursor-pointer overflow-hidden ${
           isActive ? 'border-orange-400 bg-orange-50/30' : 'border-transparent hover:border-gray-300'
         }`}
         onClick={() => setActiveId(section.id)}
       >
         {Renderer ? (
-          <Renderer config={section.config} preview />
+          <div className="pointer-events-none [&_a]:pointer-events-none [&_button]:pointer-events-none">
+            <Renderer config={section.config} preview />
+          </div>
         ) : (
           <div className="py-6 text-center text-gray-400 text-sm">
             {definition?.label || section.type}
@@ -74,7 +76,7 @@ function SortableSection({ section, index, total }: { section: LayoutSection; in
           onClick={() => moveUp(section.id)}
           disabled={index === 0}
           className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 disabled:opacity-20 disabled:hover:bg-transparent"
-          title="Di chuyen len"
+          title="Di chuyển lên"
         >
           <ArrowUp className="w-4 h-4" />
         </button>
@@ -82,14 +84,14 @@ function SortableSection({ section, index, total }: { section: LayoutSection; in
           onClick={() => moveDown(section.id)}
           disabled={index === total - 1}
           className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 disabled:opacity-20 disabled:hover:bg-transparent"
-          title="Di chuyen xuong"
+          title="Di chuyển xuống"
         >
           <ArrowDown className="w-4 h-4" />
         </button>
         <button
           onClick={() => removeSection(section.id)}
           className="p-1 rounded hover:bg-red-50 text-gray-400 hover:text-red-500"
-          title="Xoa section"
+          title="Xóa section"
         >
           <Trash2 className="w-4 h-4" />
         </button>

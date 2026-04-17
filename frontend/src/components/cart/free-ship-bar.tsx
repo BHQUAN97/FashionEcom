@@ -22,11 +22,11 @@ export function FreeShipBar({ currentTotal, className }: FreeShipBarProps) {
       <div className="flex items-center gap-2 text-sm">
         <Truck className="w-4 h-4 text-gray-500 flex-shrink-0" />
         {isFree ? (
-          <span className="text-green-600 font-medium">Ban duoc mien phi van chuyen!</span>
+          <span className="text-green-600 font-medium">Bạn được miễn phí vận chuyển!</span>
         ) : (
           <span className="text-gray-600">
             Mua them <span className="font-bold text-red-600">{formatVND(remaining)}</span> de{' '}
-            <span className="font-medium">MIEN PHI van chuyen</span>
+            <span className="font-medium">MIỄN PHÍ vận chuyển</span>
           </span>
         )}
       </div>

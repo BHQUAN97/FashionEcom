@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional, IsArray, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, IsArray, ValidateNested, IsInt, Min, Max, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ReturnItemDto {
@@ -6,8 +6,11 @@ export class ReturnItemDto {
   @IsString()
   orderItemId!: string;
 
+  /** So luong doi tra: phai la so nguyen duong */
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
+  @Min(1, { message: 'So luong doi tra phai >= 1' })
+  @Max(100, { message: 'So luong doi tra toi da 100' })
   qty!: number;
 
   @IsOptional()
@@ -44,15 +47,20 @@ export class CreateReturnDto {
 
 export class UpdateReturnStatusDto {
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(7)
   status!: number;
 
   @IsOptional()
   @IsString()
+  @MaxLength(1000)
   staffNotes?: string;
 
+  /** So tien hoan tra: phai >= 0, service se validate khong vuot order total */
   @IsOptional()
   @IsNumber()
+  @Min(0, { message: 'So tien hoan tra phai >= 0' })
   refundAmount?: number;
 }
 

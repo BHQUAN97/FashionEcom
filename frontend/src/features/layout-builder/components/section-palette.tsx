@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { ChevronUp, Image, Type, SlidersHorizontal, Grid3X3, ShoppingBag, Tag, Layers, PlayCircle, Gift, Flame, Star, Layout, Columns, BookOpen, Code, Minus, Space, Mail, Clock } from 'lucide-react';
+import { ChevronUp, Image, Type, SlidersHorizontal, Grid3X3, ShoppingBag, Layers, PlayCircle, Flame, Star, Layout, Columns, BookOpen, Code, Minus, Space, Mail } from 'lucide-react';
 import { getAllSectionDefinitions } from '../registry';
 import { type SectionDefinition } from '../registry/types';
 import { useLayoutStore } from '../stores/layout-store';

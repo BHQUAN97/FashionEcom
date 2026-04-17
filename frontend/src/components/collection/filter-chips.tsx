@@ -14,27 +14,30 @@ interface FilterChipsProps {
   className?: string;
 }
 
-/** Active filter chips — horizontal scroll, remove chip */
+/** Active filter chips — Torano style: "Ban dang xem" heading + "Xoa het" link */
 export function FilterChips({ chips, onClearAll, className }: FilterChipsProps) {
   if (chips.length === 0) return null;
 
   return (
-    <div className={cn('flex gap-2 overflow-x-auto scrollbar-hide items-center', className)}>
-      {chips.map((chip, i) => (
-        <button
-          key={i}
-          onClick={chip.onRemove}
-          className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 rounded-full text-xs font-medium whitespace-nowrap hover:bg-gray-200 transition flex-shrink-0"
-        >
-          {chip.label}
-          <X className="w-3 h-3" />
-        </button>
-      ))}
+    <div className={cn('', className)}>
+      <h3 className="font-bold text-base mb-2">Bạn đang xem</h3>
+      <div className="space-y-1.5">
+        {chips.map((chip, i) => (
+          <button
+            key={i}
+            onClick={chip.onRemove}
+            className="flex items-center gap-1.5 text-sm text-gray-700 hover:text-black transition group"
+          >
+            <X className="w-3.5 h-3.5 text-gray-400 group-hover:text-black" />
+            <span>{chip.label}</span>
+          </button>
+        ))}
+      </div>
       <button
         onClick={onClearAll}
-        className="text-xs text-red-600 hover:underline whitespace-nowrap flex-shrink-0"
+        className="text-sm text-red-600 hover:underline mt-2"
       >
-        Xoa tat ca
+        Xóa hết
       </button>
     </div>
   );

@@ -3,11 +3,11 @@ import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const quicksand = Quicksand({ subsets: ["latin", "vietnamese"], variable: "--font-sans", weight: ["400", "500", "600", "700"] });
+const quicksand = Quicksand({ subsets: ["latin", "vietnamese"], variable: "--font-sans", weight: ["400", "500", "600", "700"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Fashion Ecom — Thoi trang nam cao cap",
-  description: "Mua sam thoi trang nam chinh hang, giao hang toan quoc",
+  title: "Torano — Thoi trang nam cao cap",
+  description: "Mua sam thoi trang nam chinh hang Torano, giao hang toan quoc",
 };
 
 export default function RootLayout({

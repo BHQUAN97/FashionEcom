@@ -8,6 +8,7 @@ import { CreateBannerDto, UpdateBannerDto, ReorderBannersDto } from './dto/banne
 import { UpdateMenuDto } from './dto/menu.dto';
 import { UpdateThemeConfigDto } from './dto/theme-config.dto';
 import { UpdateEmailTemplateDto } from './dto/email-template.dto';
+import { CreatePageDto, UpdatePageDto } from './dto/page.dto';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -144,6 +145,38 @@ export class LayoutAdminController {
     const data = await this.layoutService.updateEmailTemplate(key, dto);
     return { data, message: 'Cap nhat template thanh cong' };
   }
+
+  // --- CMS Pages ---
+
+  @Get('pages')
+  async getPages() {
+    const data = await this.layoutService.getPages();
+    return { data, message: 'OK' };
+  }
+
+  @Get('pages/:id')
+  async getPage(@Param('id') id: string) {
+    const data = await this.layoutService.getPageById(id);
+    return { data, message: 'OK' };
+  }
+
+  @Post('pages')
+  async createPage(@Body() dto: CreatePageDto) {
+    const data = await this.layoutService.createPage(dto);
+    return { data, message: 'Tao trang thanh cong' };
+  }
+
+  @Put('pages/:id')
+  async updatePage(@Param('id') id: string, @Body() dto: UpdatePageDto) {
+    const data = await this.layoutService.updatePage(id, dto);
+    return { data, message: 'Cap nhat trang thanh cong' };
+  }
+
+  @Delete('pages/:id')
+  async deletePage(@Param('id') id: string) {
+    await this.layoutService.deletePage(id);
+    return { data: null, message: 'Xoa trang thanh cong' };
+  }
 }
 
 // ==================== Public Layout API (Storefront) ====================
@@ -176,6 +209,24 @@ export class LayoutPublicController {
   @Get('theme')
   async getThemeConfig() {
     const data = await this.layoutService.getThemeConfig();
+    return { data, message: 'OK' };
+  }
+
+  /**
+   * Storefront: lay danh sach trang noi dung active (cho sidebar)
+   */
+  @Get('pages')
+  async getActivePages() {
+    const data = await this.layoutService.getActivePages();
+    return { data, message: 'OK' };
+  }
+
+  /**
+   * Storefront: lay trang noi dung tinh theo slug
+   */
+  @Get('pages/:slug')
+  async getPageBySlug(@Param('slug') slug: string) {
+    const data = await this.layoutService.getPageBySlug(slug);
     return { data, message: 'OK' };
   }
 

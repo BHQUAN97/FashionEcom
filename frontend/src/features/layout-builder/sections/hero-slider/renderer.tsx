@@ -21,7 +21,6 @@ interface Slide {
 export function HeroSliderRenderer({ config, preview }: SectionRendererProps) {
   const slides = (config.slides as Slide[]) || [];
   const mode = (config.display_mode as string) || 'fullwidth';
-  const heightDesktop = (config.height_desktop as number) || 500;
   const heightMobile = (config.height_mobile as number) || 300;
   const overlayColor = (config.overlay_color as string) || '#000000';
   const overlayOpacity = ((config.overlay_opacity as number) ?? 30) / 100;

@@ -1,0 +1,11 @@
+# ──────────────────────────────────────────
+# FashionEcom — Crontab Example
+# Install: crontab scripts/crontab.example
+# Or run: bash scripts/setup-server.sh
+# ──────────────────────────────────────────
+
+# MySQL backup — daily 2am
+0 2 * * * /opt/fashionecom/scripts/backup-mysql.sh >> /var/log/fashionecom/backup.log 2>&1
+
+# Docker cleanup — weekly Sunday 3am
+0 3 * * 0 /opt/fashionecom/scripts/docker-cleanup.sh >> /var/log/fashionecom/docker-cleanup.log 2>&1

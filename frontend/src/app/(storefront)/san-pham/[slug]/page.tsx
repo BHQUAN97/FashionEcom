@@ -17,6 +17,7 @@ import { StickyBottomCTA } from '@/components/product/sticky-bottom-cta';
 import { TrustBar } from '@/components/home/trust-bar';
 import { useCartStore } from '@/lib/stores/cart.store';
 import { useWishlistStore } from '@/lib/stores/wishlist.store';
+import { useCartToast } from '@/components/ui/cart-toast';
 import { MOCK_PRODUCT_DETAIL, MOCK_REVIEWS, MOCK_PRODUCTS, MOCK_TRUST_BAR } from '@/lib/mock/data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4300/api';
@@ -164,6 +165,7 @@ export default function ProductDetailPage() {
   const reviews = MOCK_REVIEWS;
 
   const addToCart = useCartStore((s) => s.addItem);
+  const showToast = useCartToast((s) => s.showToast);
   const toggleWishlist = useWishlistStore((s) => s.toggleItem);
   const wishlistItems = useWishlistStore((s) => s.items);
 
@@ -175,6 +177,18 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.id || null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
+
+  // Auto-select size dau tien co hang khi color thay doi hoac mount
+  useEffect(() => {
+    if (!selectedColor) return;
+    const firstAvailable = product.sizes.find((s) => {
+      const variant = product.variants.find(
+        (v) => v.color_id === selectedColor && v.size_id === s.id,
+      );
+      return variant && variant.stock_qty > 0;
+    });
+    setSelectedSize(firstAvailable?.id || null);
+  }, [selectedColor, product.sizes, product.variants]);
 
   // Loc sizes co san cho mau duoc chon
   const availableSizes = useMemo(() => {
@@ -202,6 +216,8 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!currentVariant) return;
+    // Dung gia hien thi (sale price neu co) — khong dung gia goc khi dang KM
+    const effectivePrice = currentVariant.sale_price ?? currentVariant.price;
     addToCart({
       variantId: currentVariant.id,
       productId: product.id,
@@ -210,12 +226,21 @@ export default function ProductDetailPage() {
       color: currentVariant.color_name,
       color_hex: currentVariant.color_hex,
       size: currentVariant.size_name,
-      price: currentVariant.price,
-      compare_at_price: currentVariant.compare_at_price,
+      price: effectivePrice,
+      compare_at_price: currentVariant.sale_price ? currentVariant.price : currentVariant.compare_at_price,
       image: product.images[0]?.url || '',
       qty,
       sku: currentVariant.sku,
       max_qty: Math.min(currentVariant.stock_qty, 10),
+    });
+    // Toast feedback — Nielsen #1: cho KH biet da them thanh cong
+    showToast({
+      name: product.name,
+      image: product.images[0]?.url || '',
+      color: currentVariant.color_name,
+      size: currentVariant.size_name,
+      price: effectivePrice,
+      qty,
     });
   };
 
@@ -289,16 +314,31 @@ export default function ProductDetailPage() {
                 selectedId={selectedColor}
                 onChange={(id) => {
                   setSelectedColor(id);
-                  setSelectedSize(null); // Reset size khi doi mau
+                  // selectedSize se duoc auto-select boi useEffect
                 }}
               />
             </div>
 
-            {/* Size selector */}
+            {/* Size selector — Baymard: size guide giam 50% ti le tra hang */}
             <div className="mt-4">
-              <label className="text-sm font-semibold block mb-2">
-                Kích thước: {availableSizes.find((s) => s.id === selectedSize)?.name || 'Chọn size'}
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-semibold">
+                  Kích thước: {availableSizes.find((s) => s.id === selectedSize)?.name || 'Chọn size'}
+                </label>
+                <button
+                  type="button"
+                  className="text-xs text-gray-500 underline underline-offset-2 hover:text-red-600 transition flex items-center gap-1"
+                  onClick={() => {
+                    // TODO: Mo size guide modal khi co data tu CMS
+                    window.open('/trang/huong-dan-chon-size', '_blank');
+                  }}
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h4l3-7 4 14 3-7h4" />
+                  </svg>
+                  Hướng dẫn chọn size
+                </button>
+              </div>
               <SizeSelector
                 sizes={availableSizes}
                 selectedId={selectedSize}
@@ -320,8 +360,8 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* Desktop CTA buttons */}
-            <div className="hidden lg:flex gap-3 mt-6">
+            {/* Desktop + Tablet CTA buttons — md tro len */}
+            <div className="hidden md:flex gap-3 mt-6">
               <button
                 onClick={handleAddToCart}
                 disabled={!canAddToCart}
@@ -338,10 +378,10 @@ export default function ProductDetailPage() {
               </button>
             </div>
 
-            {/* Wishlist — desktop */}
+            {/* Wishlist — desktop + tablet */}
             <button
               onClick={() => toggleWishlist(product.id)}
-              className="hidden lg:flex items-center gap-2 mt-3 text-sm text-gray-500 hover:text-red-600 transition"
+              className="hidden md:flex items-center gap-2 mt-3 text-sm text-gray-500 hover:text-red-600 transition"
             >
               <Heart className={cn('w-4 h-4', isWished(product.id) ? 'fill-red-600 text-red-600' : '')} />
               {isWished(product.id) ? 'Đã yêu thích' : 'Thêm yêu thích'}
@@ -390,7 +430,7 @@ export default function ProductDetailPage() {
         compareAtPrice={currentComparePrice}
         colors={product.colors}
         selectedColorId={selectedColor}
-        onColorChange={(id) => { setSelectedColor(id); setSelectedSize(null); }}
+        onColorChange={(id) => { setSelectedColor(id); }}
         sizes={availableSizes}
         selectedSizeId={selectedSize}
         onSizeChange={setSelectedSize}

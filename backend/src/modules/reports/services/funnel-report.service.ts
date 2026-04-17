@@ -53,12 +53,12 @@ export class FunnelReportService {
     const [raw] = await this.dataSource.query(sql, params);
 
     const stepNames = [
-      'Xem san pham',
-      'Them gio hang',
-      'Bat dau thanh toan',
-      'Nhap dia chi',
-      'Chon thanh toan',
-      'Hoan thanh',
+      'Xem sản phẩm',
+      'Thêm giỏ hàng',
+      'Bắt đầu thanh toán',
+      'Nhập địa chỉ',
+      'Chọn thanh toán',
+      'Hoàn thành',
     ];
 
     const stepValues = [

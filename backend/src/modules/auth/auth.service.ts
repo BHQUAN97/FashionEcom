@@ -1,9 +1,10 @@
-import { randomUUID } from 'crypto';
+import { randomUUID, createHash } from 'crypto';
 import {
   Injectable,
   UnauthorizedException,
   ForbiddenException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,6 +19,8 @@ import { PERMISSION_MATRIX } from '@/common/constants/permissions.constant';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
@@ -28,7 +31,7 @@ export class AuthService {
   ) {}
 
   /**
-   * Dang nhap admin — verify email/password, tra JWT tokens
+   * Đăng nhập admin — verify email/password, trả JWT tokens
    */
   async login(dto: LoginDto) {
     // Tim user theo email, select password (bi exclude mac dinh)
@@ -39,23 +42,27 @@ export class AuthService {
       .getOne();
 
     if (!user) {
-      throw new UnauthorizedException('Email hoac mat khau khong dung');
+      this.logger.warn(`[SECURITY] Login failed — email not found: ${dto.email}`);
+      throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
 
     // Kiem tra tai khoan active
     if (user.sysUserStatus !== 1) {
-      throw new ForbiddenException('Tai khoan da bi khoa');
+      this.logger.warn(`[SECURITY] Login blocked — account locked: ${dto.email}`);
+      throw new ForbiddenException('Tài khoản đã bị khóa');
     }
 
     // Kiem tra role admin (khong cho customer dang nhap admin)
     if (user.sysUserRole === 0) {
-      throw new UnauthorizedException('Email hoac mat khau khong dung');
+      this.logger.warn(`[SECURITY] Login blocked — customer tried admin login: ${dto.email}`);
+      throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
 
     // Verify password
     const isValid = await comparePassword(dto.password, user.sysUserPassword);
     if (!isValid) {
-      throw new UnauthorizedException('Email hoac mat khau khong dung');
+      this.logger.warn(`[SECURITY] Login failed — wrong password: ${dto.email}`);
+      throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
 
     // Cap nhat last_login va login_count
@@ -63,6 +70,8 @@ export class AuthService {
       sysUserLastLogin: new Date(),
       sysUserLoginCount: () => 'sys_user_login_count + 1',
     } as unknown as Partial<UserEntity>);
+
+    this.logger.log(`[AUDIT] Login success: ${user.sysUserEmail}, role=${user.sysUserRole}`);
 
     // Tao token pair
     const tokens = await this.generateTokens(user);
@@ -90,25 +99,34 @@ export class AuthService {
         secret: this.config.getOrThrow<string>('JWT_REFRESH_SECRET'),
       });
     } catch {
-      throw new UnauthorizedException('Refresh token khong hop le');
+      throw new UnauthorizedException('Refresh token không hợp lệ');
     }
 
     if (payload.type !== 'refresh') {
-      throw new UnauthorizedException('Token type khong hop le');
+      throw new UnauthorizedException('Token type không hợp lệ');
     }
 
-    // Tim refresh token trong DB (chua revoke, chua het han)
+    // Tim refresh token trong DB theo hash — verify chinh xac token nao duoc su dung
+    const tokenHash = this.hashToken(refreshToken);
     const tokenRecord = await this.refreshTokenRepo.findOne({
       where: {
         sysUserId: payload.sub,
+        sysRefreshTokenHash: tokenHash,
         sysRefreshTokenRevoked: 0,
         sysRefreshTokenExpires: MoreThan(new Date()),
       },
-      order: { createdDate: 'DESC' },
     });
 
     if (!tokenRecord) {
-      throw new UnauthorizedException('Refresh token da het han hoac da bi thu hoi');
+      // Co the la token bi danh cap → revoke TAT CA tokens cua user (defense in depth)
+      this.logger.error(
+        `[SECURITY] Possible token theft detected! userId=${payload.sub} — revoking ALL sessions`,
+      );
+      await this.refreshTokenRepo.update(
+        { sysUserId: payload.sub, sysRefreshTokenRevoked: 0 },
+        { sysRefreshTokenRevoked: 1 },
+      );
+      throw new UnauthorizedException('Refresh token không hợp lệ — tất cả phiên đã bị thu hồi');
     }
 
     // Revoke token cu
@@ -119,7 +137,7 @@ export class AuthService {
     // Tim user
     const user = await this.userRepo.findOne({ where: { sysUserId: payload.sub } });
     if (!user || user.sysUserStatus !== 1) {
-      throw new UnauthorizedException('Tai khoan khong ton tai hoac da bi khoa');
+      throw new UnauthorizedException('Tài khoản không tồn tại hoặc đã bị khóa');
     }
 
     // Tao token pair moi
@@ -141,7 +159,7 @@ export class AuthService {
    */
   async getMe(userId: string) {
     const user = await this.userRepo.findOne({ where: { sysUserId: userId } });
-    if (!user) throw new UnauthorizedException('User khong ton tai');
+    if (!user) throw new UnauthorizedException('Phiên đăng nhập không hợp lệ');
 
     const permissions = PERMISSION_MATRIX[user.sysUserRole] || [];
 
@@ -156,7 +174,7 @@ export class AuthService {
   }
 
   /**
-   * Doi mat khau — verify current, hash new
+   * Đổi mật khẩu — verify current, hash new
    */
   async changePassword(userId: string, dto: ChangePasswordDto) {
     const user = await this.userRepo
@@ -165,15 +183,17 @@ export class AuthService {
       .where('u.sysUserId = :id', { id: userId })
       .getOne();
 
-    if (!user) throw new UnauthorizedException('User khong ton tai');
+    if (!user) throw new UnauthorizedException('Phiên đăng nhập không hợp lệ');
 
     const isValid = await comparePassword(dto.currentPassword, user.sysUserPassword);
     if (!isValid) {
-      throw new BadRequestException('Mat khau hien tai khong dung');
+      throw new BadRequestException('Mật khẩu hiện tại không đúng');
     }
 
     const hashed = await hashPassword(dto.newPassword);
     await this.userRepo.update(userId, { sysUserPassword: hashed });
+
+    this.logger.warn(`[AUDIT] Password changed: userId=${userId}`);
 
     // Revoke tat ca refresh tokens sau khi doi mat khau
     await this.logout(userId);
@@ -207,12 +227,17 @@ export class AuthService {
     const tokenEntity = this.refreshTokenRepo.create({
       sysRefreshTokenId: randomUUID(),
       sysUserId: user.sysUserId,
-      sysRefreshTokenHash: refreshToken.slice(-32), // Luu 32 ky tu cuoi de doi chieu
+      sysRefreshTokenHash: this.hashToken(refreshToken), // SHA256 hash toan bo token
       sysRefreshTokenExpires: expiresAt,
       sysRefreshTokenRevoked: 0,
     });
     await this.refreshTokenRepo.save(tokenEntity);
 
     return { accessToken, refreshToken };
+  }
+
+  /** Hash token bang SHA256 — dung cho luu va verify refresh token */
+  private hashToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex');
   }
 }

@@ -1,0 +1,273 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e13]
+  - generic [ref=e14]:
+    - complementary [ref=e15]:
+      - generic [ref=e17]: ADMIN
+      - navigation [ref=e18]:
+        - link "Dashboard" [ref=e19] [cursor=pointer]:
+          - /url: /admin
+        - link "Đơn hàng" [ref=e20] [cursor=pointer]:
+          - /url: /admin/don-hang
+        - link "Sản phẩm" [ref=e21] [cursor=pointer]:
+          - /url: /admin/san-pham
+        - link "Danh mục" [ref=e22] [cursor=pointer]:
+          - /url: /admin/danh-muc
+        - link "Tồn kho" [ref=e23] [cursor=pointer]:
+          - /url: /admin/ton-kho
+        - link "Khách hàng" [ref=e24] [cursor=pointer]:
+          - /url: /admin/khach-hang
+        - link "Khuyến mãi" [ref=e25] [cursor=pointer]:
+          - /url: /admin/khuyen-mai
+        - link "Layout Builder" [ref=e26] [cursor=pointer]:
+          - /url: /admin/layout-builder
+        - link "Báo cáo" [ref=e27] [cursor=pointer]:
+          - /url: /admin/bao-cao
+        - link "Media" [ref=e28] [cursor=pointer]:
+          - /url: /admin/media
+        - link "Người dùng" [ref=e29] [cursor=pointer]:
+          - /url: /admin/nguoi-dung
+        - link "Cài đặt" [ref=e30] [cursor=pointer]:
+          - /url: /admin/cai-dat
+        - link "Nhật ký" [ref=e31] [cursor=pointer]:
+          - /url: /admin/nhat-ky
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]: FashionEcom Admin
+        - button "Thông báo" [ref=e36] [cursor=pointer]:
+          - img [ref=e37]
+      - main [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - heading "Dashboard" [level=1] [ref=e43]
+            - generic [ref=e44]:
+              - button "7d" [ref=e45] [cursor=pointer]
+              - button "30d" [ref=e46] [cursor=pointer]
+              - button "90d" [ref=e47] [cursor=pointer]
+          - generic [ref=e48]:
+            - generic [ref=e49]:
+              - heading "Doanh thu theo ngay" [level=3] [ref=e50]
+              - application [ref=e53]
+            - generic [ref=e59]:
+              - heading "Phương thức thanh toán" [level=3] [ref=e60]
+              - application [ref=e63]
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - heading "Top 10 SP ban chay" [level=3] [ref=e66]
+              - application [ref=e69]
+            - generic [ref=e75]:
+              - heading "Top 10 danh muc" [level=3] [ref=e76]
+              - application [ref=e79]
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - heading "Khach hang moi" [level=3] [ref=e87]
+              - application [ref=e90]
+            - generic [ref=e96]:
+              - heading "Heatmap don hang" [level=3] [ref=e97]
+              - generic [ref=e99]:
+                - generic [ref=e100]:
+                  - generic [ref=e102]: "0"
+                  - generic [ref=e103]: "1"
+                  - generic [ref=e104]: "2"
+                  - generic [ref=e105]: "3"
+                  - generic [ref=e106]: "4"
+                  - generic [ref=e107]: "5"
+                  - generic [ref=e108]: "6"
+                  - generic [ref=e109]: "7"
+                  - generic [ref=e110]: "8"
+                  - generic [ref=e111]: "9"
+                  - generic [ref=e112]: "10"
+                  - generic [ref=e113]: "11"
+                  - generic [ref=e114]: "12"
+                  - generic [ref=e115]: "13"
+                  - generic [ref=e116]: "14"
+                  - generic [ref=e117]: "15"
+                  - generic [ref=e118]: "16"
+                  - generic [ref=e119]: "17"
+                  - generic [ref=e120]: "18"
+                  - generic [ref=e121]: "19"
+                  - generic [ref=e122]: "20"
+                  - generic [ref=e123]: "21"
+                  - generic [ref=e124]: "22"
+                  - generic [ref=e125]: "23"
+                - generic [ref=e126]:
+                  - generic [ref=e127]: CN
+                  - 'generic "CN 0h: 0 don" [ref=e128]'
+                  - 'generic "CN 1h: 0 don" [ref=e129]'
+                  - 'generic "CN 2h: 0 don" [ref=e130]'
+                  - 'generic "CN 3h: 0 don" [ref=e131]'
+                  - 'generic "CN 4h: 0 don" [ref=e132]'
+                  - 'generic "CN 5h: 0 don" [ref=e133]'
+                  - 'generic "CN 6h: 0 don" [ref=e134]'
+                  - 'generic "CN 7h: 0 don" [ref=e135]'
+                  - 'generic "CN 8h: 0 don" [ref=e136]'
+                  - 'generic "CN 9h: 0 don" [ref=e137]'
+                  - 'generic "CN 10h: 0 don" [ref=e138]'
+                  - 'generic "CN 11h: 0 don" [ref=e139]'
+                  - 'generic "CN 12h: 0 don" [ref=e140]'
+                  - 'generic "CN 13h: 0 don" [ref=e141]'
+                  - 'generic "CN 14h: 0 don" [ref=e142]'
+                  - 'generic "CN 15h: 0 don" [ref=e143]'
+                  - 'generic "CN 16h: 0 don" [ref=e144]'
+                  - 'generic "CN 17h: 0 don" [ref=e145]'
+                  - 'generic "CN 18h: 0 don" [ref=e146]'
+                  - 'generic "CN 19h: 0 don" [ref=e147]'
+                  - 'generic "CN 20h: 0 don" [ref=e148]'
+                  - 'generic "CN 21h: 0 don" [ref=e149]'
+                  - 'generic "CN 22h: 0 don" [ref=e150]'
+                  - 'generic "CN 23h: 0 don" [ref=e151]'
+                - generic [ref=e152]:
+                  - generic [ref=e153]: T2
+                  - 'generic "T2 0h: 0 don" [ref=e154]'
+                  - 'generic "T2 1h: 0 don" [ref=e155]'
+                  - 'generic "T2 2h: 0 don" [ref=e156]'
+                  - 'generic "T2 3h: 0 don" [ref=e157]'
+                  - 'generic "T2 4h: 0 don" [ref=e158]'
+                  - 'generic "T2 5h: 0 don" [ref=e159]'
+                  - 'generic "T2 6h: 0 don" [ref=e160]'
+                  - 'generic "T2 7h: 0 don" [ref=e161]'
+                  - 'generic "T2 8h: 0 don" [ref=e162]'
+                  - 'generic "T2 9h: 0 don" [ref=e163]'
+                  - 'generic "T2 10h: 0 don" [ref=e164]'
+                  - 'generic "T2 11h: 0 don" [ref=e165]'
+                  - 'generic "T2 12h: 0 don" [ref=e166]'
+                  - 'generic "T2 13h: 0 don" [ref=e167]'
+                  - 'generic "T2 14h: 0 don" [ref=e168]'
+                  - 'generic "T2 15h: 0 don" [ref=e169]'
+                  - 'generic "T2 16h: 0 don" [ref=e170]'
+                  - 'generic "T2 17h: 0 don" [ref=e171]'
+                  - 'generic "T2 18h: 0 don" [ref=e172]'
+                  - 'generic "T2 19h: 0 don" [ref=e173]'
+                  - 'generic "T2 20h: 0 don" [ref=e174]'
+                  - 'generic "T2 21h: 0 don" [ref=e175]'
+                  - 'generic "T2 22h: 0 don" [ref=e176]'
+                  - 'generic "T2 23h: 0 don" [ref=e177]'
+                - generic [ref=e178]:
+                  - generic [ref=e179]: T3
+                  - 'generic "T3 0h: 0 don" [ref=e180]'
+                  - 'generic "T3 1h: 0 don" [ref=e181]'
+                  - 'generic "T3 2h: 0 don" [ref=e182]'
+                  - 'generic "T3 3h: 0 don" [ref=e183]'
+                  - 'generic "T3 4h: 0 don" [ref=e184]'
+                  - 'generic "T3 5h: 0 don" [ref=e185]'
+                  - 'generic "T3 6h: 0 don" [ref=e186]'
+                  - 'generic "T3 7h: 0 don" [ref=e187]'
+                  - 'generic "T3 8h: 0 don" [ref=e188]'
+                  - 'generic "T3 9h: 0 don" [ref=e189]'
+                  - 'generic "T3 10h: 0 don" [ref=e190]'
+                  - 'generic "T3 11h: 0 don" [ref=e191]'
+                  - 'generic "T3 12h: 0 don" [ref=e192]'
+                  - 'generic "T3 13h: 0 don" [ref=e193]'
+                  - 'generic "T3 14h: 0 don" [ref=e194]'
+                  - 'generic "T3 15h: 0 don" [ref=e195]'
+                  - 'generic "T3 16h: 0 don" [ref=e196]'
+                  - 'generic "T3 17h: 0 don" [ref=e197]'
+                  - 'generic "T3 18h: 0 don" [ref=e198]'
+                  - 'generic "T3 19h: 0 don" [ref=e199]'
+                  - 'generic "T3 20h: 0 don" [ref=e200]'
+                  - 'generic "T3 21h: 0 don" [ref=e201]'
+                  - 'generic "T3 22h: 0 don" [ref=e202]'
+                  - 'generic "T3 23h: 0 don" [ref=e203]'
+                - generic [ref=e204]:
+                  - generic [ref=e205]: T4
+                  - 'generic "T4 0h: 0 don" [ref=e206]'
+                  - 'generic "T4 1h: 0 don" [ref=e207]'
+                  - 'generic "T4 2h: 0 don" [ref=e208]'
+                  - 'generic "T4 3h: 0 don" [ref=e209]'
+                  - 'generic "T4 4h: 0 don" [ref=e210]'
+                  - 'generic "T4 5h: 0 don" [ref=e211]'
+                  - 'generic "T4 6h: 0 don" [ref=e212]'
+                  - 'generic "T4 7h: 0 don" [ref=e213]'
+                  - 'generic "T4 8h: 0 don" [ref=e214]'
+                  - 'generic "T4 9h: 0 don" [ref=e215]'
+                  - 'generic "T4 10h: 0 don" [ref=e216]'
+                  - 'generic "T4 11h: 0 don" [ref=e217]'
+                  - 'generic "T4 12h: 0 don" [ref=e218]'
+                  - 'generic "T4 13h: 0 don" [ref=e219]'
+                  - 'generic "T4 14h: 0 don" [ref=e220]'
+                  - 'generic "T4 15h: 0 don" [ref=e221]'
+                  - 'generic "T4 16h: 0 don" [ref=e222]'
+                  - 'generic "T4 17h: 0 don" [ref=e223]'
+                  - 'generic "T4 18h: 0 don" [ref=e224]'
+                  - 'generic "T4 19h: 0 don" [ref=e225]'
+                  - 'generic "T4 20h: 0 don" [ref=e226]'
+                  - 'generic "T4 21h: 0 don" [ref=e227]'
+                  - 'generic "T4 22h: 0 don" [ref=e228]'
+                  - 'generic "T4 23h: 0 don" [ref=e229]'
+                - generic [ref=e230]:
+                  - generic [ref=e231]: T5
+                  - 'generic "T5 0h: 0 don" [ref=e232]'
+                  - 'generic "T5 1h: 0 don" [ref=e233]'
+                  - 'generic "T5 2h: 0 don" [ref=e234]'
+                  - 'generic "T5 3h: 0 don" [ref=e235]'
+                  - 'generic "T5 4h: 0 don" [ref=e236]'
+                  - 'generic "T5 5h: 0 don" [ref=e237]'
+                  - 'generic "T5 6h: 0 don" [ref=e238]'
+                  - 'generic "T5 7h: 0 don" [ref=e239]'
+                  - 'generic "T5 8h: 0 don" [ref=e240]'
+                  - 'generic "T5 9h: 0 don" [ref=e241]'
+                  - 'generic "T5 10h: 0 don" [ref=e242]'
+                  - 'generic "T5 11h: 0 don" [ref=e243]'
+                  - 'generic "T5 12h: 0 don" [ref=e244]'
+                  - 'generic "T5 13h: 0 don" [ref=e245]'
+                  - 'generic "T5 14h: 0 don" [ref=e246]'
+                  - 'generic "T5 15h: 0 don" [ref=e247]'
+                  - 'generic "T5 16h: 0 don" [ref=e248]'
+                  - 'generic "T5 17h: 0 don" [ref=e249]'
+                  - 'generic "T5 18h: 0 don" [ref=e250]'
+                  - 'generic "T5 19h: 0 don" [ref=e251]'
+                  - 'generic "T5 20h: 0 don" [ref=e252]'
+                  - 'generic "T5 21h: 0 don" [ref=e253]'
+                  - 'generic "T5 22h: 0 don" [ref=e254]'
+                  - 'generic "T5 23h: 0 don" [ref=e255]'
+                - generic [ref=e256]:
+                  - generic [ref=e257]: T6
+                  - 'generic "T6 0h: 0 don" [ref=e258]'
+                  - 'generic "T6 1h: 0 don" [ref=e259]'
+                  - 'generic "T6 2h: 0 don" [ref=e260]'
+                  - 'generic "T6 3h: 0 don" [ref=e261]'
+                  - 'generic "T6 4h: 0 don" [ref=e262]'
+                  - 'generic "T6 5h: 0 don" [ref=e263]'
+                  - 'generic "T6 6h: 0 don" [ref=e264]'
+                  - 'generic "T6 7h: 0 don" [ref=e265]'
+                  - 'generic "T6 8h: 0 don" [ref=e266]'
+                  - 'generic "T6 9h: 0 don" [ref=e267]'
+                  - 'generic "T6 10h: 0 don" [ref=e268]'
+                  - 'generic "T6 11h: 0 don" [ref=e269]'
+                  - 'generic "T6 12h: 0 don" [ref=e270]'
+                  - 'generic "T6 13h: 0 don" [ref=e271]'
+                  - 'generic "T6 14h: 0 don" [ref=e272]'
+                  - 'generic "T6 15h: 0 don" [ref=e273]'
+                  - 'generic "T6 16h: 0 don" [ref=e274]'
+                  - 'generic "T6 17h: 0 don" [ref=e275]'
+                  - 'generic "T6 18h: 0 don" [ref=e276]'
+                  - 'generic "T6 19h: 0 don" [ref=e277]'
+                  - 'generic "T6 20h: 0 don" [ref=e278]'
+                  - 'generic "T6 21h: 0 don" [ref=e279]'
+                  - 'generic "T6 22h: 0 don" [ref=e280]'
+                  - 'generic "T6 23h: 0 don" [ref=e281]'
+                - generic [ref=e282]:
+                  - generic [ref=e283]: T7
+                  - 'generic "T7 0h: 0 don" [ref=e284]'
+                  - 'generic "T7 1h: 0 don" [ref=e285]'
+                  - 'generic "T7 2h: 0 don" [ref=e286]'
+                  - 'generic "T7 3h: 0 don" [ref=e287]'
+                  - 'generic "T7 4h: 0 don" [ref=e288]'
+                  - 'generic "T7 5h: 0 don" [ref=e289]'
+                  - 'generic "T7 6h: 0 don" [ref=e290]'
+                  - 'generic "T7 7h: 0 don" [ref=e291]'
+                  - 'generic "T7 8h: 0 don" [ref=e292]'
+                  - 'generic "T7 9h: 0 don" [ref=e293]'
+                  - 'generic "T7 10h: 0 don" [ref=e294]'
+                  - 'generic "T7 11h: 0 don" [ref=e295]'
+                  - 'generic "T7 12h: 0 don" [ref=e296]'
+                  - 'generic "T7 13h: 0 don" [ref=e297]'
+                  - 'generic "T7 14h: 0 don" [ref=e298]'
+                  - 'generic "T7 15h: 0 don" [ref=e299]'
+                  - 'generic "T7 16h: 0 don" [ref=e300]'
+                  - 'generic "T7 17h: 0 don" [ref=e301]'
+                  - 'generic "T7 18h: 0 don" [ref=e302]'
+                  - 'generic "T7 19h: 0 don" [ref=e303]'
+                  - 'generic "T7 20h: 0 don" [ref=e304]'
+                  - 'generic "T7 21h: 0 don" [ref=e305]'
+                  - 'generic "T7 22h: 0 don" [ref=e306]'
+                  - 'generic "T7 23h: 0 don" [ref=e307]'

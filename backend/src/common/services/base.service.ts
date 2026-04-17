@@ -1,4 +1,4 @@
-import { Repository, FindOptionsWhere, ObjectLiteral } from 'typeorm';
+import { Repository, FindOptionsWhere, FindOptionsOrder, ObjectLiteral } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 /**
@@ -32,15 +32,18 @@ export abstract class BaseService<T extends ObjectLiteral> {
   async findAllBase(
     page = 1,
     limit = 20,
-    options?: { where?: FindOptionsWhere<T>; relations?: string[]; order?: Record<string, 'ASC' | 'DESC'> },
+    options?: { where?: FindOptionsWhere<T>; relations?: string[]; order?: FindOptionsOrder<T> },
   ): Promise<PaginatedResult<T>> {
     const take = Math.min(limit, 100);
     const skip = (page - 1) * take;
 
+    // Fallback order — dung createdDate DESC khi caller khong truyen
+    const defaultOrder = { createdDate: 'DESC' } as unknown as FindOptionsOrder<T>;
+
     const [data, total] = await this.repo.findAndCount({
       where: options?.where,
       relations: options?.relations,
-      order: (options?.order || { createdDate: 'DESC' }) as any,
+      order: options?.order ?? defaultOrder,
       skip,
       take,
     });

@@ -17,7 +17,7 @@ const configSchema = z.object({
   show_rating: z.boolean().default(true),
   show_quick_add: z.boolean().default(true),
   show_cta: z.boolean().default(true),
-  cta_text: z.string().default('XEM TAT CA'),
+  cta_text: z.string().default('XEM TẤT CẢ'),
   cta_link: z.string().default('/san-pham'),
   // Grid tuy chinh
   columns_desktop: z.number().min(2).max(6).default(5),
@@ -26,28 +26,28 @@ const configSchema = z.object({
 });
 
 const Editor = createSimpleEditor([
-  { key: 'title', label: 'Tieu de', type: 'text' },
-  { key: 'display_mode', label: 'Che do hien thi', type: 'radio_cards', options: [
-    { value: 'carousel', label: 'Carousel', icon: '↔', description: 'Cuon ngang' },
-    { value: 'grid', label: 'Luoi', icon: '▦', description: 'Grid co dinh' },
-    { value: 'list', label: 'Danh sach', icon: '☰', description: 'Tung dong' },
+  { key: 'title', label: 'Tiêu đề', type: 'text' },
+  { key: 'display_mode', label: 'Chế độ hiển thị', type: 'radio_cards', options: [
+    { value: 'carousel', label: 'Carousel', icon: '↔', description: 'Cuộn ngang' },
+    { value: 'grid', label: 'Lưới', icon: '▦', description: 'Grid cố định' },
+    { value: 'list', label: 'Danh sách', icon: '☰', description: 'Từng dòng' },
   ]},
-  { key: 'section_source', label: 'Nguon du lieu', type: 'section_header' },
-  { key: 'source_value', label: 'Loai san pham', type: 'select', options: [
-    { label: 'Hang moi ve', value: 'new_arrivals' },
-    { label: 'Ban chay nhat', value: 'best_sellers' },
-    { label: 'Dang giam gia', value: 'on_sale' },
-    { label: 'Theo danh muc', value: 'by_category' },
+  { key: 'section_source', label: 'Nguồn dữ liệu', type: 'section_header' },
+  { key: 'source_value', label: 'Loại sản phẩm', type: 'select', options: [
+    { label: 'Hàng mới về', value: 'new_arrivals' },
+    { label: 'Bán chạy nhất', value: 'best_sellers' },
+    { label: 'Đang giảm giá', value: 'on_sale' },
+    { label: 'Theo danh mục', value: 'by_category' },
   ]},
-  { key: 'max_products', label: 'So SP toi da', type: 'range', min: 4, max: 24, step: 2 },
-  { key: 'columns_desktop', label: 'So cot (Grid mode)', type: 'number', min: 2, max: 6, showWhen: { key: 'display_mode', value: 'grid' } },
-  { key: 'section_display', label: 'Hien thi', type: 'section_header' },
-  { key: 'show_badge', label: 'Hien badge (Sale, New)', type: 'toggle' },
-  { key: 'show_price', label: 'Hien gia', type: 'toggle' },
-  { key: 'show_quick_add', label: 'Nut them vao gio', type: 'toggle' },
-  { key: 'autoplay', label: 'Tu dong cuon', type: 'toggle', showWhen: { key: 'display_mode', value: 'carousel' } },
-  { key: 'section_cta', label: 'Nut hanh dong', type: 'section_header' },
-  { key: 'show_cta', label: 'Hien nut CTA', type: 'toggle' },
+  { key: 'max_products', label: 'Số SP tối đa', type: 'range', min: 4, max: 24, step: 2 },
+  { key: 'columns_desktop', label: 'Số cột (Grid mode)', type: 'number', min: 2, max: 6, showWhen: { key: 'display_mode', value: 'grid' } },
+  { key: 'section_display', label: 'Hiển thị', type: 'section_header' },
+  { key: 'show_badge', label: 'Hiện badge (Sale, New)', type: 'toggle' },
+  { key: 'show_price', label: 'Hiện giá', type: 'toggle' },
+  { key: 'show_quick_add', label: 'Nút thêm vào giỏ', type: 'toggle' },
+  { key: 'autoplay', label: 'Tự động cuộn', type: 'toggle', showWhen: { key: 'display_mode', value: 'carousel' } },
+  { key: 'section_cta', label: 'Nút hành động', type: 'section_header' },
+  { key: 'show_cta', label: 'Hiện nút CTA', type: 'toggle' },
   { key: 'cta_text', label: 'Text CTA', type: 'text', showWhen: { key: 'show_cta', value: true } },
   { key: 'cta_link', label: 'Link CTA', type: 'text', showWhen: { key: 'show_cta', value: true } },
 ]);
@@ -71,13 +71,13 @@ function PlaceholderProductCard({ compact }: { compact?: boolean }) {
         )}
       </div>
       <div className={compact ? 'flex-1 py-1' : 'mt-2 px-0.5'}>
-        <p className="text-xs text-gray-700 line-clamp-2 mb-1">Ao thun nam co tron basic</p>
+        <p className="text-xs text-gray-700 line-clamp-2 mb-1">Áo thun nam cổ tròn basic</p>
         <div className="flex items-center gap-1.5">
           <span className="text-xs font-bold text-red-600">{price.toLocaleString('vi-VN')}d</span>
           {hasDiscount && <span className="text-[10px] text-gray-400 line-through">{oldPrice.toLocaleString('vi-VN')}d</span>}
         </div>
         {!compact && (
-          <p className="text-[10px] text-gray-400 mt-1">+3 Mau sac</p>
+          <p className="text-[10px] text-gray-400 mt-1">+3 Màu sắc</p>
         )}
       </div>
     </div>
@@ -89,7 +89,7 @@ function Renderer({ config }: SectionRendererProps) {
   const mode = (config.display_mode as string) || 'carousel';
   const maxProducts = (config.max_products as number) || 12;
   const showCta = config.show_cta !== false;
-  const ctaText = (config.cta_text as string) || 'XEM TAT CA';
+  const ctaText = (config.cta_text as string) || 'XEM TẤT CẢ';
   const cols = (config.columns_desktop as number) || 5;
 
   const displayCount = mode === 'carousel' ? Math.min(5, maxProducts) : Math.min(cols * 2, maxProducts);
@@ -149,7 +149,7 @@ function Renderer({ config }: SectionRendererProps) {
       )}
       <div className="flex gap-3 overflow-x-auto px-4 pb-2">
         {Array.from({ length: displayCount }).map((_, i) => (
-          <div key={i} className="shrink-0 w-40 md:w-48">
+          <div key={i} className="shrink-0 w-[170px] sm:w-[200px] md:w-[240px] lg:w-[260px] xl:w-[280px]">
             <PlaceholderProductCard />
           </div>
         ))}

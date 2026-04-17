@@ -8,6 +8,12 @@ export class OrderQueryDto extends PaginationDto {
   @IsNumber()
   status?: number;
 
+  /** Filter trang thai van chuyen: 0-10 */
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  shippingStatus?: number;
+
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
@@ -17,6 +23,12 @@ export class OrderQueryDto extends PaginationDto {
   @Type(() => Number)
   @IsNumber()
   paymentType?: number;
+
+  /** 1=chi don co su co */
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  hasIncident?: number;
 
   @IsOptional()
   @IsString()

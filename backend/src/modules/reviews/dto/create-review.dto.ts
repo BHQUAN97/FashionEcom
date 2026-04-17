@@ -1,14 +1,14 @@
 import {
-  IsUUID, IsInt, Min, Max, IsString,
+  Matches, IsInt, Min, Max, IsString,
   IsOptional, IsArray, MaxLength, ArrayMaxSize,
 } from 'class-validator';
 
 /** DTO tao review — validate rating [1-5], gioi han noi dung + anh */
 export class CreateReviewDto {
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   productId!: string;
 
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   orderItemId!: string;
 
   @IsInt()

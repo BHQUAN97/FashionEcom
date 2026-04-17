@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils';
 import type { CheckoutStep } from '@/lib/stores/checkout.store';
 
 const STEPS: { key: CheckoutStep; label: string }[] = [
-  { key: 'review', label: 'Kiem tra' },
-  { key: 'shipping', label: 'Giao hang' },
-  { key: 'payment', label: 'Thanh toan' },
+  { key: 'review', label: 'Kiểm tra' },
+  { key: 'shipping', label: 'Giao hàng' },
+  { key: 'payment', label: 'Thanh toán' },
 ];
 
 interface CheckoutStepIndicatorProps {

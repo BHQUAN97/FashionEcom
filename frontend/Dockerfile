@@ -3,6 +3,15 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Build args — bake NEXT_PUBLIC_* vao build
+ARG NEXT_PUBLIC_API_URL=/api
+ARG NEXT_PUBLIC_SITE_URL=
+ARG INTERNAL_API_URL=http://backend:4000/api
+
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV INTERNAL_API_URL=$INTERNAL_API_URL
+
 COPY package.json package-lock.json ./
 RUN npm ci
 

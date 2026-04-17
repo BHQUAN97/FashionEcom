@@ -1,0 +1,9 @@
+erDiagram
+    sys_user ||--o| sys_customer : "1:1"
+    cat_category ||--o{ cat_product : "1:N"
+    cat_product ||--o{ cat_product_variant : "1:N"
+    cat_product_variant ||--o{ inv_inventory_level : "1:N"
+    inv_warehouse ||--o{ inv_inventory_level : "1:N"
+    sys_customer ||--o{ sal_order : "1:N"
+    sal_order ||--o{ sal_order_item : "1:N"
+    cat_product_variant ||--o{ sal_order_item : "1:N"

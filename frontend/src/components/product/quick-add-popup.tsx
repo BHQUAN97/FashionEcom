@@ -30,6 +30,18 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
   const [added, setAdded] = useState(false);
   const [currentImg, setCurrentImg] = useState(0);
 
+  // Auto-select size dau tien co hang khi color thay doi hoac mount
+  useEffect(() => {
+    if (!selectedColor) return;
+    const firstAvailable = product.sizes.find((s) => {
+      const variant = product.variants.find(
+        (v) => v.color_id === selectedColor && v.size_id === s.id,
+      );
+      return variant && variant.stock_qty > 0;
+    });
+    setSelectedSize(firstAvailable?.id || null);
+  }, [selectedColor, product.sizes, product.variants]);
+
   // Danh sach anh
   const images = [product.image, product.image_hover].filter(Boolean) as string[];
 
@@ -104,7 +116,7 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg shadow-2xl w-full max-w-[900px] max-h-[90vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200"
+        className="bg-white rounded-lg shadow-2xl w-full max-w-[900px] max-h-[90vh] overflow-y-auto overscroll-contain relative animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Nut dong */}
@@ -171,7 +183,7 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
           </div>
 
           {/* === BEN PHAI: Thong tin + chon variant === */}
-          <div className="md:w-1/2 p-4 md:p-6 md:pl-2">
+          <div className="md:w-1/2 p-4 pb-6 md:p-6 md:pl-2">
             {/* Ten SP */}
             <h2 className="text-lg font-bold leading-snug pr-8">{product.name}</h2>
 
@@ -213,7 +225,7 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
                         key={c.id}
                         onClick={() => {
                           setSelectedColor(c.id);
-                          setSelectedSize(null);
+                          // selectedSize se duoc auto-select boi useEffect
                           setQty(1);
                         }}
                         className={cn(
@@ -239,7 +251,17 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
             {/* Kich thuoc — check ton kho theo mau */}
             {product.sizes.length > 0 && (
               <div className="mt-4">
-                <label className="text-sm font-semibold mb-2 block">Kích thước:</label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm font-semibold">Kích thước:</label>
+                  <a
+                    href="/trang/huong-dan-chon-size"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-gray-500 underline underline-offset-2 hover:text-red-600 transition"
+                  >
+                    Hướng dẫn chọn size
+                  </a>
+                </div>
                 <div className="flex gap-2 flex-wrap">
                   {product.sizes.map((s) => {
                     const stock = sizeStock[s.id] ?? 0;

@@ -22,29 +22,29 @@ const configSchema = z.object({
 });
 
 const Editor = createSimpleEditor([
-  { key: 'title', label: 'Tieu de', type: 'text' },
-  { key: 'display_mode', label: 'Che do hien thi', type: 'radio_cards', options: [
-    { value: 'grid', label: 'Luoi', icon: '▦', description: 'Grid co dinh' },
-    { value: 'scroll', label: 'Cuon ngang', icon: '↔', description: 'Carousel' },
-    { value: 'circle', label: 'Tron', icon: '◉', description: 'Icon tron' },
+  { key: 'title', label: 'Tiêu đề', type: 'text' },
+  { key: 'display_mode', label: 'Chế độ hiển thị', type: 'radio_cards', options: [
+    { value: 'grid', label: 'Lưới', icon: '▦', description: 'Grid cố định' },
+    { value: 'scroll', label: 'Cuộn ngang', icon: '↔', description: 'Carousel' },
+    { value: 'circle', label: 'Tròn', icon: '◉', description: 'Icon tròn' },
   ]},
-  { key: 'card_style', label: 'Kieu the', type: 'radio_cards', options: [
-    { value: 'overlay', label: 'Overlay', icon: '▮', description: 'Text tren anh' },
-    { value: 'below', label: 'Ben duoi', icon: '▯', description: 'Text duoi anh' },
-    { value: 'minimal', label: 'Toi gian', icon: '▫', description: 'Chi text' },
+  { key: 'card_style', label: 'Kiểu thẻ', type: 'radio_cards', options: [
+    { value: 'overlay', label: 'Overlay', icon: '▮', description: 'Text trên ảnh' },
+    { value: 'below', label: 'Bên dưới', icon: '▯', description: 'Text dưới ảnh' },
+    { value: 'minimal', label: 'Tối giản', icon: '▫', description: 'Chỉ text' },
   ]},
-  { key: 'section_grid', label: 'Tuy chinh luoi', type: 'section_header' },
-  { key: 'columns_desktop', label: 'So cot desktop', type: 'number', min: 2, max: 6 },
-  { key: 'columns_mobile', label: 'So cot mobile', type: 'number', min: 2, max: 3 },
-  { key: 'item_count', label: 'So danh muc hien thi', type: 'number', min: 2, max: 12 },
-  { key: 'section_display', label: 'Hien thi', type: 'section_header' },
-  { key: 'show_image', label: 'Hien anh', type: 'toggle' },
-  { key: 'show_count', label: 'Hien so san pham', type: 'toggle' },
-  { key: 'show_arrow', label: 'Hien mui ten', type: 'toggle' },
+  { key: 'section_grid', label: 'Tùy chỉnh lưới', type: 'section_header' },
+  { key: 'columns_desktop', label: 'Số cột desktop', type: 'number', min: 2, max: 6 },
+  { key: 'columns_mobile', label: 'Số cột mobile', type: 'number', min: 2, max: 3 },
+  { key: 'item_count', label: 'Số danh mục hiển thị', type: 'number', min: 2, max: 12 },
+  { key: 'section_display', label: 'Hiển thị', type: 'section_header' },
+  { key: 'show_image', label: 'Hiện ảnh', type: 'toggle' },
+  { key: 'show_count', label: 'Hiện số sản phẩm', type: 'toggle' },
+  { key: 'show_arrow', label: 'Hiện mũi tên', type: 'toggle' },
 ]);
 
 /** Placeholder category names */
-const PLACEHOLDER_NAMES = ['Ao Polo', 'Ao Thun', 'Quan Short', 'Quan Au', 'Ao Khoac', 'Phu Kien', 'Giay Dep', 'Ao So Mi', 'Quan Jeans', 'Ao Vest', 'Tui Xach', 'Non Mu'];
+const PLACEHOLDER_NAMES = ['Áo Polo', 'Áo Thun', 'Quần Short', 'Quần Âu', 'Áo Khoác', 'Phụ Kiện', 'Giày Dép', 'Áo Sơ Mi', 'Quần Jeans', 'Áo Vest', 'Túi Xách', 'Nón Mũ'];
 
 function Renderer({ config }: SectionRendererProps) {
   const title = config.title as string;

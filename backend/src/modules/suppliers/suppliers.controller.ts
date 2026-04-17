@@ -53,7 +53,7 @@ export class PurchaseOrdersController {
   }
 
   @Post()
-  async create(@Body() dto: CreatePurchaseOrderDto, @CurrentUser('sub') userId: string) {
+  async create(@Body() dto: CreatePurchaseOrderDto, @CurrentUser('userId') userId: string) {
     const data = await this.suppliersService.createPO(dto, userId);
     return { data, message: 'Tao PO thanh cong' };
   }
@@ -69,7 +69,7 @@ export class PurchaseOrdersController {
   async updateStatus(
     @Param('id') id: string,
     @Body('status') status: number,
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
   ) {
     const data = await this.suppliersService.updatePOStatus(id, status, userId);
     return { data, message: 'Cap nhat trang thai PO thanh cong' };
@@ -79,7 +79,7 @@ export class PurchaseOrdersController {
   async receive(
     @Param('id') id: string,
     @Body() dto: ReceiveGoodsDto,
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
   ) {
     const data = await this.suppliersService.receiveGoods(id, dto, userId);
     return { data, message: 'Nhap kho thanh cong' };

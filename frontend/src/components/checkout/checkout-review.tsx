@@ -14,7 +14,7 @@ export function CheckoutReview() {
       <Accordion defaultValue={[0]}>
         <AccordionItem>
           <AccordionTrigger className="text-sm font-semibold">
-            Don hang ({items.length} san pham)
+            Đơn hàng ({items.length} sản phẩm)
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3">

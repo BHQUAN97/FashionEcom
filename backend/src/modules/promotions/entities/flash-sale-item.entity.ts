@@ -15,8 +15,14 @@ export class FlashSaleItemEntity {
   @Column({ name: 'cat_product_id', type: 'char', length: 36 })
   catProductId!: string;
 
+  @Column({ name: 'cat_product_variant_id', type: 'char', length: 36, nullable: true })
+  catProductVariantId!: string | null;
+
   @Column({ name: 'prm_flash_sale_item_discount_pct', type: 'decimal', precision: 18, scale: 4, default: 0 })
   prmFlashSaleItemDiscountPct!: number;
+
+  @Column({ name: 'prm_flash_sale_item_sale_price', type: 'decimal', precision: 22, scale: 4, nullable: true })
+  prmFlashSaleItemSalePrice!: number | null;
 
   @Column({ name: 'prm_flash_sale_item_max_qty', type: 'int', default: 0 })
   prmFlashSaleItemMaxQty!: number;

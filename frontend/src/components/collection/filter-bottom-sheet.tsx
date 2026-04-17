@@ -23,7 +23,7 @@ export function FilterBottomSheet({
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl px-4 pt-4 pb-0">
         <SheetHeader className="pb-3 border-b">
-          <SheetTitle className="text-base">Bo loc san pham</SheetTitle>
+          <SheetTitle className="text-base">Bộ lọc sản phẩm</SheetTitle>
         </SheetHeader>
 
         <div className="overflow-y-auto flex-1 py-4" style={{ maxHeight: 'calc(85vh - 140px)' }}>
@@ -38,13 +38,13 @@ export function FilterBottomSheet({
             }}
             className="flex-1 py-2.5 border border-gray-300 rounded-lg text-sm font-medium"
           >
-            Xoa bo loc
+            Xóa bộ lọc
           </button>
           <button
             onClick={onClose}
             className="flex-1 py-2.5 bg-black text-white rounded-lg text-sm font-semibold"
           >
-            Xem {resultCount} san pham
+            Xem {resultCount} sản phẩm
           </button>
         </div>
       </SheetContent>

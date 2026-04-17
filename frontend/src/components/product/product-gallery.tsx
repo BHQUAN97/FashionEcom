@@ -62,7 +62,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
       <div className="flex-1">
         <div ref={emblaRef} className="overflow-hidden rounded-lg">
           <div className="flex">
-            {images.map((img) => (
+            {images.map((img, idx) => (
               <div key={img.id} className="flex-[0_0_100%] min-w-0">
                 <div className="relative aspect-square bg-gray-100">
                   <Image
@@ -71,7 +71,8 @@ export function ProductGallery({ images }: ProductGalleryProps) {
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
-                    priority
+                    priority={idx === 0}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 </div>
               </div>

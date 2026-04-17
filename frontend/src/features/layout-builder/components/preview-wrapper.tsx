@@ -41,9 +41,9 @@ export function PreviewWrapper({ children }: { children: ReactNode }) {
         </button>
       </div>
 
-      {/* Preview container */}
+      {/* Preview container — overflow-hidden de ngan content tran ra */}
       <div
-        className="mx-auto transition-all duration-300"
+        className="mx-auto transition-all duration-300 overflow-hidden border rounded-b-lg bg-white"
         style={{ maxWidth: device === 'mobile' ? '375px' : '100%' }}
       >
         {children}

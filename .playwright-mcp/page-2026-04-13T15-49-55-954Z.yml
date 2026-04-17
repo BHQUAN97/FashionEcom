@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - heading "Admin Login" [level=1] [ref=e4]
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: Email
+        - textbox "admin@example.com" [ref=e8]
+      - generic [ref=e9]:
+        - generic [ref=e10]: Mật khẩu
+        - textbox "••••••••" [ref=e11]
+      - button "Đăng nhập" [ref=e12] [cursor=pointer]
+  - alert [ref=e13]

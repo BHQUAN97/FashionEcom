@@ -33,15 +33,17 @@ async function bootstrap() {
     }),
   );
 
-  // Swagger API docs — accessible at /api/docs
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('FashionEcom API')
-    .setDescription('API documentation for FashionEcom e-commerce platform')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api/docs', app, document);
+  // Swagger API docs — chi enable ngoai production
+  if (process.env.NODE_ENV !== 'production') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('FashionEcom API')
+      .setDescription('API documentation for FashionEcom e-commerce platform')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
   const port = process.env.PORT || 4300;
   await app.listen(port);

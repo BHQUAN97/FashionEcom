@@ -3,9 +3,10 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThanOrEqual } from 'typeorm';
+import { Repository, LessThanOrEqual, DataSource } from 'typeorm';
 import { LoyaltyConfigEntity } from './entities/loyalty-config.entity';
 import { LoyaltyTransactionEntity } from './entities/loyalty-transaction.entity';
 import { RedeemPointsDto, AdjustPointsDto, UpdateLoyaltyConfigDto } from './dto/loyalty.dto';
@@ -19,11 +20,14 @@ const TIER_MULTIPLIERS: Record<string, number> = {
 
 @Injectable()
 export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
+  private readonly logger = new Logger(LoyaltyService.name);
+
   constructor(
     @InjectRepository(LoyaltyConfigEntity)
     private readonly configRepo: Repository<LoyaltyConfigEntity>,
     @InjectRepository(LoyaltyTransactionEntity)
     private readonly transRepo: Repository<LoyaltyTransactionEntity>,
+    private readonly dataSource: DataSource,
   ) {
     super(transRepo, 'prmLoyaltyTransactionId', 'Diem thuong');
   }
@@ -183,6 +187,18 @@ export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
   async adjustPoints(dto: AdjustPointsDto, adminId: string) {
     const balance = await this.getCurrentBalance(dto.customerId);
 
+    // BAO MAT: khong cho tru qua so du
+    if (dto.points < 0 && balance + dto.points < 0) {
+      throw new BadRequestException(
+        `Khong du diem de tru. So du hien tai: ${balance}, dieu chinh: ${dto.points}`,
+      );
+    }
+
+    this.logger.warn(
+      `[AUDIT] Loyalty adjust: customer=${dto.customerId}, points=${dto.points}, ` +
+      `balance=${balance}->${balance + dto.points}, admin=${adminId}, desc=${dto.description}`,
+    );
+
     const transaction = this.transRepo.create({
       prmLoyaltyTransactionId: randomUUID(),
       sysCustomerId: dto.customerId,
@@ -246,13 +262,23 @@ export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
   }
 
   private async evaluateTier(customerId: string, config: LoyaltyConfigEntity) {
-    // Tinh tong chi tieu 12 thang — can join voi orders, de don gian tra ve Member
     const silver = Number(config.prmLoyaltyConfigSilverThreshold);
     const gold = Number(config.prmLoyaltyConfigGoldThreshold);
     const platinum = Number(config.prmLoyaltyConfigPlatinumThreshold);
 
-    // TODO: Query tong tien don hang 12 thang gan nhat cua KH
-    const spend12m = 0; // placeholder
+    // Tinh tong chi tieu 12 thang tu don hang hoan thanh (status=4)
+    const twelveMonthsAgo = new Date();
+    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+
+    const spendResult = await this.dataSource.query(
+      `SELECT COALESCE(SUM(sal_order_total), 0) AS total_spent
+       FROM sal_order
+       WHERE sys_customer_id = ?
+         AND sal_order_status = 4
+         AND created_date >= ?`,
+      [customerId, twelveMonthsAgo],
+    );
+    const spend12m = Number(spendResult?.[0]?.total_spent || 0);
 
     let name = LoyaltyTier.MEMBER;
     let nextTier = LoyaltyTier.SILVER;

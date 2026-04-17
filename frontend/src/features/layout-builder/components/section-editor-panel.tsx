@@ -42,7 +42,7 @@ export function SectionEditorPanel() {
             <button
               onClick={() => toggleVisibility(activeSection.id)}
               className="p-1 rounded hover:bg-gray-200 transition"
-              title={activeSection.visible ? 'An section' : 'Hien section'}
+              title={activeSection.visible ? 'Ẩn section' : 'Hiện section'}
             >
               {activeSection.visible ? (
                 <Eye className="w-4 h-4 text-gray-500" />

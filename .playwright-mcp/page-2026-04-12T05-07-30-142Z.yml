@@ -1,0 +1,131 @@
+- generic [ref=e2]:
+  - paragraph [ref=e4]: "Mien phi giao hang cho don tu 500.000d | Hotline: 1900-xxxx"
+  - banner [ref=e5]:
+    - generic [ref=e7]:
+      - link "FASHION" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=e9]:
+        - link "SAN PHAM MOI" [ref=e10] [cursor=pointer]:
+          - /url: /san-pham
+        - link "AO NAM" [ref=e12] [cursor=pointer]:
+          - /url: /danh-muc/ao-nam
+        - link "QUAN NAM" [ref=e14] [cursor=pointer]:
+          - /url: /danh-muc/quan-nam
+        - link "PHU KIEN" [ref=e16] [cursor=pointer]:
+          - /url: /danh-muc/phu-kien
+        - link "SALE" [ref=e17] [cursor=pointer]:
+          - /url: /danh-muc/sale
+      - generic [ref=e18]:
+        - link "Tim kiem" [ref=e19] [cursor=pointer]:
+          - /url: /tim-kiem
+          - img [ref=e20]
+        - link "Tai khoan" [ref=e22] [cursor=pointer]:
+          - /url: /tai-khoan
+          - img [ref=e23]
+        - link "Yeu thich" [ref=e25] [cursor=pointer]:
+          - /url: /tai-khoan/yeu-thich
+          - img [ref=e26]
+        - link "Gio hang" [ref=e28] [cursor=pointer]:
+          - /url: /gio-hang
+          - img [ref=e29]
+          - generic [ref=e31]: "0"
+  - main [ref=e32]:
+    - generic [ref=e34]:
+      - link "FASHION" [ref=e36] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e38]:
+        - heading "Dang nhap tai khoan" [level=2] [ref=e39]
+        - paragraph [ref=e40]: "Nhap email va mat khau cua ban:"
+        - textbox "Email" [ref=e42]
+        - generic [ref=e43]:
+          - textbox "Mat khau" [ref=e44]
+          - button [ref=e45] [cursor=pointer]:
+            - img [ref=e46]
+        - paragraph [ref=e49]:
+          - text: Trang web nay duoc bao ve boi reCAPTCHA.
+          - link "Chinh sach bao mat" [ref=e50] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy
+          - text: va
+          - link "Dieu khoan dich vu" [ref=e51] [cursor=pointer]:
+            - /url: https://policies.google.com/terms
+          - text: cua Google.
+        - button "DANG NHAP" [ref=e52] [cursor=pointer]
+        - generic [ref=e53]:
+          - paragraph [ref=e54]:
+            - text: Khach hang moi?
+            - link "Tao tai khoan" [ref=e55] [cursor=pointer]:
+              - /url: /dang-ky
+          - paragraph [ref=e56]:
+            - text: Quen mat khau?
+            - link "Khoi phuc mat khau" [ref=e57] [cursor=pointer]:
+              - /url: /quen-mat-khau
+  - contentinfo [ref=e58]:
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - heading "Thoi trang nam FASHION" [level=3] [ref=e61]
+        - paragraph [ref=e62]: He thong thoi trang cho phai manh hang dau Viet Nam, huong toi phong cach nam tinh, lich lam va tre trung.
+        - generic [ref=e63]:
+          - link "f" [ref=e64] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e65]: f
+          - link "t" [ref=e66] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e67]: t
+          - link "i" [ref=e68] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e69]: i
+          - link "t" [ref=e70] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e71]: t
+          - link "y" [ref=e72] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e73]: "y"
+        - heading "Phuong thuc thanh toan" [level=4] [ref=e74]
+        - generic [ref=e75]:
+          - generic [ref=e76]: VNPAY
+          - generic [ref=e77]: ZaloPay
+          - generic [ref=e78]: MoMo
+          - generic [ref=e79]: COD
+          - generic [ref=e80]: VISA
+      - generic [ref=e81]:
+        - heading "Thong tin lien he" [level=4] [ref=e82]
+        - list [ref=e83]:
+          - listitem [ref=e84]: "Dia chi: 123 Nguyen Hue, Quan 1, TP. Ho Chi Minh"
+          - listitem [ref=e85]: "Dien thoai: 1900-xxxx"
+          - listitem [ref=e86]: "Email: support@fashionecom.vn"
+        - heading "Phuong thuc van chuyen" [level=4] [ref=e87]
+        - generic [ref=e88]:
+          - generic [ref=e89]: GHN
+          - generic [ref=e90]: GHTK
+          - generic [ref=e91]: J&T
+          - generic [ref=e92]: Ninja Van
+      - generic [ref=e93]:
+        - heading "Nhom lien ket" [level=4] [ref=e94]
+        - list [ref=e95]:
+          - listitem [ref=e96]:
+            - link "Tim kiem" [ref=e97] [cursor=pointer]:
+              - /url: /tim-kiem
+          - listitem [ref=e98]:
+            - link "Gioi thieu" [ref=e99] [cursor=pointer]:
+              - /url: /gioi-thieu
+          - listitem [ref=e100]:
+            - link "Chinh sach doi tra" [ref=e101] [cursor=pointer]:
+              - /url: /chinh-sach/doi-tra
+          - listitem [ref=e102]:
+            - link "Chinh sach bao mat" [ref=e103] [cursor=pointer]:
+              - /url: /chinh-sach/bao-mat
+          - listitem [ref=e104]:
+            - link "Tuyen dung" [ref=e105] [cursor=pointer]:
+              - /url: /tuyen-dung
+          - listitem [ref=e106]:
+            - link "Lien he" [ref=e107] [cursor=pointer]:
+              - /url: /lien-he
+      - generic [ref=e108]:
+        - heading "Dang ky nhan tin" [level=4] [ref=e109]
+        - paragraph [ref=e110]: De cap nhat nhung san pham moi, nhan thong tin uu dai dac biet va thong tin giam gia khac.
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - img [ref=e113]
+            - textbox "Nhap email cua ban" [ref=e115]
+          - button "DANG KY" [ref=e116] [cursor=pointer]
+    - generic [ref=e118]: Copyright © 2026 Fashion Ecom. All rights reserved.

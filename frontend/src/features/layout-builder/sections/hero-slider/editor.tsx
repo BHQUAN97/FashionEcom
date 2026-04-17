@@ -128,22 +128,22 @@ export function HeroSliderEditor({ config, onChange }: SectionEditorProps) {
                   )}
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-gray-500">Anh desktop</label>
-                    <input value={slide.image_desktop || ''} onChange={(e) => updateSlide(i, 'image_desktop', e.target.value)} placeholder="URL anh desktop (1920x600)" className="w-full text-xs border rounded-md px-2 py-1.5" />
+                    <label className="text-[10px] text-gray-500">Ảnh desktop</label>
+                    <input value={slide.image_desktop || ''} onChange={(e) => updateSlide(i, 'image_desktop', e.target.value)} placeholder="URL ảnh desktop (1920x600)" className="w-full text-xs border rounded-md px-2 py-1.5" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-gray-500">Anh mobile</label>
-                    <input value={slide.image_mobile || ''} onChange={(e) => updateSlide(i, 'image_mobile', e.target.value)} placeholder="URL anh mobile (750x750)" className="w-full text-xs border rounded-md px-2 py-1.5" />
+                    <label className="text-[10px] text-gray-500">Ảnh mobile</label>
+                    <input value={slide.image_mobile || ''} onChange={(e) => updateSlide(i, 'image_mobile', e.target.value)} placeholder="URL ảnh mobile (750x750)" className="w-full text-xs border rounded-md px-2 py-1.5" />
                   </div>
-                  <input value={slide.title || ''} onChange={(e) => updateSlide(i, 'title', e.target.value)} placeholder="Tieu de" className="w-full text-xs border rounded-md px-2 py-1.5" />
-                  <input value={slide.subtitle || ''} onChange={(e) => updateSlide(i, 'subtitle', e.target.value)} placeholder="Phu de" className="w-full text-xs border rounded-md px-2 py-1.5" />
+                  <input value={slide.title || ''} onChange={(e) => updateSlide(i, 'title', e.target.value)} placeholder="Tiêu đề" className="w-full text-xs border rounded-md px-2 py-1.5" />
+                  <input value={slide.subtitle || ''} onChange={(e) => updateSlide(i, 'subtitle', e.target.value)} placeholder="Phụ đề" className="w-full text-xs border rounded-md px-2 py-1.5" />
                   <div className="grid grid-cols-2 gap-2">
-                    <input value={slide.cta_text || ''} onChange={(e) => updateSlide(i, 'cta_text', e.target.value)} placeholder="Nut CTA" className="text-xs border rounded-md px-2 py-1.5" />
+                    <input value={slide.cta_text || ''} onChange={(e) => updateSlide(i, 'cta_text', e.target.value)} placeholder="Nút CTA" className="text-xs border rounded-md px-2 py-1.5" />
                     <input value={slide.cta_link || ''} onChange={(e) => updateSlide(i, 'cta_link', e.target.value)} placeholder="Link CTA" className="text-xs border rounded-md px-2 py-1.5" />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[10px] text-gray-500">Vi tri text</label>
+                      <label className="text-[10px] text-gray-500">Vị trí text</label>
                       <select value={slide.text_position || 'center'} onChange={(e) => updateSlide(i, 'text_position', e.target.value)} className="w-full text-xs border rounded-md px-2 py-1.5">
                         <option value="left">Trai</option>
                         <option value="center">Giua</option>

@@ -9,6 +9,21 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "Quicksand", "sans-serif"],
+      },
+      fontSize: {
+        xs: ["14px", { lineHeight: "1.4" }],
+        sm: ["15px", { lineHeight: "1.5" }],
+        base: ["15px", { lineHeight: "1.6" }],
+        lg: ["17px", { lineHeight: "1.5" }],
+        xl: ["19px", { lineHeight: "1.4" }],
+        "2xl": ["22px", { lineHeight: "1.35" }],
+        "3xl": ["26px", { lineHeight: "1.3" }],
+        "4xl": ["30px", { lineHeight: "1.25" }],
+        "5xl": ["36px", { lineHeight: "1.2" }],
+        "6xl": ["42px", { lineHeight: "1.15" }],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -45,10 +60,21 @@ const config: Config = {
         // Design system — Torano style
         fashion: {
           black: "#1a1a1a",
-          red: "#D0021B",
+          red: "#d60000",
           white: "#FFFFFF",
           text: "#333333",
           muted: "#6B7280",
+          hover: "#d60000",
+          border: "#e7e7e7",
+          bg: "#f5f5f5",
+        },
+        topbar: {
+          DEFAULT: "#242021",
+          text: "#ffffff",
+        },
+        flashsale: {
+          bg: "#faefec",
+          countdown: "#d60000",
         },
       },
       borderColor: {
@@ -58,10 +84,15 @@ const config: Config = {
         DEFAULT: "var(--ring)",
       },
       screens: {
-        // Mobile-first breakpoints
+        // Mobile-first breakpoints (Torano: 767/991/1199/1200)
         sm: "375px",
         md: "768px",
-        lg: "1280px",
+        lg: "992px",
+        xl: "1200px",
+        "2xl": "1600px",
+      },
+      maxWidth: {
+        container: "1600px",
       },
     },
   },

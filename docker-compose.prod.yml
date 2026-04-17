@@ -1,87 +1,52 @@
 version: "3.8"
 
+# ── FashionEcom Production ──────────────────
+# Dung chung shared-mysql, shared-redis, shared-nginx tu WebPhoto
+# Deploy: bash scripts/quick-deploy.sh <vps-ip> [domain]
+
 services:
-  # ── MySQL 8.0 ─────────────────────────────
-  mysql:
-    image: mysql:8.0
-    container_name: fashionecom-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    command: >
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_0900_as_ci
-      --default-authentication-plugin=caching_sha2_password
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - fashionecom-net
-
-  # ── Redis 7 ───────────────────────────────
-  redis:
-    image: redis:7-alpine
-    container_name: fashionecom-redis
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - fashionecom-net
-
   # ── Backend (NestJS) ──────────────────────
   backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: fashionecom-backend:latest
-    container_name: fashionecom-backend
+    container_name: fashionecom-api
     restart: unless-stopped
-    ports:
-      - "4300:4000"
     env_file:
       - .env
     environment:
-      DB_HOST: mysql
-      DB_PORT: 3306
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      NODE_ENV: production
+      PORT: 4000
+    depends_on: []
     networks:
       - fashionecom-net
+      - webphoto_backend
 
   # ── Frontend (Next.js) ────────────────────
   frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: /api
+        NEXT_PUBLIC_SITE_URL: https://${DOMAIN:-shop.bhquan.store}
+        INTERNAL_API_URL: http://fashionecom-api:4000/api
     image: fashionecom-frontend:latest
     container_name: fashionecom-frontend
     restart: unless-stopped
-    ports:
-      - "3300:3000"
-    env_file:
-      - .env
     environment:
       NEXT_PUBLIC_API_URL: /api
+      NEXT_PUBLIC_SITE_URL: https://${DOMAIN:-shop.bhquan.store}
+      INTERNAL_API_URL: http://fashionecom-api:4000/api
     depends_on:
       - backend
     networks:
       - fashionecom-net
-
-volumes:
-  mysql_data:
-  redis_data:
+      - webphoto_backend
 
 networks:
   fashionecom-net:
     driver: bridge
+  webphoto_backend:
+    external: true

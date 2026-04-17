@@ -33,7 +33,7 @@ export function HeroBanner({ slides }: HeroBannerProps) {
     <section className="relative">
       <div ref={emblaRef} className="overflow-hidden">
         <div className="flex">
-          {slides.map((slide) => (
+          {slides.map((slide, idx) => (
             <div key={slide.id} className="flex-[0_0_100%] min-w-0 relative">
               {/* Mobile: 4:3, Desktop: ~16:7 */}
               <div className="relative aspect-[4/3] md:aspect-[16/7]">
@@ -43,7 +43,8 @@ export function HeroBanner({ slides }: HeroBannerProps) {
                   fill
                   sizes="100vw"
                   className="object-cover hidden md:block"
-                  priority
+                  priority={idx === 0}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
                 />
                 <Image
                   src={slide.image_mobile}
@@ -51,7 +52,8 @@ export function HeroBanner({ slides }: HeroBannerProps) {
                   fill
                   sizes="100vw"
                   className="object-cover md:hidden"
-                  priority
+                  priority={idx === 0}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
                 />
                 {/* Overlay content */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20">
@@ -62,7 +64,7 @@ export function HeroBanner({ slides }: HeroBannerProps) {
                     <p className="mt-2 text-sm md:text-lg drop-shadow-md">{slide.subtitle}</p>
                     <Link
                       href={slide.cta_link}
-                      className="mt-4 inline-block bg-red-600 text-white px-6 py-2.5 text-sm font-semibold hover:bg-red-700 transition"
+                      className="btn-sweep btn-sweep-red mt-4 inline-block"
                     >
                       {slide.cta_text}
                     </Link>

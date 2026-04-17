@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { SizeEntity } from './size.entity';
 
 /**
  * Entity cat_size_group — nhom kich thuoc san pham
@@ -20,4 +21,8 @@ export class SizeGroupEntity {
 
   @Column({ name: 'cat_size_group_sort', type: 'decimal', precision: 18, scale: 4, default: 0 })
   catSizeGroupSort!: number;
+
+  // Relations
+  @OneToMany(() => SizeEntity, (s) => s.sizeGroup)
+  sizes!: SizeEntity[];
 }

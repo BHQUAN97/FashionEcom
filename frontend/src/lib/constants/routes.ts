@@ -17,4 +17,5 @@ export const ROUTES = {
   ORDER_DETAIL: (code: string) => `/tai-khoan/don-hang/${code}`,
   WISHLIST: '/tai-khoan/yeu-thich',
   ADDRESSES: '/tai-khoan/dia-chi',
+  CMS_PAGE: (slug: string) => `/trang/${slug}`,
 } as const;

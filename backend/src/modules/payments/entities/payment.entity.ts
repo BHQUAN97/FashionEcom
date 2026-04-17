@@ -34,6 +34,22 @@ export class PaymentEntity {
   @Column({ name: 'sal_payment_redirect_url', type: 'varchar', length: 500, nullable: true })
   salPaymentRedirectUrl!: string | null;
 
+  /** URL anh chung minh da chuyen khoan (KH upload) */
+  @Column({ name: 'sal_payment_proof_image', type: 'varchar', length: 500, nullable: true })
+  salPaymentProofImage!: string | null;
+
+  /** Ghi chu admin khi duyet/tu choi */
+  @Column({ name: 'sal_payment_admin_note', type: 'text', nullable: true })
+  salPaymentAdminNote!: string | null;
+
+  /** Admin ID nguoi duyet */
+  @Column({ name: 'sal_payment_reviewed_by', type: 'char', length: 36, nullable: true })
+  salPaymentReviewedBy!: string | null;
+
+  /** Thoi diem duyet */
+  @Column({ name: 'sal_payment_reviewed_at', type: 'datetime', nullable: true })
+  salPaymentReviewedAt!: Date | null;
+
   @Column({ name: 'sal_payment_expires_at', type: 'datetime', nullable: true })
   salPaymentExpiresAt!: Date | null;
 

@@ -11,37 +11,40 @@ export function CheckoutShipping() {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-sm">Thong tin giao hang</h3>
+      <h3 className="font-semibold text-sm">Thông tin giao hàng</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">Ho ten *</label>
+          <label className="text-xs text-gray-500 mb-1 block">Họ tên *</label>
           <input
             type="text"
             value={shipping.name}
             onChange={(e) => setShipping({ name: e.target.value })}
-            placeholder="Nguyen Van A"
+            placeholder="Nguyễn Văn A"
             className={inputClass}
             required
+            maxLength={100}
           />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">So dien thoai *</label>
+          <label className="text-xs text-gray-500 mb-1 block">Số điện thoại *</label>
           <input
             type="tel"
             value={shipping.phone}
             onChange={(e) => setShipping({ phone: e.target.value })}
             placeholder="0901234567"
+            pattern="^(0|\+84)[0-9]{9,10}$"
+            title="So dien thoai bat dau bang 0 hoac +84, theo sau 9-10 so"
             className={inputClass}
             required
           />
         </div>
       </div>
 
-      {/* Tinh/Thanh pho */}
+      {/* Tỉnh/Thành phố */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">Tinh/Thanh pho *</label>
+          <label className="text-xs text-gray-500 mb-1 block">Tỉnh/Thành phố *</label>
           <select
             value={shipping.province_code}
             onChange={(e) => {
@@ -50,16 +53,16 @@ export function CheckoutShipping() {
             }}
             className={inputClass}
           >
-            <option value="">Chon tinh/thanh pho</option>
-            <option value="79">Ho Chi Minh</option>
-            <option value="01">Ha Noi</option>
-            <option value="48">Da Nang</option>
-            <option value="92">Can Tho</option>
-            <option value="31">Hai Phong</option>
+            <option value="">Chọn tỉnh/thành phố</option>
+            <option value="79">Hồ Chí Minh</option>
+            <option value="01">Hà Nội</option>
+            <option value="48">Đà Nẵng</option>
+            <option value="92">Cần Thơ</option>
+            <option value="31">Hải Phòng</option>
           </select>
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">Quan/Huyen *</label>
+          <label className="text-xs text-gray-500 mb-1 block">Quận/Huyện *</label>
           <select
             value={shipping.district_code}
             onChange={(e) => {
@@ -68,26 +71,26 @@ export function CheckoutShipping() {
             }}
             className={inputClass}
           >
-            <option value="">Chon quan/huyen</option>
+            <option value="">Chọn quận/huyện</option>
             {shipping.province_code === '79' && (
               <>
-                <option value="760">Quan 1</option>
-                <option value="769">Quan 3</option>
-                <option value="773">Quan 7</option>
-                <option value="778">Binh Thanh</option>
+                <option value="760">Quận 1</option>
+                <option value="769">Quận 3</option>
+                <option value="773">Quận 7</option>
+                <option value="778">Bình Thạnh</option>
               </>
             )}
             {shipping.province_code === '01' && (
               <>
-                <option value="001">Ba Dinh</option>
-                <option value="005">Cau Giay</option>
-                <option value="006">Dong Da</option>
+                <option value="001">Ba Đình</option>
+                <option value="005">Cầu Giấy</option>
+                <option value="006">Đống Đa</option>
               </>
             )}
           </select>
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">Phuong/Xa *</label>
+          <label className="text-xs text-gray-500 mb-1 block">Phường/Xã *</label>
           <select
             value={shipping.ward_code}
             onChange={(e) => {
@@ -96,37 +99,38 @@ export function CheckoutShipping() {
             }}
             className={inputClass}
           >
-            <option value="">Chon phuong/xa</option>
+            <option value="">Chọn phường/xã</option>
             {shipping.district_code === '760' && (
               <>
-                <option value="26734">Phuong Ben Nghe</option>
-                <option value="26737">Phuong Ben Thanh</option>
+                <option value="26734">Phường Bến Nghé</option>
+                <option value="26737">Phường Bến Thành</option>
               </>
             )}
           </select>
         </div>
       </div>
 
-      {/* Dia chi cu the */}
+      {/* Địa chỉ cụ thể */}
       <div>
-        <label className="text-xs text-gray-500 mb-1 block">Dia chi cu the *</label>
+        <label className="text-xs text-gray-500 mb-1 block">Địa chỉ cụ thể *</label>
         <input
           type="text"
           value={shipping.address_line}
           onChange={(e) => setShipping({ address_line: e.target.value })}
-          placeholder="So nha, ten duong..."
+          placeholder="Số nhà, tên đường..."
           className={inputClass}
           required
+          maxLength={255}
         />
       </div>
 
-      {/* Ghi chu */}
+      {/* Ghi chú */}
       <div>
-        <label className="text-xs text-gray-500 mb-1 block">Ghi chu</label>
+        <label className="text-xs text-gray-500 mb-1 block">Ghi chú</label>
         <textarea
           value={shipping.note}
           onChange={(e) => setShipping({ note: e.target.value })}
-          placeholder="Ghi chu cho don hang (giao gio hanh chinh, goi truoc khi giao...)"
+          placeholder="Ghi chú cho đơn hàng (giao giờ hành chính, gọi trước khi giao...)"
           rows={2}
           className={inputClass}
         />

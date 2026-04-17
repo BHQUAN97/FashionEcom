@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile
     container_name: fashionecom-backend
     ports:
-      - "4300:4000"
+      - "5301:4000"
     env_file:
       - .env
     environment:
@@ -66,7 +66,7 @@ services:
       dockerfile: Dockerfile
     container_name: fashionecom-frontend
     ports:
-      - "3300:3000"
+      - "5300:3000"
     env_file:
       - .env
     environment:

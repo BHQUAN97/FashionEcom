@@ -1,0 +1,15 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e328]
+  - generic [ref=e329]:
+    - paragraph [ref=e331]: "Mien phi giao hang cho don tu 500.000d | Hotline: 1900-xxxx"
+    - banner [ref=e332]:
+      - generic [ref=e334]
+    - main [ref=e355]:
+      - generic [ref=e356]
+    - contentinfo [ref=e803]:
+      - generic [ref=e804]
+  - generic [ref=e827] [cursor=pointer]:
+    - img [ref=e828]
+    - generic [ref=e830]: 3 errors
+    - button "Hide Errors" [ref=e831]:
+      - img [ref=e832]

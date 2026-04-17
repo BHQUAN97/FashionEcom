@@ -1,11 +1,11 @@
-import { IsArray, ValidateNested, IsUUID, IsNumber, IsOptional } from 'class-validator';
+import { IsArray, ValidateNested, Matches, IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ReorderItemDto {
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   id!: string;
 
-  @IsUUID()
+  @Matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: '$property must be a UUID' })
   @IsOptional()
   parentId?: string | null;
 

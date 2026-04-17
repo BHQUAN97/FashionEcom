@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as path from 'path';
@@ -16,6 +16,34 @@ interface UploadedFile {
   size: number;
   buffer: Buffer;
 }
+
+/** Whitelist MIME types duoc phep upload */
+const ALLOWED_MIMETYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'video/mp4',
+  'video/webm',
+]);
+
+/** Extensions bi chan — chong upload shell/script */
+const BLOCKED_EXTENSIONS = new Set([
+  '.php', '.phtml', '.php3', '.php4', '.php5',
+  '.exe', '.bat', '.cmd', '.sh', '.ps1',
+  '.jsp', '.asp', '.aspx', '.cgi', '.pl',
+  '.htaccess', '.svg', '.html', '.htm', '.js',
+]);
+
+/** Map MIME type -> safe extension */
+const MIME_TO_EXT: Record<string, string> = {
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/webp': '.webp',
+  'image/gif': '.gif',
+  'video/mp4': '.mp4',
+  'video/webm': '.webm',
+};
 
 @Injectable()
 export class MediaService extends BaseService<MediaEntity> {
@@ -58,19 +86,32 @@ export class MediaService extends BaseService<MediaEntity> {
   }
 
   /**
-   * Upload file — luu vao local storage, tao record trong DB
-   * Sharp resize se duoc bo sung sau khi cai sharp package
+   * Upload file — validate MIME/extension, luu vao local storage, tao record trong DB
+   * BAO MAT: whitelist MIME type + block dangerous extensions + regenerate filename
    */
   async upload(file: UploadedFile, userId: string | null) {
+    // Validate MIME type
+    if (!ALLOWED_MIMETYPES.has(file.mimetype)) {
+      throw new BadRequestException(
+        `File type '${file.mimetype}' khong duoc phep. Chi chap nhan: ${[...ALLOWED_MIMETYPES].join(', ')}`,
+      );
+    }
+
+    // Validate extension — chong upload shell/script voi fake MIME
+    const originalExt = path.extname(file.originalname).toLowerCase();
+    if (BLOCKED_EXTENSIONS.has(originalExt)) {
+      throw new BadRequestException(`Extension '${originalExt}' bi chan vi ly do bao mat`);
+    }
+
     const now = new Date();
     const yearMonth = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`;
     const subDir = path.join(this.storagePath, 'uploads', yearMonth);
 
     await fs.mkdir(subDir, { recursive: true });
 
-    // Tao ten file unique
-    const ext = path.extname(file.originalname);
-    const uniqueName = `${randomUUID()}${ext}`;
+    // Regenerate filename voi safe extension tu MIME type (khong dung extension goc)
+    const safeExt = MIME_TO_EXT[file.mimetype] || originalExt;
+    const uniqueName = `${randomUUID()}${safeExt}`;
     const filePath = path.join(subDir, uniqueName);
 
     // Ghi file (async — khong block event loop)
@@ -84,7 +125,7 @@ export class MediaService extends BaseService<MediaEntity> {
       sysMediaPath: relativePath,
       sysMediaType: file.mimetype.startsWith('video') ? 2 : 1,
       sysMediaSize: file.size,
-      sysMediaAlt: path.basename(file.originalname, ext),
+      sysMediaAlt: path.basename(file.originalname, path.extname(file.originalname)),
       sysUserId: userId,
     });
 
@@ -93,12 +134,18 @@ export class MediaService extends BaseService<MediaEntity> {
 
   /**
    * Xoa media — xoa file vat ly + record DB
+   * BAO MAT: validate resolved path nam trong storage directory (chong path traversal)
    */
   async remove(id: string) {
     const media = await super.findOne(id);
 
+    // BAO MAT: Path traversal protection — dam bao file nam trong storagePath
+    const fullPath = path.resolve(this.storagePath, media.sysMediaPath.replace(/^\//, ''));
+    if (!fullPath.startsWith(this.storagePath)) {
+      throw new BadRequestException('Duong dan file khong hop le — path traversal detected');
+    }
+
     // Xoa file vat ly (async)
-    const fullPath = path.join(this.storagePath, media.sysMediaPath);
     try {
       await fs.unlink(fullPath);
     } catch {

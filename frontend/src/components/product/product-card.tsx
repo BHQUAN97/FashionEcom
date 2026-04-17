@@ -73,7 +73,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
                     'img-first object-cover',
                     isOutOfStock && 'opacity-50',
                   )}
-                  priority
+                  loading="lazy"
                 />
               )}
               {hasSecondImage && (
@@ -140,7 +140,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
               </div>
             )}
 
-            {/* Mobile: icon add-to-cart tron — Torano style */}
+            {/* Mobile: icon add-to-cart — Fitts's Law: min 44px touch target */}
             {!isOutOfStock && (
               <button
                 onClick={(e) => {
@@ -148,10 +148,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
                   e.stopPropagation();
                   setShowQuickAdd(true);
                 }}
-                className="md:hidden absolute bottom-2 right-2 z-10 w-7 h-7 flex items-center justify-center bg-[#333] rounded-full"
+                className="md:hidden absolute bottom-1.5 right-1.5 z-10 w-9 h-9 flex items-center justify-center bg-[#333] rounded-full active:scale-95 transition-transform"
                 aria-label="Thêm vào giỏ"
               >
-                <ShoppingBag className="w-3.5 h-3.5 text-white" />
+                <ShoppingBag className="w-4 h-4 text-white" />
               </button>
             )}
           </div>

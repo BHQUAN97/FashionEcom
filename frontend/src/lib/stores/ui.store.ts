@@ -4,9 +4,10 @@ interface UIState {
   // Mobile drawer menu
   isMobileMenuOpen: boolean;
   toggleMobileMenu: () => void;
-  // Mini cart drawer (desktop)
+  // Mini cart drawer
   isMiniCartOpen: boolean;
   toggleMiniCart: () => void;
+  openMiniCart: () => void;
   // Filter bottom sheet (mobile)
   isFilterOpen: boolean;
   toggleFilter: () => void;
@@ -21,6 +22,7 @@ export const useUIStore = create<UIState>((set) => ({
 
   isMiniCartOpen: false,
   toggleMiniCart: () => set((s) => ({ isMiniCartOpen: !s.isMiniCartOpen })),
+  openMiniCart: () => set({ isMiniCartOpen: true }),
 
   isFilterOpen: false,
   toggleFilter: () => set((s) => ({ isFilterOpen: !s.isFilterOpen })),

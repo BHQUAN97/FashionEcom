@@ -1,5 +1,6 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
+import { AdminNotificationService } from '../notifications/admin-notification.service';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -9,7 +10,10 @@ import { UserRole } from '@/common/constants/roles.constant';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.MANAGER, UserRole.STAFF)
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(
+    private readonly dashboardService: DashboardService,
+    private readonly adminNotifService: AdminNotificationService,
+  ) {}
 
   @Get('kpis')
   async getKpis() {
@@ -43,7 +47,7 @@ export class DashboardController {
     @Query('limit') limit?: string,
   ) {
     const days = range === '90d' ? 90 : 30;
-    const topN = limit ? parseInt(limit) : 10;
+    const topN = limit ? Math.min(Math.max(parseInt(limit) || 10, 1), 50) : 10;
     const data = await this.dashboardService.getTopProducts(days, topN);
     return { data, message: 'OK' };
   }
@@ -57,7 +61,7 @@ export class DashboardController {
     @Query('limit') limit?: string,
   ) {
     const days = range === '90d' ? 90 : 30;
-    const topN = limit ? parseInt(limit) : 10;
+    const topN = limit ? Math.min(Math.max(parseInt(limit) || 10, 1), 50) : 10;
     const data = await this.dashboardService.getTopCategories(days, topN);
     return { data, message: 'OK' };
   }
@@ -79,6 +83,16 @@ export class DashboardController {
   async getNewCustomersChart(@Query('range') range?: string) {
     const days = range === '90d' ? 90 : 30;
     const data = await this.dashboardService.getNewCustomersChart(days);
+    return { data, message: 'OK' };
+  }
+
+  /**
+   * Tong quan viec can xu ly — hien tren dashboard
+   * Don cho xac nhan, TT cho duyet, su co van chuyen, giao that bai
+   */
+  @Get('pending-summary')
+  async getPendingSummary() {
+    const data = await this.adminNotifService.getPendingCounts();
     return { data, message: 'OK' };
   }
 }

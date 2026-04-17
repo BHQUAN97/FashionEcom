@@ -39,9 +39,11 @@ export default function RevenueReportPage() {
   const [rows, setRows] = useState<RevenueRow[]>([]);
   const [summary, setSummary] = useState<RevenueSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const params = new URLSearchParams({ period });
       if (from) params.set('from', from);
@@ -51,11 +53,17 @@ export default function RevenueReportPage() {
       if (json.success && json.data) {
         setRows(json.data.rows || []);
         setSummary(json.data.summary || null);
+      } else {
+        // API tra ve nhung khong success — hien loi ro cho user, khong im lang fallback
+        throw new Error(json.message || 'Du lieu tra ve khong hop le');
       }
-    } catch {
-      // Fallback: demo data khi API chua san sang
+    } catch (err: unknown) {
+      // Log de debug + hien banner loi cho user biet (khong silently fallback demo data)
+      console.error('Failed to load revenue report:', err);
+      const msg = err instanceof Error ? err.message : 'Khong tai duoc bao cao doanh thu';
+      setError(msg);
       setRows([]);
-      setSummary({ total_orders: 0, gross_revenue: 0, total_discount: 0, net_revenue: 0, aov: 0 });
+      setSummary(null);
     } finally {
       setLoading(false);
     }
@@ -74,6 +82,20 @@ export default function RevenueReportPage() {
 
   return (
     <div className="space-y-6">
+      {/* Banner loi — hien khi API that bai, giu user biet thay vi silently fallback */}
+      {error && (
+        <div className="rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+          Khong tai duoc bao cao doanh thu: {error}
+          <button
+            type="button"
+            onClick={() => fetchData()}
+            className="ml-3 underline font-medium hover:text-red-900"
+          >
+            Thu lai
+          </button>
+        </div>
+      )}
+
       {/* Filters */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <DateRangePicker from={from} to={to} onChange={(f, t) => { setFrom(f); setTo(t); }} />

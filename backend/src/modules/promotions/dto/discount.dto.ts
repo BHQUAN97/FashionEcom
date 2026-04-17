@@ -1,25 +1,56 @@
-import { IsString, IsNumber, IsOptional, IsDateString, IsObject, IsArray } from 'class-validator';
+import {
+  IsString, IsNumber, IsOptional, IsDateString, IsObject, IsArray,
+  IsInt, Min, Max, MaxLength, ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+/** Dieu kien ap dung ma giam gia — strict schema, chong injection */
+export class DiscountConditionsDto {
+  @IsOptional() @IsNumber() @Min(0)
+  min_order_value?: number;
+
+  @IsOptional() @IsInt() @Min(1)
+  min_quantity?: number;
+
+  @IsOptional() @IsArray() @IsString({ each: true })
+  category_ids?: string[];
+
+  @IsOptional() @IsArray() @IsString({ each: true })
+  product_ids?: string[];
+}
 
 export class CreateDiscountDto {
   @IsString()
+  @MaxLength(50)
   code!: string;
 
-  @IsNumber()
+  /** 1=phan tram, 2=so tien co dinh */
+  @IsInt()
+  @Min(1)
+  @Max(2)
   type!: number;
 
+  /** Gia tri giam: 0-100 cho %, >= 0 cho fixed — service validate theo type */
   @IsNumber()
+  @Min(0)
   value!: number;
 
-  @IsOptional() @IsNumber()
+  /** Muc giam toi da (chi ap dung cho type=1 phan tram) */
+  @IsOptional() @IsNumber() @Min(0)
   maxAmount?: number;
 
-  @IsOptional() @IsObject()
-  conditionsJson?: Record<string, unknown>;
+  /** Dieu kien ap dung — validated nested object */
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => DiscountConditionsDto)
+  conditionsJson?: DiscountConditionsDto;
 
-  @IsOptional() @IsNumber()
+  /** So luot su dung toi da (0 = khong gioi han) */
+  @IsOptional() @IsInt() @Min(0)
   maxUsage?: number;
 
-  @IsOptional() @IsNumber()
+  /** So luot toi da per customer */
+  @IsOptional() @IsInt() @Min(0)
   maxPerCustomer?: number;
 
   @IsOptional() @IsDateString()
@@ -28,16 +59,19 @@ export class CreateDiscountDto {
   @IsOptional() @IsDateString()
   endDate?: string;
 
-  @IsOptional() @IsNumber()
+  /** 0=khong stackable, 1=stackable */
+  @IsOptional() @IsInt() @Min(0) @Max(1)
   stackable?: number;
 
-  @IsOptional() @IsNumber()
+  /** 0=inactive, 1=active */
+  @IsOptional() @IsInt() @Min(0) @Max(1)
   status?: number;
 
-  @IsOptional() @IsNumber()
+  /** 0=tat ca, 1=chi logged-in, 2=whitelist customer */
+  @IsOptional() @IsInt() @Min(0) @Max(2)
   customerScope?: number;
 
-  @IsOptional() @IsArray()
+  @IsOptional() @IsArray() @IsString({ each: true })
   customerIds?: string[];
 }
 

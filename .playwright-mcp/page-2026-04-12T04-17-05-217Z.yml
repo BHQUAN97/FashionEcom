@@ -1,0 +1,391 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - paragraph [ref=e4]: "Mien phi giao hang cho don tu 500.000d | Hotline: 1900-xxxx"
+    - banner [ref=e5]:
+      - generic [ref=e7]:
+        - link "FASHION" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e9]:
+          - link "SAN PHAM MOI" [ref=e10] [cursor=pointer]:
+            - /url: /san-pham
+          - link "AO NAM" [ref=e11] [cursor=pointer]:
+            - /url: /danh-muc/ao-nam
+          - link "QUAN NAM" [ref=e12] [cursor=pointer]:
+            - /url: /danh-muc/quan-nam
+          - link "PHU KIEN" [ref=e13] [cursor=pointer]:
+            - /url: /danh-muc/phu-kien
+          - link "SALE" [ref=e14] [cursor=pointer]:
+            - /url: /danh-muc/sale
+        - generic [ref=e15]:
+          - link "Tim kiem" [ref=e16] [cursor=pointer]:
+            - /url: /tim-kiem
+            - img [ref=e17]
+          - link "Tai khoan" [ref=e19] [cursor=pointer]:
+            - /url: /tai-khoan
+            - img [ref=e20]
+          - link "Yeu thich" [ref=e22] [cursor=pointer]:
+            - /url: /tai-khoan/yeu-thich
+            - img [ref=e23]
+          - button "Gio hang" [ref=e25] [cursor=pointer]:
+            - img [ref=e26]
+    - main [ref=e28]:
+      - generic [ref=e30]:
+        - navigation "Breadcrumb" [ref=e31]:
+          - list [ref=e32]:
+            - listitem [ref=e33]:
+              - link "Trang chu" [ref=e34] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e35]:
+              - img [ref=e36]
+              - generic [ref=e38]: Ao Polo
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - heading "Ao Polo" [level=1] [ref=e44]
+            - generic [ref=e45]: 24 san pham
+          - generic [ref=e46]:
+            - button "Tim kiem" [ref=e47] [cursor=pointer]:
+              - img [ref=e48]
+            - generic [ref=e51]:
+              - generic [ref=e52]: Sap xep theo
+              - combobox [ref=e53] [cursor=pointer]:
+                - option "San pham noi bat" [selected]
+                - option "Moi nhat"
+                - option "Gia thap den cao"
+                - option "Gia cao den thap"
+                - option "Danh gia cao"
+        - generic [ref=e54]:
+          - complementary [ref=e56]:
+            - heading "Bo loc" [level=3] [ref=e57]
+            - generic [ref=e58]:
+              - button "Danh muc san pham" [ref=e59] [cursor=pointer]:
+                - text: Danh muc san pham
+                - img [ref=e60]
+              - generic [ref=e62]:
+                - link "San pham moi" [ref=e63] [cursor=pointer]:
+                  - /url: /danh-muc/san-pham-moi
+                  - generic [ref=e64]: San pham moi
+                - link "Danh muc sale" [ref=e65] [cursor=pointer]:
+                  - /url: /danh-muc/sale
+                  - generic [ref=e66]: Danh muc sale
+                - link "Ao nam ›" [ref=e67] [cursor=pointer]:
+                  - /url: /danh-muc/ao-nam
+                  - generic [ref=e68]: Ao nam
+                  - generic [ref=e69]: ›
+                - link "Quan nam ›" [ref=e70] [cursor=pointer]:
+                  - /url: /danh-muc/quan-nam
+                  - generic [ref=e71]: Quan nam
+                  - generic [ref=e72]: ›
+                - link "Phu kien ›" [ref=e73] [cursor=pointer]:
+                  - /url: /danh-muc/phu-kien
+                  - generic [ref=e74]: Phu kien
+                  - generic [ref=e75]: ›
+            - generic [ref=e76]:
+              - button "Khoang gia" [ref=e77] [cursor=pointer]:
+                - text: Khoang gia
+                - img [ref=e78]
+              - generic [ref=e80]:
+                - slider [ref=e83] [cursor=pointer]: "0"
+                - slider [ref=e84] [cursor=pointer]: "3000000"
+                - generic [ref=e85]:
+                  - textbox [ref=e87]: 0 ₫
+                  - generic [ref=e88]: —
+                  - textbox [ref=e90]: 3.000.000 ₫
+            - button "Mau sac" [ref=e92] [cursor=pointer]:
+              - text: Mau sac
+              - img [ref=e93]
+            - generic [ref=e94]:
+              - button "Size" [ref=e95] [cursor=pointer]:
+                - text: Size
+                - img [ref=e96]
+              - generic [ref=e98]:
+                - button "S" [ref=e99] [cursor=pointer]
+                - button "M" [ref=e100] [cursor=pointer]
+                - button "L" [ref=e101] [cursor=pointer]
+                - button "XL" [ref=e102] [cursor=pointer]
+                - button "XXL" [ref=e103] [cursor=pointer]
+                - button "36" [ref=e104] [cursor=pointer]
+                - button "37" [ref=e105] [cursor=pointer]
+                - button "38" [ref=e106] [cursor=pointer]
+                - button "39" [ref=e107] [cursor=pointer]
+          - generic [ref=e108]:
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - generic [ref=e112] [cursor=pointer]:
+                  - generic [ref=e113]: "-21%"
+                  - img "Ao Polo Nam Cao Cap Classic Fit" [ref=e114]
+                  - img "Ao Polo Nam Cao Cap Classic Fit - 2" [ref=e115]
+                  - button "Them yeu thich" [ref=e116]:
+                    - img [ref=e117]
+                  - generic [ref=e119]:
+                    - button "THEM VAO GIO" [ref=e120]:
+                      - img [ref=e121]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e124]:
+                      - img [ref=e125]
+                - generic [ref=e128]:
+                  - generic [ref=e129]: +1 Mau sac
+                  - generic [ref=e130]: +3 Kich thuoc
+                - link "Ao Polo Nam Cao Cap Classic Fit" [ref=e131] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-1
+                  - heading "Ao Polo Nam Cao Cap Classic Fit" [level=3] [ref=e132]
+                - generic [ref=e133]:
+                  - generic [ref=e134]: 590.000 ₫
+                  - generic [ref=e135]: 750.000 ₫
+              - generic [ref=e136]:
+                - generic [ref=e138] [cursor=pointer]:
+                  - generic [ref=e139]: NEW
+                  - img "Ao So Mi Nam Slim Fit Oxford" [ref=e140]
+                  - img "Ao So Mi Nam Slim Fit Oxford - 2" [ref=e141]
+                  - button "Them yeu thich" [ref=e142]:
+                    - img [ref=e143]
+                  - generic [ref=e145]:
+                    - button "THEM VAO GIO" [ref=e146]:
+                      - img [ref=e147]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e150]:
+                      - img [ref=e151]
+                - generic [ref=e154]:
+                  - generic [ref=e155]: +2 Mau sac
+                  - generic [ref=e156]: +4 Kich thuoc
+                - link "Ao So Mi Nam Slim Fit Oxford" [ref=e157] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-2
+                  - heading "Ao So Mi Nam Slim Fit Oxford" [level=3] [ref=e158]
+                - generic [ref=e159]:
+                  - generic [ref=e160]: 450.000 ₫
+                  - generic [ref=e161]: 590.000 ₫
+              - generic [ref=e162]:
+                - generic [ref=e164] [cursor=pointer]:
+                  - generic [ref=e165]: NEW
+                  - img "Quan Tay Nam Lich Lam Wool Blend" [ref=e166]
+                  - img "Quan Tay Nam Lich Lam Wool Blend - 2" [ref=e167]
+                  - button "Them yeu thich" [ref=e168]:
+                    - img [ref=e169]
+                  - generic [ref=e171]:
+                    - button "THEM VAO GIO" [ref=e172]:
+                      - img [ref=e173]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e176]:
+                      - img [ref=e177]
+                - generic [ref=e180]:
+                  - generic [ref=e181]: +3 Mau sac
+                  - generic [ref=e182]: +3 Kich thuoc
+                - link "Quan Tay Nam Lich Lam Wool Blend" [ref=e183] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-3
+                  - heading "Quan Tay Nam Lich Lam Wool Blend" [level=3] [ref=e184]
+                - generic [ref=e185]:
+                  - generic [ref=e186]: 890.000 ₫
+                  - generic [ref=e187]: 1.190.000 ₫
+              - generic [ref=e188]:
+                - generic [ref=e190] [cursor=pointer]:
+                  - generic [ref=e191]: "-18%"
+                  - img "Quan Jeans Nam Straight Fit" [ref=e192]
+                  - img "Quan Jeans Nam Straight Fit - 2" [ref=e193]
+                  - button "Them yeu thich" [ref=e194]:
+                    - img [ref=e195]
+                  - generic [ref=e197]:
+                    - button "THEM VAO GIO" [ref=e198]:
+                      - img [ref=e199]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e202]:
+                      - img [ref=e203]
+                - generic [ref=e206]:
+                  - generic [ref=e207]: +1 Mau sac
+                  - generic [ref=e208]: +4 Kich thuoc
+                - link "Quan Jeans Nam Straight Fit" [ref=e209] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-4
+                  - heading "Quan Jeans Nam Straight Fit" [level=3] [ref=e210]
+                - generic [ref=e211]:
+                  - generic [ref=e212]: 650.000 ₫
+                  - generic [ref=e213]: 790.000 ₫
+              - generic [ref=e214]:
+                - generic [ref=e216] [cursor=pointer]:
+                  - img "Ao Khoac Blazer Nam 2 Lop" [ref=e217]
+                  - img "Ao Khoac Blazer Nam 2 Lop - 2" [ref=e218]
+                  - button "Them yeu thich" [ref=e219]:
+                    - img [ref=e220]
+                  - generic [ref=e222]:
+                    - button "THEM VAO GIO" [ref=e223]:
+                      - img [ref=e224]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e227]:
+                      - img [ref=e228]
+                - generic [ref=e231]:
+                  - generic [ref=e232]: +2 Mau sac
+                  - generic [ref=e233]: +3 Kich thuoc
+                - link "Ao Khoac Blazer Nam 2 Lop" [ref=e234] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-5
+                  - heading "Ao Khoac Blazer Nam 2 Lop" [level=3] [ref=e235]
+                - generic [ref=e236]:
+                  - generic [ref=e237]: 1.290.000 ₫
+                  - generic [ref=e238]: 1.590.000 ₫
+              - generic [ref=e239]:
+                - generic [ref=e241] [cursor=pointer]:
+                  - img "Ao Thun Nam Cotton Premium" [ref=e242]
+                  - img "Ao Thun Nam Cotton Premium - 2" [ref=e243]
+                  - button "Them yeu thich" [ref=e244]:
+                    - img [ref=e245]
+                  - generic [ref=e247]:
+                    - button "THEM VAO GIO" [ref=e248]:
+                      - img [ref=e249]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e252]:
+                      - img [ref=e253]
+                - generic [ref=e256]:
+                  - generic [ref=e257]: +3 Mau sac
+                  - generic [ref=e258]: +4 Kich thuoc
+                - link "Ao Thun Nam Cotton Premium" [ref=e259] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-6
+                  - heading "Ao Thun Nam Cotton Premium" [level=3] [ref=e260]
+                - generic [ref=e261]:
+                  - generic [ref=e262]: 350.000 ₫
+                  - generic [ref=e263]: 450.000 ₫
+              - generic [ref=e264]:
+                - generic [ref=e266] [cursor=pointer]:
+                  - generic [ref=e267]: "-25%"
+                  - img "Quan Short Nam Chino" [ref=e268]
+                  - img "Quan Short Nam Chino - 2" [ref=e269]
+                  - button "Them yeu thich" [ref=e270]:
+                    - img [ref=e271]
+                  - generic [ref=e273]:
+                    - button "THEM VAO GIO" [ref=e274]:
+                      - img [ref=e275]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e278]:
+                      - img [ref=e279]
+                - generic [ref=e282]:
+                  - generic [ref=e283]: +1 Mau sac
+                  - generic [ref=e284]: +3 Kich thuoc
+                - link "Quan Short Nam Chino" [ref=e285] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-7
+                  - heading "Quan Short Nam Chino" [level=3] [ref=e286]
+                - generic [ref=e287]:
+                  - generic [ref=e288]: 490.000 ₫
+                  - generic [ref=e289]: 650.000 ₫
+              - generic [ref=e290]:
+                - generic [ref=e292] [cursor=pointer]:
+                  - generic [ref=e293]: HET HANG
+                  - img "Ao Vest Nam Cao Cap Italian Wool" [ref=e294]
+                  - img "Ao Vest Nam Cao Cap Italian Wool - 2" [ref=e295]
+                  - button "Them yeu thich" [ref=e296]:
+                    - img [ref=e297]
+                - generic [ref=e299]:
+                  - generic [ref=e300]: +2 Mau sac
+                  - generic [ref=e301]: +4 Kich thuoc
+                - link "Ao Vest Nam Cao Cap Italian Wool" [ref=e302] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-8
+                  - heading "Ao Vest Nam Cao Cap Italian Wool" [level=3] [ref=e303]
+                - generic [ref=e304]:
+                  - generic [ref=e305]: 2.490.000 ₫
+                  - generic [ref=e306]: 2.990.000 ₫
+              - generic [ref=e307]:
+                - generic [ref=e309] [cursor=pointer]:
+                  - img "Ao Polo Nam Cao Cap Classic Fit" [ref=e310]
+                  - img "Ao Polo Nam Cao Cap Classic Fit - 2" [ref=e311]
+                  - button "Them yeu thich" [ref=e312]:
+                    - img [ref=e313]
+                  - generic [ref=e315]:
+                    - button "THEM VAO GIO" [ref=e316]:
+                      - img [ref=e317]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e320]:
+                      - img [ref=e321]
+                - generic [ref=e324]:
+                  - generic [ref=e325]: +3 Mau sac
+                  - generic [ref=e326]: +3 Kich thuoc
+                - link "Ao Polo Nam Cao Cap Classic Fit" [ref=e327] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-9
+                  - heading "Ao Polo Nam Cao Cap Classic Fit" [level=3] [ref=e328]
+                - generic [ref=e329]:
+                  - generic [ref=e330]: 590.000 ₫
+                  - generic [ref=e331]: 750.000 ₫
+              - generic [ref=e332]:
+                - generic [ref=e334] [cursor=pointer]:
+                  - generic [ref=e335]: "-24%"
+                  - img "Ao So Mi Nam Slim Fit Oxford" [ref=e336]
+                  - img "Ao So Mi Nam Slim Fit Oxford - 2" [ref=e337]
+                  - button "Them yeu thich" [ref=e338]:
+                    - img [ref=e339]
+                  - generic [ref=e341]:
+                    - button "THEM VAO GIO" [ref=e342]:
+                      - img [ref=e343]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e346]:
+                      - img [ref=e347]
+                - generic [ref=e350]:
+                  - generic [ref=e351]: +1 Mau sac
+                  - generic [ref=e352]: +4 Kich thuoc
+                - link "Ao So Mi Nam Slim Fit Oxford" [ref=e353] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-10
+                  - heading "Ao So Mi Nam Slim Fit Oxford" [level=3] [ref=e354]
+                - generic [ref=e355]:
+                  - generic [ref=e356]: 450.000 ₫
+                  - generic [ref=e357]: 590.000 ₫
+              - generic [ref=e358]:
+                - generic [ref=e360] [cursor=pointer]:
+                  - img "Quan Tay Nam Lich Lam Wool Blend" [ref=e361]
+                  - img "Quan Tay Nam Lich Lam Wool Blend - 2" [ref=e362]
+                  - button "Them yeu thich" [ref=e363]:
+                    - img [ref=e364]
+                  - generic [ref=e366]:
+                    - button "THEM VAO GIO" [ref=e367]:
+                      - img [ref=e368]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e371]:
+                      - img [ref=e372]
+                - generic [ref=e375]:
+                  - generic [ref=e376]: +2 Mau sac
+                  - generic [ref=e377]: +3 Kich thuoc
+                - link "Quan Tay Nam Lich Lam Wool Blend" [ref=e378] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-11
+                  - heading "Quan Tay Nam Lich Lam Wool Blend" [level=3] [ref=e379]
+                - generic [ref=e380]:
+                  - generic [ref=e381]: 890.000 ₫
+                  - generic [ref=e382]: 1.190.000 ₫
+              - generic [ref=e383]:
+                - generic [ref=e385] [cursor=pointer]:
+                  - img "Quan Jeans Nam Straight Fit" [ref=e386]
+                  - img "Quan Jeans Nam Straight Fit - 2" [ref=e387]
+                  - button "Them yeu thich" [ref=e388]:
+                    - img [ref=e389]
+                  - generic [ref=e391]:
+                    - button "THEM VAO GIO" [ref=e392]:
+                      - img [ref=e393]
+                      - text: THEM VAO GIO
+                    - button "Xem chi tiet" [ref=e396]:
+                      - img [ref=e397]
+                - generic [ref=e400]:
+                  - generic [ref=e401]: +3 Mau sac
+                  - generic [ref=e402]: +4 Kich thuoc
+                - link "Quan Jeans Nam Straight Fit" [ref=e403] [cursor=pointer]:
+                  - /url: /san-pham/san-pham-12
+                  - heading "Quan Jeans Nam Straight Fit" [level=3] [ref=e404]
+                - generic [ref=e405]:
+                  - generic [ref=e406]: 650.000 ₫
+                  - generic [ref=e407]: 790.000 ₫
+            - button "XEM THEM" [ref=e409] [cursor=pointer]
+    - contentinfo [ref=e410]:
+      - generic [ref=e411]:
+        - generic [ref=e412]:
+          - heading "FASHION ECOM" [level=3] [ref=e413]
+          - paragraph [ref=e414]: Thoi trang nam cao cap
+        - generic [ref=e415]:
+          - heading "HO TRO" [level=4] [ref=e416]
+          - list [ref=e417]:
+            - listitem [ref=e418]:
+              - link "Chinh sach van chuyen" [ref=e419] [cursor=pointer]:
+                - /url: /chinh-sach/van-chuyen
+            - listitem [ref=e420]:
+              - link "Chinh sach doi tra" [ref=e421] [cursor=pointer]:
+                - /url: /chinh-sach/doi-tra
+            - listitem [ref=e422]:
+              - link "Chinh sach bao mat" [ref=e423] [cursor=pointer]:
+                - /url: /chinh-sach/bao-mat
+        - generic [ref=e424]:
+          - heading "LIEN HE" [level=4] [ref=e425]
+          - list [ref=e426]:
+            - listitem [ref=e427]: "Hotline: 1900-xxxx"
+            - listitem [ref=e428]: "Email: support@fashionecom.vn"
+        - generic [ref=e429]:
+          - heading "THANH TOAN" [level=4] [ref=e430]
+          - paragraph [ref=e431]: COD | MoMo | VNPAY | ZaloPay
+  - alert [ref=e432]

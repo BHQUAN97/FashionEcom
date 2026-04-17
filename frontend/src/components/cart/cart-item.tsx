@@ -63,7 +63,7 @@ export function CartItemRow({ item, onUpdateQty, onRemove }: CartItemProps) {
       <button
         onClick={onRemove}
         className="self-start p-1.5 text-gray-400 hover:text-red-600 transition"
-        aria-label="Xoa san pham"
+        aria-label="Xóa sản phẩm"
       >
         <Trash2 className="w-4 h-4" />
       </button>

@@ -27,6 +27,7 @@ export class CustomersController {
   }
 
   @Get(':id/orders')
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.MANAGER)
   async getOrderHistory(
     @Param('id') id: string,
     @Query('page') page?: string,
@@ -34,12 +35,13 @@ export class CustomersController {
   ) {
     return this.customersService.getOrderHistory(
       id,
-      page ? parseInt(page) : 1,
-      limit ? parseInt(limit) : 10,
+      page ? (parseInt(page) || 1) : 1,
+      limit ? Math.min(parseInt(limit) || 10, 100) : 10,
     );
   }
 
   @Get(':id/addresses')
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
   async getAddresses(@Param('id') id: string) {
     const data = await this.customersService.getAddresses(id);
     return { data, message: 'OK' };

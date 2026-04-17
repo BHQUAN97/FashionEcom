@@ -1,60 +1,79 @@
-'use client';
-
+import dynamic from 'next/dynamic';
 import { HeroBanner } from '@/components/home/hero-banner';
 import { CategoryGrid } from '@/components/home/category-grid';
-import { SaleCarousel } from '@/components/home/sale-carousel';
-import { CollectionBanner } from '@/components/home/collection-banner';
-import { FeaturedProducts } from '@/components/home/featured-products';
-import { OutfitOfDay } from '@/components/home/outfit-of-day';
-import { CategoryProductTabs } from '@/components/home/category-product-tabs';
-import { FlashSaleCountdown } from '@/components/home/flash-sale-countdown';
-import { TrustBar } from '@/components/home/trust-bar';
-import { NewsletterSignup } from '@/components/home/newsletter-signup';
 import {
   MOCK_HERO_SLIDES,
   MOCK_FLASH_SALE,
   MOCK_PRODUCTS,
+  MOCK_CATEGORIES,
   MOCK_TRUST_BAR,
 } from '@/lib/mock/data';
 
-// Placeholder image helper
-const IMG = (w: number, h: number, text = '') =>
-  `https://placehold.co/${w}x${h}/e5e7eb/9ca3af.png?text=${encodeURIComponent(text || `${w}x${h}`)}`;
+// Below-the-fold — lazy load, chi tai khi user scroll xuong
+const FlashSaleCountdown = dynamic(
+  () => import('@/components/home/flash-sale-countdown').then(m => ({ default: m.FlashSaleCountdown })),
+  { ssr: false },
+);
+const SaleCarousel = dynamic(
+  () => import('@/components/home/sale-carousel').then(m => ({ default: m.SaleCarousel })),
+  { ssr: false },
+);
+const CollectionBanner = dynamic(
+  () => import('@/components/home/collection-banner').then(m => ({ default: m.CollectionBanner })),
+);
+const FeaturedProducts = dynamic(
+  () => import('@/components/home/featured-products').then(m => ({ default: m.FeaturedProducts })),
+  { ssr: false },
+);
+const OutfitOfDay = dynamic(
+  () => import('@/components/home/outfit-of-day').then(m => ({ default: m.OutfitOfDay })),
+);
+const CategoryProductTabs = dynamic(
+  () => import('@/components/home/category-product-tabs').then(m => ({ default: m.CategoryProductTabs })),
+  { ssr: false },
+);
+const TrustBar = dynamic(
+  () => import('@/components/home/trust-bar').then(m => ({ default: m.TrustBar })),
+);
+const NewsletterSignup = dynamic(
+  () => import('@/components/home/newsletter-signup').then(m => ({ default: m.NewsletterSignup })),
+  { ssr: false },
+);
 
-// --- Mock data cho cac section moi ---
+// --- Section data tu mock ---
 
-/** Danh muc grid — 4 danh muc chinh voi lifestyle images */
-const CATEGORY_GRID = [
-  { id: '1', name: 'Polo', slug: 'ao-polo', image: IMG(600, 800, 'Polo') },
-  { id: '2', name: 'Ao Thun', slug: 'ao-thun', image: IMG(600, 800, 'Ao+Thun') },
-  { id: '3', name: 'Quan Short', slug: 'quan-short', image: IMG(600, 800, 'Quan+Short') },
-  { id: '4', name: 'Quan Au', slug: 'quan-tay', image: IMG(600, 800, 'Quan+Au') },
-];
+/** Danh muc grid — 8 danh muc chinh Torano */
+const CATEGORY_GRID = MOCK_CATEGORIES.slice(0, 8).map((c) => ({
+  id: c.id,
+  name: c.name,
+  slug: c.slug,
+  image: c.image,
+}));
 
 /** San pham khuyen mai — loc san pham dang sale */
 const SALE_PRODUCTS = MOCK_PRODUCTS.filter((p) => p.is_sale);
 
-/** Tabs san pham noi bat */
+/** Tabs san pham noi bat — chia theo loai san pham */
 const FEATURED_TABS = [
-  { label: 'SẢN PHẨM NỔI BẬT', products: MOCK_PRODUCTS.slice(0, 10) },
-  { label: 'ĐỒ THU ĐÔNG', products: MOCK_PRODUCTS.slice(4, 14) },
-  { label: 'ĐỒ CÔNG SỞ', products: MOCK_PRODUCTS.slice(2, 12) },
-  { label: 'ĐỒ THỂ THAO', products: MOCK_PRODUCTS.slice(6, 16) },
+  { label: 'SẢN PHẨM NỔI BẬT', products: MOCK_PRODUCTS.filter((p) => p.is_bestseller || p.is_new).slice(0, 10) },
+  { label: 'ÁO POLO', products: MOCK_PRODUCTS.slice(0, 6) },
+  { label: 'ÁO KHOÁC', products: MOCK_PRODUCTS.slice(24, 30) },
+  { label: 'QUẦN ÂU & JEANS', products: MOCK_PRODUCTS.slice(18, 24) },
 ];
 
-/** Outfit of the day */
+/** Outfit of the day — anh set combo Torano */
 const OUTFITS = [
-  { id: 'o1', image: IMG(600, 800, 'OUTFIT+DI+LAM'), label: 'OUTFIT DI LAM', link: '/bo-suu-tap/di-lam' },
-  { id: 'o2', image: IMG(600, 800, 'OUTFIT+DI+CHOI'), label: 'OUTFIT DI CHOI', link: '/bo-suu-tap/di-choi' },
-  { id: 'o3', image: IMG(600, 800, 'OUTFIT+LICH+LAM'), label: 'OUTFIT LICH LAM', link: '/bo-suu-tap/lich-lam' },
+  { id: 'o1', image: '/images/theme/home_set_combo_1_img.jpg', label: 'OUTFIT ĐI LÀM', link: '/danh-muc/ao-polo' },
+  { id: 'o2', image: '/images/theme/home_set_combo_2_img.jpg', label: 'OUTFIT ĐI CHƠI', link: '/danh-muc/ao-thun' },
+  { id: 'o3', image: '/images/theme/home_set_combo_3_img.jpg', label: 'OUTFIT LỊCH LÃM', link: '/danh-muc/ao-khoac' },
 ];
 
 /** Category tabs — danh muc san pham chi tiet */
 const CATEGORY_TABS = [
-  { label: 'Ao Polo', slug: 'ao-polo', products: MOCK_PRODUCTS.slice(0, 5) },
-  { label: 'Quan Short', slug: 'quan-short', products: MOCK_PRODUCTS.slice(5, 10) },
-  { label: 'So mi - Quan dai', slug: 'ao-so-mi', products: MOCK_PRODUCTS.slice(10, 15) },
-  { label: 'Ao Khoac', slug: 'ao-khoac', products: MOCK_PRODUCTS.slice(15, 20) },
+  { label: 'Áo Polo', slug: 'ao-polo', products: MOCK_PRODUCTS.slice(0, 6) },
+  { label: 'Quần Short', slug: 'quan-short', products: MOCK_PRODUCTS.slice(12, 18) },
+  { label: 'Áo Sơ Mi', slug: 'ao-so-mi', products: MOCK_PRODUCTS.slice(30, 36) },
+  { label: 'Áo Khoác', slug: 'ao-khoac', products: MOCK_PRODUCTS.slice(24, 30) },
 ];
 
 /**
@@ -65,40 +84,40 @@ const CATEGORY_TABS = [
 export default function HomePage() {
   return (
     <div>
-      {/* 1. Hero Banner — swipe carousel, giu nguyen */}
+      {/* 1. Hero Banner — above-the-fold, load ngay */}
       <HeroBanner slides={MOCK_HERO_SLIDES} />
 
-      {/* 2. DANH MUC SAN PHAM — 4-column image grid */}
+      {/* 2. DANH MUC SAN PHAM — above-the-fold, load ngay */}
       <CategoryGrid categories={CATEGORY_GRID} />
 
-      {/* 3. Flash Sale — countdown + product scroll */}
+      {/* 3. Flash Sale — lazy load, co carousel + timer */}
       <FlashSaleCountdown data={MOCK_FLASH_SALE} />
 
-      {/* 4. SAN PHAM KHUYEN MAI — horizontal carousel voi arrows */}
+      {/* 4. SAN PHAM KHUYEN MAI — lazy load */}
       <SaleCarousel products={SALE_PRODUCTS} />
 
-      {/* 5. BST Banner — full-width lifestyle banner */}
+      {/* 5. BST Banner — lazy load */}
       <CollectionBanner
-        image={IMG(1440, 400, 'BO+SUU+TAP+HE+2026')}
+        image="/images/theme/a1.png"
         title="BỘ SƯU TẬP HÈ 2026"
         subtitle="NEW COLLECTION"
         ctaText="KHÁM PHÁ NGAY"
         ctaLink="/bo-suu-tap/he-2026"
       />
 
-      {/* 6. SAN PHAM NOI BAT — tabbed product grid */}
+      {/* 6. SAN PHAM NOI BAT — lazy load */}
       <FeaturedProducts tabs={FEATURED_TABS} />
 
-      {/* 7. OUTFIT OF THE DAY — 3-column lifestyle images */}
+      {/* 7. OUTFIT OF THE DAY — lazy load */}
       <OutfitOfDay outfits={OUTFITS} />
 
-      {/* 8. Category Tabs — danh muc san pham chi tiet */}
+      {/* 8. Category Tabs — lazy load */}
       <CategoryProductTabs tabs={CATEGORY_TABS} />
 
-      {/* 9. Trust Bar */}
+      {/* 9. Trust Bar — lazy load */}
       <TrustBar items={MOCK_TRUST_BAR} />
 
-      {/* 10. Newsletter */}
+      {/* 10. Newsletter — lazy load */}
       <NewsletterSignup />
     </div>
   );

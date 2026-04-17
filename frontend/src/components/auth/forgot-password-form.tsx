@@ -25,12 +25,12 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="text-center space-y-3">
-        <h2 className="text-xl font-bold">Kiem tra email</h2>
+        <h2 className="text-xl font-bold">Kiểm tra email</h2>
         <p className="text-sm text-gray-500">
-          Chung toi da gui huong dan dat lai mat khau den <span className="font-medium text-black">{email}</span>
+          Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến <span className="font-medium text-black">{email}</span>
         </p>
         <Link href={ROUTES.LOGIN} className="text-sm text-red-600 hover:underline">
-          Quay lai dang nhap
+          Quay lại đăng nhập
         </Link>
       </div>
     );
@@ -38,9 +38,9 @@ export function ForgotPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold text-center">Quen mat khau</h2>
+      <h2 className="text-xl font-bold text-center">Quên mật khẩu</h2>
       <p className="text-sm text-gray-500 text-center">
-        Nhap email de nhan huong dan dat lai mat khau
+        Nhập email để nhận hướng dẫn đặt lại mật khẩu
       </p>
 
       <div>
@@ -49,11 +49,11 @@ export function ForgotPasswordForm() {
       </div>
 
       <button type="submit" disabled={loading} className="w-full py-2.5 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition disabled:opacity-50">
-        {loading ? 'Dang gui...' : 'GUI HUONG DAN'}
+        {loading ? 'Đang gửi...' : 'GỬI HƯỚNG DẪN'}
       </button>
 
       <p className="text-sm text-center">
-        <Link href={ROUTES.LOGIN} className="text-gray-500 hover:underline">Quay lai dang nhap</Link>
+        <Link href={ROUTES.LOGIN} className="text-gray-500 hover:underline">Quay lại đăng nhập</Link>
       </p>
     </form>
   );

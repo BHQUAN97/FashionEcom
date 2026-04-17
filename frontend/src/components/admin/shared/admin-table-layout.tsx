@@ -10,10 +10,15 @@ interface AdminTableLayoutProps {
   filters?: ReactNode;
   /** Dang tai du lieu */
   loading?: boolean;
+  /** Loi fetch du lieu — hien banner do o tren table (backward compat: optional) */
+  error?: Error | string | null;
   children: ReactNode;
 }
 
-export function AdminTableLayout({ title, actions, filters, loading, children }: AdminTableLayoutProps) {
+export function AdminTableLayout({ title, actions, filters, loading, error, children }: AdminTableLayoutProps) {
+  // Chuan hoa error message — ho tro ca string va Error instance
+  const errorMessage = error ? (typeof error === 'string' ? error : error.message) : null;
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -24,6 +29,13 @@ export function AdminTableLayout({ title, actions, filters, loading, children }:
 
       {/* Filters */}
       {filters && <div className="flex flex-wrap items-center gap-2">{filters}</div>}
+
+      {/* Banner loi — hien truoc content de user biet du lieu khong load duoc */}
+      {errorMessage && (
+        <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+          Khong tai duoc du lieu: {errorMessage}
+        </div>
+      )}
 
       {/* Content */}
       {loading ? (

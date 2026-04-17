@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { OrdersService } from './orders.service';
 import { OrderEntity } from './entities/order.entity';
 import { OrderItemEntity } from './entities/order-item.entity';
@@ -12,6 +13,12 @@ describe('OrdersService', () => {
   let orderRepo: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let timelineRepo: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let itemRepo: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let queryRunner: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let queryRunnerManager: any;
 
   // Helper: tao mock order
   const makeOrder = (overrides: Partial<OrderEntity> = {}): OrderEntity =>
@@ -37,6 +44,7 @@ describe('OrdersService', () => {
   const mockQb = () => {
     const qb: Record<string, jest.Mock> = {};
     qb.andWhere = jest.fn().mockReturnValue(qb);
+    qb.where = jest.fn().mockReturnValue(qb);
     qb.orderBy = jest.fn().mockReturnValue(qb);
     qb.skip = jest.fn().mockReturnValue(qb);
     qb.take = jest.fn().mockReturnValue(qb);
@@ -65,12 +73,40 @@ describe('OrdersService', () => {
       find: jest.fn().mockResolvedValue([]),
     };
 
+    itemRepo = {
+      find: jest.fn().mockResolvedValue([]),
+    };
+
+    // Mock queryRunner.manager — service gio dung queryRunner.manager.save thay vi repo.save
+    queryRunnerManager = {
+      save: jest.fn().mockImplementation((_entity, data) => Promise.resolve(data)),
+      update: jest.fn(),
+      find: jest.fn().mockResolvedValue([]),
+      findOne: jest.fn(),
+      query: jest.fn().mockResolvedValue([]),
+    };
+
+    queryRunner = {
+      connect: jest.fn(),
+      startTransaction: jest.fn(),
+      commitTransaction: jest.fn(),
+      rollbackTransaction: jest.fn(),
+      release: jest.fn(),
+      manager: queryRunnerManager,
+    };
+
+    const mockDataSource = {
+      createQueryRunner: jest.fn().mockReturnValue(queryRunner),
+      query: jest.fn().mockResolvedValue([]),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OrdersService,
         { provide: getRepositoryToken(OrderEntity), useValue: orderRepo },
-        { provide: getRepositoryToken(OrderItemEntity), useValue: {} },
+        { provide: getRepositoryToken(OrderItemEntity), useValue: itemRepo },
         { provide: getRepositoryToken(OrderTimelineEntity), useValue: timelineRepo },
+        { provide: DataSource, useValue: mockDataSource },
       ],
     }).compile();
 
@@ -87,7 +123,13 @@ describe('OrdersService', () => {
 
       const result = await service.updateStatus('order-1', { status: 1 }, 'admin');
       expect(result.salOrderStatus).toBe(1);
-      expect(orderRepo.save).toHaveBeenCalledWith(expect.objectContaining({ salOrderStatus: 1 }));
+      // Service gio save qua queryRunner.manager.save(OrderEntity, order) trong transaction
+      expect(queryRunnerManager.save).toHaveBeenCalledWith(
+        OrderEntity,
+        expect.objectContaining({ salOrderStatus: 1 }),
+      );
+      expect(queryRunner.commitTransaction).toHaveBeenCalled();
+      expect(queryRunner.rollbackTransaction).not.toHaveBeenCalled();
     });
 
     it('cho phep Pending(0) -> Cancelled(5)', async () => {
@@ -180,13 +222,17 @@ describe('OrdersService', () => {
         expect.objectContaining({
           salOrderId: 'order-1',
           salOrderTimelineStep: 1,
-          salOrderTimelineStatus: 'Da xac nhan',
-          salOrderTimelineLabel: 'Da xac nhan',
+          salOrderTimelineStatus: 'Đã xác nhận',
+          salOrderTimelineLabel: 'Đã xác nhận',
           salOrderTimelineNote: 'Xac nhan nhanh',
           salOrderTimelineActor: 'staff-1',
         }),
       );
-      expect(timelineRepo.save).toHaveBeenCalled();
+      // Timeline entity duoc save qua queryRunner.manager (trong transaction)
+      expect(queryRunnerManager.save).toHaveBeenCalledWith(
+        OrderTimelineEntity,
+        expect.objectContaining({ salOrderTimelineActor: 'staff-1' }),
+      );
     });
 
     it('timeline note la null khi khong truyen', async () => {
@@ -236,7 +282,7 @@ describe('OrdersService', () => {
         'admin',
       );
 
-      expect(result).toEqual({ processed: 2, total: 2 });
+      expect(result).toEqual(expect.objectContaining({ processed: 2, failed: 0, total: 2 }));
     });
 
     it('cancel hang loat', async () => {
@@ -252,8 +298,9 @@ describe('OrdersService', () => {
     });
 
     it('throw BadRequest khi action khong hop le', async () => {
+      // DTO @IsIn se chan truoc, nhung service van throw neu nhan gia tri la
       await expect(
-        service.bulkAction({ ids: ['o1'], action: 'refund' }, 'admin'),
+        service.bulkAction({ ids: ['o1'], action: 'refund' as never }, 'admin'),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -270,7 +317,7 @@ describe('OrdersService', () => {
         'admin',
       );
 
-      expect(result).toEqual({ processed: 1, total: 2 });
+      expect(result).toEqual(expect.objectContaining({ processed: 1, failed: 1, total: 2 }));
     });
   });
 
@@ -299,7 +346,13 @@ describe('OrdersService', () => {
   describe('findAll', () => {
     it('gioi han limit toi da 100', async () => {
       const qb = mockQb();
-      orderRepo.createQueryBuilder.mockReturnValue(qb);
+      const statsQb = mockQb();
+      const shipStatsQb = mockQb();
+      orderRepo.createQueryBuilder
+        .mockReturnValueOnce(qb)
+        .mockReturnValueOnce(statsQb)
+        .mockReturnValueOnce(shipStatsQb);
+      orderRepo.count = jest.fn().mockResolvedValue(0);
 
       await service.findAll({ limit: 200 } as any);
 
@@ -308,7 +361,13 @@ describe('OrdersService', () => {
 
     it('ap dung filter search, status, date range', async () => {
       const qb = mockQb();
-      orderRepo.createQueryBuilder.mockReturnValue(qb);
+      const statsQb = mockQb();
+      const shipStatsQb = mockQb();
+      orderRepo.createQueryBuilder
+        .mockReturnValueOnce(qb)
+        .mockReturnValueOnce(statsQb)
+        .mockReturnValueOnce(shipStatsQb);
+      orderRepo.count = jest.fn().mockResolvedValue(0);
 
       await service.findAll({
         search: 'DH-001',
@@ -324,13 +383,17 @@ describe('OrdersService', () => {
     it('tra ve stats grouped by status', async () => {
       const qb = mockQb();
       const statsQb = mockQb();
+      const shipStatsQb = mockQb();
       statsQb.getRawMany.mockResolvedValue([
         { status: 0, count: '5' },
         { status: 1, count: '3' },
       ]);
+      shipStatsQb.getRawMany.mockResolvedValue([]);
       orderRepo.createQueryBuilder
         .mockReturnValueOnce(qb)
-        .mockReturnValueOnce(statsQb);
+        .mockReturnValueOnce(statsQb)
+        .mockReturnValueOnce(shipStatsQb);
+      orderRepo.count = jest.fn().mockResolvedValue(0);
 
       const result = await service.findAll({} as any);
 
@@ -348,17 +411,26 @@ describe('OrdersService', () => {
     });
 
     it('sort timeline DESC khi co data', async () => {
-      const order = makeOrder({
-        timeline: [
-          { createdDate: new Date('2026-01-01') } as any,
-          { createdDate: new Date('2026-01-03') } as any,
-          { createdDate: new Date('2026-01-02') } as any,
-        ],
-      });
+      // Service gio query timeline rieng qua timelineRepo.find (LIMIT 20, DESC)
+      const order = makeOrder({ timeline: [] });
       orderRepo.findOne.mockResolvedValue(order);
+
+      // Repo tra timeline da sort DESC (database handle sort qua order clause)
+      const sortedTimeline = [
+        { createdDate: new Date('2026-01-03') } as any,
+        { createdDate: new Date('2026-01-02') } as any,
+        { createdDate: new Date('2026-01-01') } as any,
+      ];
+      timelineRepo.find.mockResolvedValue(sortedTimeline);
 
       const result = await service.findOne('order-1');
 
+      // Verify goi find voi sort DESC + take 20
+      expect(timelineRepo.find).toHaveBeenCalledWith({
+        where: { salOrderId: 'order-1' },
+        order: { createdDate: 'DESC' },
+        take: 20,
+      });
       // Timeline[0] phai la moi nhat (01-03)
       expect(result.timeline[0].createdDate).toEqual(new Date('2026-01-03'));
       expect(result.timeline[2].createdDate).toEqual(new Date('2026-01-01'));

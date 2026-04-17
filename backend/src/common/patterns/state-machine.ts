@@ -63,7 +63,7 @@ export class StateMachine<TState extends number | string> {
       const fromLabel = this.labels[from] || from;
       const toLabel = this.labels[to] || to;
       throw new Error(
-        `Khong the chuyen tu "${fromLabel}" sang "${toLabel}"`,
+        `Không thể chuyển từ "${fromLabel}" sang "${toLabel}"`,
       );
     }
     if (t.onTransition) {

@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { Repository } from 'typeorm';
 import { OrderEntity } from '../orders/entities/order.entity';
 import { CustomerEntity } from '../customers/entities/customer.entity';
@@ -7,6 +9,9 @@ import { InventoryLevelEntity } from '../inventory/entities/inventory-level.enti
 
 @Injectable()
 export class DashboardService {
+  // TTL cho KPI cache — 10 phut (milliseconds cho cache-manager v7)
+  private static readonly KPI_TTL_MS = 600_000;
+
   constructor(
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
@@ -14,13 +19,33 @@ export class DashboardService {
     private readonly customerRepo: Repository<CustomerEntity>,
     @InjectRepository(InventoryLevelEntity)
     private readonly inventoryRepo: Repository<InventoryLevelEntity>,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
   /**
    * KPI tong hop — doanh thu, don hang, khach moi, AOV, ton kho thap
    * Nang cap Phase 3: them % change so voi ky truoc
+   * Cache: 10 phut theo ngay (key: dashboard:kpis:YYYY-MM-DD)
    */
   async getKpis() {
+    // Cache key theo ngay — tu dong refresh khi sang ngay moi
+    const dateKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const cacheKey = `dashboard:kpis:${dateKey}`;
+
+    const cached = await this.cache.get<Awaited<ReturnType<DashboardService['computeKpis']>>>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const data = await this.computeKpis();
+    await this.cache.set(cacheKey, data, DashboardService.KPI_TTL_MS);
+    return data;
+  }
+
+  /**
+   * Tinh toan KPI tu DB — tach rieng de cache wrapper gon hon
+   */
+  private async computeKpis() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 

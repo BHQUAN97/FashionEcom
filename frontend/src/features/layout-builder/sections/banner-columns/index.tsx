@@ -86,13 +86,13 @@ function Editor({ config, onChange }: SectionEditorProps) {
           {columns.map((col, i) => (
             <div key={i} className="border rounded-lg p-2.5 space-y-1.5">
               <div className="flex justify-between">
-                <span className="text-[10px] text-gray-400">Cot {i + 1}</span>
-                <button onClick={() => onChange({ ...config, columns: columns.filter((_, j) => j !== i) })} className="text-[10px] text-red-400 hover:text-red-600">Xoa</button>
+                <span className="text-[10px] text-gray-400">Cột {i + 1}</span>
+                <button onClick={() => onChange({ ...config, columns: columns.filter((_, j) => j !== i) })} className="text-[10px] text-red-400 hover:text-red-600">Xóa</button>
               </div>
               {col.image && <img src={col.image} alt="" className="w-full h-14 object-cover rounded" />}
-              <input value={col.image} onChange={(e) => updateCol(i, 'image', e.target.value)} placeholder="URL anh" className="w-full text-xs border rounded-md px-2 py-1.5" />
-              <input value={col.title} onChange={(e) => updateCol(i, 'title', e.target.value)} placeholder="Tieu de" className="w-full text-xs border rounded-md px-2 py-1.5" />
-              <input value={col.subtitle || ''} onChange={(e) => updateCol(i, 'subtitle', e.target.value)} placeholder="Phu de" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={col.image} onChange={(e) => updateCol(i, 'image', e.target.value)} placeholder="URL ảnh" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={col.title} onChange={(e) => updateCol(i, 'title', e.target.value)} placeholder="Tiêu đề" className="w-full text-xs border rounded-md px-2 py-1.5" />
+              <input value={col.subtitle || ''} onChange={(e) => updateCol(i, 'subtitle', e.target.value)} placeholder="Phụ đề" className="w-full text-xs border rounded-md px-2 py-1.5" />
               <input value={col.link} onChange={(e) => updateCol(i, 'link', e.target.value)} placeholder="Link" className="w-full text-xs border rounded-md px-2 py-1.5" />
             </div>
           ))}

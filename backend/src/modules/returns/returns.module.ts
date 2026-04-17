@@ -6,6 +6,7 @@ import { ReturnRequestEntity } from './entities/return-request.entity';
 import { ReturnRequestItemEntity } from './entities/return-request-item.entity';
 import { ReturnRequestMediaEntity } from './entities/return-request-media.entity';
 import { OrderEntity } from '../orders/entities/order.entity';
+import { OrderItemEntity } from '../orders/entities/order-item.entity';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { OrderEntity } from '../orders/entities/order.entity';
       ReturnRequestItemEntity,
       ReturnRequestMediaEntity,
       OrderEntity,
+      OrderItemEntity,
     ]),
   ],
   controllers: [ReturnsController, AdminReturnsController],

@@ -1,6 +1,7 @@
 import {
   Controller, Get, Post, Patch, Body, Param, Query, UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewStatusDto } from './dto/update-review-status.dto';
@@ -15,17 +16,19 @@ import { UserRole } from '@/common/constants/roles.constant';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
+  /** Rate limit: 5 reviews/phut — chong spam */
   @Post('reviews')
   @UseGuards(JwtAuthGuard)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async create(
     @Body() dto: CreateReviewDto,
-    @CurrentUser('sub') customerId: string,
+    @CurrentUser('userId') customerId: string,
   ) {
     const data = await this.reviewsService.create({
       ...dto,
       customerId,
     });
-    return { data, message: 'Gui danh gia thanh cong, dang cho duyet' };
+    return { data, message: 'Gửi đánh giá thành công, đang chờ duyệt' };
   }
 
   @Get('products/:id/reviews')
@@ -57,17 +60,17 @@ export class AdminReviewsController {
   @Patch(':id/status')
   async updateStatus(@Param('id') id: string, @Body() dto: UpdateReviewStatusDto) {
     const data = await this.reviewsService.updateStatus(id, dto.status);
-    return { data, message: 'Cap nhat trang thai review thanh cong' };
+    return { data, message: 'Cập nhật trạng thái review thành công' };
   }
 
   @Post(':id/reply')
   async reply(
     @Param('id') id: string,
     @Body('content') content: string,
-    @CurrentUser('sub') adminId: string,
+    @CurrentUser('userId') adminId: string,
   ) {
     const data = await this.reviewsService.addReply(id, content, adminId);
-    return { data, message: 'Phan hoi review thanh cong' };
+    return { data, message: 'Phản hồi review thành công' };
   }
 
   @Get('stats')

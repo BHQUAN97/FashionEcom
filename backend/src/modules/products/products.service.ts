@@ -4,6 +4,7 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
@@ -23,6 +24,8 @@ import { BaseService } from '@/common/services/base.service';
 
 @Injectable()
 export class ProductsService extends BaseService<ProductEntity> {
+  private readonly logger = new Logger(ProductsService.name);
+
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepo: Repository<ProductEntity>,
@@ -203,13 +206,22 @@ export class ProductsService extends BaseService<ProductEntity> {
   async duplicate(id: string) {
     const source = await this.findOne(id);
     const newId = randomUUID();
-    const newCode = `${source.catProductCode}-COPY`;
+
+    // Tao code unique — them timestamp suffix de tranh trung khi duplicate nhieu lan
+    const suffix = Date.now().toString(36).slice(-4).toUpperCase();
+    let newCode = `${source.catProductCode}-COPY`;
+    const existsCode = await this.productRepo.findOne({
+      where: { catProductCode: newCode },
+    });
+    if (existsCode) {
+      newCode = `${source.catProductCode}-CP${suffix}`;
+    }
 
     const product = this.productRepo.create({
       ...source,
       catProductId: newId,
       catProductCode: newCode,
-      catProductSlug: `${source.catProductSlug}-copy`,
+      catProductSlug: `${source.catProductSlug}-copy-${suffix.toLowerCase()}`,
       catProductStatus: 0, // Trang thai nhap
       createdDate: undefined as any,
       modifiedDate: null,
@@ -431,10 +443,26 @@ export class ProductsService extends BaseService<ProductEntity> {
    * Bulk edit variants (gia, trang thai)
    */
   async bulkEditVariants(dto: BulkEditVariantDto) {
+    // BAO MAT: validate gia tri gia
+    if (dto.price !== undefined && dto.price < 1) {
+      throw new BadRequestException('Gia san pham phai >= 1 VND');
+    }
+    if (dto.comparePrice !== undefined && dto.price !== undefined && dto.comparePrice > 0 && dto.comparePrice < dto.price) {
+      this.logger.warn(
+        `[SECURITY] Bulk edit: comparePrice (${dto.comparePrice}) < price (${dto.price}) — gia so sanh thap hon gia ban`,
+      );
+    }
+
     const updateData: Partial<ProductVariantEntity> = {};
     if (dto.price !== undefined) updateData.catProductVariantPrice = dto.price;
     if (dto.comparePrice !== undefined) updateData.catProductVariantComparePrice = dto.comparePrice;
     if (dto.status !== undefined) updateData.catProductVariantStatus = dto.status;
+
+    // AUDIT: log truoc khi update
+    this.logger.log(
+      `[AUDIT] Bulk edit variants: ids=${dto.ids.length}, ` +
+      `price=${dto.price ?? '-'}, comparePrice=${dto.comparePrice ?? '-'}, status=${dto.status ?? '-'}`,
+    );
 
     await this.variantRepo.update(
       { catProductVariantId: In(dto.ids) },

@@ -3,13 +3,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { NotificationsController, AdminNotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
+import { AdminNotificationService } from './admin-notification.service';
 import { NotificationEntity, PushSubscriptionEntity } from './entities/notification.entity';
+import { AdminNotificationEntity } from './entities/admin-notification.entity';
 import { EmailChannel } from './channels/email.channel';
 import { WebPushChannel } from './channels/webpush.channel';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([NotificationEntity, PushSubscriptionEntity]),
+    TypeOrmModule.forFeature([NotificationEntity, PushSubscriptionEntity, AdminNotificationEntity]),
     ConfigModule,
   ],
   controllers: [NotificationsController, AdminNotificationsController],
@@ -22,7 +24,8 @@ import { WebPushChannel } from './channels/webpush.channel';
       inject: [EmailChannel, WebPushChannel],
     },
     NotificationsService,
+    AdminNotificationService,
   ],
-  exports: [NotificationsService],
+  exports: [NotificationsService, AdminNotificationService],
 })
 export class NotificationsModule {}

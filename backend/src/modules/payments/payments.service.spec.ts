@@ -1,11 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { PaymentsService } from './payments.service';
 import { PaymentEntity } from './entities/payment.entity';
 import { OrderEntity } from '../orders/entities/order.entity';
+import { DiscountUsageEntity } from '../promotions/entities/discount-usage.entity';
+import { DiscountCodeEntity } from '../promotions/entities/discount-code.entity';
+import { PaymentMethodConfigEntity } from './entities/payment-method-config.entity';
 import { PaymentGatewayFactory } from './gateways/payment-gateway.factory';
 import { PaymentMethod, PaymentStatus } from './gateways/payment-gateway.interface';
+import { AdminNotificationService } from '../notifications/admin-notification.service';
 
 describe('PaymentsService', () => {
   let service: PaymentsService;
@@ -14,9 +20,17 @@ describe('PaymentsService', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let orderRepo: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let discountUsageRepo: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let discountCodeRepo: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let gatewayFactory: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockGateway: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let queryRunnerManager: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let queryRunner: any;
 
   // Helper: tao mock payment
   const makePayment = (overrides: Partial<PaymentEntity> = {}): PaymentEntity =>
@@ -74,7 +88,7 @@ describe('PaymentsService', () => {
     paymentRepo = {
       create: jest.fn().mockImplementation((dto) => dto),
       save: jest.fn().mockImplementation((e) => e),
-      findOne: jest.fn(),
+      findOne: jest.fn().mockResolvedValue(null), // default: no existing payment
       find: jest.fn().mockResolvedValue([]),
       createQueryBuilder: jest.fn(),
       metadata: { primaryColumns: [{ propertyName: 'salPaymentId' }] },
@@ -85,12 +99,66 @@ describe('PaymentsService', () => {
       update: jest.fn(),
     };
 
+    discountUsageRepo = {
+      find: jest.fn().mockResolvedValue([]),
+      remove: jest.fn(),
+    };
+
+    discountCodeRepo = {
+      findOne: jest.fn(),
+      save: jest.fn(),
+    };
+
+    // Mock queryRunner cho transaction trong updatePaymentStatus + refund + releaseDiscountUsageInTx
+    // Service gio dung manager.find/findOne/save/remove/update — can mock day du
+    queryRunnerManager = {
+      save: jest.fn().mockImplementation((e) => e),
+      update: jest.fn(),
+      find: jest.fn().mockResolvedValue([]),
+      findOne: jest.fn().mockResolvedValue(null),
+      remove: jest.fn().mockImplementation((e) => e),
+    };
+
+    queryRunner = {
+      connect: jest.fn(),
+      startTransaction: jest.fn(),
+      commitTransaction: jest.fn(),
+      rollbackTransaction: jest.fn(),
+      release: jest.fn(),
+      manager: queryRunnerManager,
+    };
+
+    const mockDataSource = {
+      createQueryRunner: jest.fn().mockReturnValue(queryRunner),
+    };
+
+    const mockConfigService = {
+      get: jest.fn().mockReturnValue('localhost'),
+      getOrThrow: jest.fn().mockReturnValue('localhost'),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PaymentsService,
         { provide: getRepositoryToken(PaymentEntity), useValue: paymentRepo },
         { provide: getRepositoryToken(OrderEntity), useValue: orderRepo },
+        { provide: getRepositoryToken(DiscountUsageEntity), useValue: discountUsageRepo },
+        { provide: getRepositoryToken(DiscountCodeEntity), useValue: discountCodeRepo },
         { provide: PaymentGatewayFactory, useValue: gatewayFactory },
+        { provide: ConfigService, useValue: mockConfigService },
+        { provide: DataSource, useValue: mockDataSource },
+        { provide: getRepositoryToken(PaymentMethodConfigEntity), useValue: {
+          findOne: jest.fn().mockResolvedValue(null),
+          find: jest.fn().mockResolvedValue([]),
+          create: jest.fn().mockImplementation((dto: unknown) => dto),
+          save: jest.fn().mockImplementation((e: unknown) => e),
+        }},
+        { provide: AdminNotificationService, useValue: {
+          notifyNewOrder: jest.fn(),
+          notifyPendingPayment: jest.fn(),
+          notifyShippingIncident: jest.fn(),
+          getPendingCounts: jest.fn().mockResolvedValue({}),
+        }},
       ],
     }).compile();
 
@@ -98,31 +166,41 @@ describe('PaymentsService', () => {
     jest.clearAllMocks();
   });
 
-  // ── CREATE PAYMENT ──
+  // ── CREATE PAYMENT (flow thu cong — khong gateway) ──
 
   describe('createPayment', () => {
-    it('tao payment thanh cong voi MoMo', async () => {
+    it('tao payment PENDING voi MoMo — khong goi gateway', async () => {
       orderRepo.findOne.mockResolvedValue(makeOrder());
+      paymentRepo.findOne.mockResolvedValue(null);
 
       const result = await service.createPayment(
         { orderId: 'order-1', method: PaymentMethod.MOMO },
         '127.0.0.1',
       );
 
-      expect(result.redirectUrl).toBe('https://gateway.vn/pay');
-      expect(gatewayFactory.getGateway).toHaveBeenCalledWith(PaymentMethod.MOMO);
-      expect(mockGateway.createPayment).toHaveBeenCalledWith(
-        expect.objectContaining({
-          orderId: 'order-1',
-          orderCode: 'DH-0001',
-          amount: 500000,
-          ipAddress: '127.0.0.1',
-        }),
-      );
+      expect(result.paymentId).toBeDefined();
+      expect(result.method).toBe(PaymentMethod.MOMO);
+      expect(result.amount).toBe(500000);
+      // Khong goi gateway — flow thu cong
+      expect(gatewayFactory.getGateway).not.toHaveBeenCalled();
     });
 
-    it('tinh phi gateway dung — MoMo 1.5%', async () => {
-      orderRepo.findOne.mockResolvedValue(makeOrder({ salOrderTotal: 1000000 }));
+    it('tao payment voi bank transfer — tra ve bankInfo', async () => {
+      orderRepo.findOne.mockResolvedValue(makeOrder());
+      paymentRepo.findOne.mockResolvedValue(null);
+
+      const result = await service.createPayment(
+        { orderId: 'order-1', method: PaymentMethod.BANK_TRANSFER },
+        '127.0.0.1',
+      );
+
+      expect(result.transferContent).toBe('DH-0001');
+      expect(result.message).toContain('nội dung');
+    });
+
+    it('phi = 0 cho tat ca phuong thuc (flow thu cong)', async () => {
+      orderRepo.findOne.mockResolvedValue(makeOrder());
+      paymentRepo.findOne.mockResolvedValue(null);
 
       await service.createPayment(
         { orderId: 'order-1', method: PaymentMethod.MOMO },
@@ -130,34 +208,21 @@ describe('PaymentsService', () => {
       );
 
       expect(paymentRepo.create).toHaveBeenCalledWith(
-        expect.objectContaining({ salPaymentFee: 15000 }),
+        expect.objectContaining({ salPaymentFee: 0 }),
       );
     });
 
-    it('tinh phi gateway dung — VNPAY 1.1%', async () => {
-      orderRepo.findOne.mockResolvedValue(makeOrder({ salOrderTotal: 1000000 }));
-
-      await service.createPayment(
-        { orderId: 'order-1', method: PaymentMethod.VNPAY },
-        '127.0.0.1',
-      );
-
-      expect(paymentRepo.create).toHaveBeenCalledWith(
-        expect.objectContaining({ salPaymentFee: 11000 }),
-      );
-    });
-
-    it('phi = 0 cho COD', async () => {
+    it('COD tra ve message COD', async () => {
       orderRepo.findOne.mockResolvedValue(makeOrder());
+      paymentRepo.findOne.mockResolvedValue(null);
 
-      await service.createPayment(
+      const result = await service.createPayment(
         { orderId: 'order-1', method: PaymentMethod.COD },
         '127.0.0.1',
       );
 
-      expect(paymentRepo.create).toHaveBeenCalledWith(
-        expect.objectContaining({ salPaymentFee: 0 }),
-      );
+      expect(result.message).toContain('COD');
+      expect(result.paymentInfo).toBeNull();
     });
 
     it('throw NotFoundException khi don hang khong ton tai', async () => {
@@ -176,8 +241,18 @@ describe('PaymentsService', () => {
       ).rejects.toThrow(BadRequestException);
     });
 
+    it('throw BadRequest khi da co payment SUCCESS', async () => {
+      orderRepo.findOne.mockResolvedValue(makeOrder());
+      paymentRepo.findOne.mockResolvedValue(makePayment({ salPaymentStatus: PaymentStatus.SUCCESS }));
+
+      await expect(
+        service.createPayment({ orderId: 'order-1', method: PaymentMethod.MOMO }, '127.0.0.1'),
+      ).rejects.toThrow(BadRequestException);
+    });
+
     it('luu payment record voi status PENDING', async () => {
       orderRepo.findOne.mockResolvedValue(makeOrder());
+      paymentRepo.findOne.mockResolvedValue(null);
 
       await service.createPayment(
         { orderId: 'order-1', method: PaymentMethod.MOMO },
@@ -214,9 +289,10 @@ describe('PaymentsService', () => {
 
       await service.handleWebhook('momo', {}, 'sig');
 
-      expect(orderRepo.update).toHaveBeenCalledWith('order-1', {
-        salOrderPaymentStatus: 1,
-      });
+      // updatePaymentStatus dung queryRunner.manager.update
+      expect(queryRunnerManager.update).toHaveBeenCalledWith(
+        OrderEntity, 'order-1', { salOrderPaymentStatus: 1 },
+      );
     });
 
     it('KHONG cap nhat order khi thanh toan that bai', async () => {
@@ -231,26 +307,11 @@ describe('PaymentsService', () => {
       await service.handleWebhook('momo', {}, 'sig');
 
       expect(payment.salPaymentStatus).toBe(PaymentStatus.FAILED);
-      expect(orderRepo.update).not.toHaveBeenCalled();
+      expect(queryRunnerManager.update).not.toHaveBeenCalled();
     });
 
-    it('fallback tim theo orderId khi khong co transactionId', async () => {
-      paymentRepo.findOne.mockResolvedValue(null); // Khong tim duoc theo txnId
-      const latestPayment = makePayment({ salPaymentId: 'pay-latest' });
-      paymentRepo.find.mockResolvedValue([latestPayment]); // Tim duoc theo orderId
-
-      const result = await service.handleWebhook('momo', {}, 'sig');
-
-      expect(paymentRepo.find).toHaveBeenCalledWith({
-        where: { salOrderId: 'order-1' },
-        order: { createdDate: 'DESC' },
-      });
-      expect(result.paymentId).toBe('pay-latest');
-    });
-
-    it('throw NotFoundException khi khong tim thay giao dich nao', async () => {
+    it('throw NotFoundException khi khong tim thay giao dich', async () => {
       paymentRepo.findOne.mockResolvedValue(null);
-      paymentRepo.find.mockResolvedValue([]);
 
       await expect(
         service.handleWebhook('momo', {}, 'sig'),
@@ -315,6 +376,29 @@ describe('PaymentsService', () => {
       expect(payment.salPaymentStatus).toBe(PaymentStatus.REFUNDED);
     });
 
+    it('hoan tien MoMo — giai phong discount usage', async () => {
+      const payment = makePayment({
+        salPaymentStatus: PaymentStatus.SUCCESS,
+        salPaymentTransactionId: 'txn-123',
+      });
+      paymentRepo.findOne.mockResolvedValue(payment);
+      const usage = { prmDiscountId: 'disc-1', salOrderId: 'order-1' };
+      // Service gio dung queryRunner.manager.find/findOne/save trong transaction
+      queryRunnerManager.find.mockResolvedValue([usage]);
+      queryRunnerManager.findOne.mockResolvedValue({ prmDiscountId: 'disc-1', prmDiscountUsageCount: 5 });
+
+      await service.refund('pay-1', { amount: 300000 });
+
+      expect(queryRunnerManager.find).toHaveBeenCalledWith(
+        DiscountUsageEntity,
+        { where: { salOrderId: 'order-1' } },
+      );
+      // Discount usage count decrement + save qua manager
+      expect(queryRunnerManager.save).toHaveBeenCalledWith(
+        expect.objectContaining({ prmDiscountUsageCount: 4 }),
+      );
+    });
+
     it('throw BadRequest khi payment chua SUCCESS', async () => {
       const payment = makePayment({ salPaymentStatus: PaymentStatus.PENDING });
       paymentRepo.findOne.mockResolvedValue(payment);
@@ -373,16 +457,17 @@ describe('PaymentsService', () => {
 
   // ── GATEWAY FEE RATES ──
 
-  describe('gateway fee calculation', () => {
+  describe('flow thu cong — phi = 0 cho tat ca phuong thuc', () => {
     it.each([
-      [PaymentMethod.MOMO, 1000000, 15000],    // 1.5%
-      [PaymentMethod.VNPAY, 1000000, 11000],   // 1.1%
-      [PaymentMethod.PAYOO, 1000000, 20000],   // 2.0%
-      [PaymentMethod.ZALOPAY, 1000000, 15000], // 1.5%
-      [PaymentMethod.COD, 1000000, 0],         // 0%
-      [PaymentMethod.BANK_TRANSFER, 1000000, 0], // 0%
-    ])('method %i voi amount %i => fee = %i', async (method, amount, expectedFee) => {
+      [PaymentMethod.MOMO, 1000000],
+      [PaymentMethod.VNPAY, 1000000],
+      [PaymentMethod.PAYOO, 1000000],
+      [PaymentMethod.ZALOPAY, 1000000],
+      [PaymentMethod.COD, 1000000],
+      [PaymentMethod.BANK_TRANSFER, 1000000],
+    ])('method %i voi amount %i => fee = 0 (thu cong)', async (method, amount) => {
       orderRepo.findOne.mockResolvedValue(makeOrder({ salOrderTotal: amount }));
+      paymentRepo.findOne.mockResolvedValue(null);
 
       await service.createPayment(
         { orderId: 'order-1', method },
@@ -390,7 +475,7 @@ describe('PaymentsService', () => {
       );
 
       expect(paymentRepo.create).toHaveBeenCalledWith(
-        expect.objectContaining({ salPaymentFee: expectedFee }),
+        expect.objectContaining({ salPaymentFee: 0, salPaymentStatus: PaymentStatus.PENDING }),
       );
     });
   });

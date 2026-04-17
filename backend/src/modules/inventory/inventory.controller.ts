@@ -77,7 +77,7 @@ export class WarehouseTransferController {
       reason?: string;
       items: { variantId: string; qty: number }[];
     },
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
   ) {
     const data = await this.transferService.create(body, userId);
     return { data, message: 'Tao phieu dieu chuyen thanh cong' };
@@ -93,7 +93,7 @@ export class WarehouseTransferController {
   async updateStatus(
     @Param('id') id: string,
     @Body('status') status: number,
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
   ) {
     const data = await this.transferService.updateStatus(id, status, userId);
     return { data, message: 'Cap nhat trang thai dieu chuyen thanh cong' };

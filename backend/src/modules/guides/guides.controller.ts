@@ -16,7 +16,7 @@ export class GuidesController {
   @Get(':screenId')
   async getGuide(
     @Param('screenId') screenId: string,
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
     @CurrentUser('role') role: number,
   ) {
     const data = await this.guidesService.getGuide(screenId, userId, role);
@@ -26,10 +26,10 @@ export class GuidesController {
   @Post(':screenId/complete')
   async complete(
     @Param('screenId') screenId: string,
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
   ) {
     await this.guidesService.complete(screenId, userId);
-    return { message: 'Da hoan thanh guide' };
+    return { message: 'Đã hoàn thành guide' };
   }
 
   @Get('manage')
@@ -53,6 +53,6 @@ export class GuidesController {
     },
   ) {
     const data = await this.guidesService.update(screenId, body);
-    return { data, message: 'Cap nhat guide thanh cong' };
+    return { data, message: 'Cập nhật guide thành công' };
   }
 }
