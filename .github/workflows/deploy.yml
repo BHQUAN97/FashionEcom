@@ -1,0 +1,688 @@
+name: Auto Deploy
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+      - 'Design/**'
+      - '.sdd/**'
+      - '.github/workflows/ci.yml'
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+env:
+  APP_DIR: /opt/fashionecom
+  WEBPHOTO_DIR: /opt/webphoto
+
+# ══════════════════════════════════════════════════════
+# Pipeline: typecheck → build → deploy → verify
+# ══════════════════════════════════════════════════════
+
+jobs:
+  # ─── STAGE 1: TYPE CHECK (parallel) ──────────────
+  typecheck-fe:
+    name: "1. Typecheck FE"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: cd frontend && npm ci && npx tsc --noEmit
+
+  typecheck-be:
+    name: "1. Typecheck BE"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: cd backend && npm ci && npx tsc --noEmit
+
+  # ─── STAGE 2: DETECT CHANGES ─────────────────────
+  build:
+    name: "2. Detect Changes"
+    runs-on: ubuntu-latest
+    needs: [typecheck-fe, typecheck-be]
+    outputs:
+      mode: ${{ steps.detect.outputs.mode }}
+      fe: ${{ steps.changes.outputs.fe }}
+      be: ${{ steps.changes.outputs.be }}
+      infra: ${{ steps.changes.outputs.infra }}
+      db: ${{ steps.changes.outputs.db }}
+      config: ${{ steps.changes.outputs.config }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Load config/env
+        run: |
+          while IFS= read -r line; do
+            [[ -z "$line" || "$line" == \#* ]] && continue
+            [[ "$line" == *=* ]] && echo "$line" >> $GITHUB_ENV
+          done < config/env
+          PASS=$(sed -n 's/^VPS_PASSWORD=//p' config/env)
+          echo "SSHPASS=${PASS}" >> $GITHUB_ENV
+
+      - name: Setup SSH
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass > /dev/null
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ env.VPS_PORT }} -H ${{ env.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Detect deploy mode
+        id: detect
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          if sshpass -e ssh -p $PORT $VPS "test -f ${APP_DIR}/docker-compose.prod.yml"; then
+            echo "mode=update" >> $GITHUB_OUTPUT
+            echo "Deploy mode: UPDATE"
+          else
+            echo "mode=init" >> $GITHUB_OUTPUT
+            echo "Deploy mode: INIT (first-time)"
+          fi
+
+      - name: Detect changes
+        id: changes
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ] || [ -z "$BEFORE" ]; then
+            DIFF="FULL"
+          else
+            DIFF=$(git diff --name-only "$BEFORE" "${{ github.sha }}" 2>/dev/null || echo "FULL")
+          fi
+
+          echo "Changed files:"
+          echo "$DIFF" | head -20
+
+          fe=false; be=false; infra=false; db=false; config=false
+
+          if [ "$DIFF" = "FULL" ]; then
+            fe=true; be=true; infra=true; db=true; config=true
+          else
+            echo "$DIFF" | grep -qE '^frontend/' && fe=true
+            echo "$DIFF" | grep -qE '^backend/' && be=true
+            echo "$DIFF" | grep -qE '^(docker-compose|infra/|nginx/|.*/Dockerfile)' && infra=true
+            echo "$DIFF" | grep -qE '^(db/|backend/src/.*entity)' && db=true
+            echo "$DIFF" | grep -qE '^config/' && config=true
+          fi
+
+          if [ "${{ steps.detect.outputs.mode }}" = "init" ]; then
+            fe=true; be=true; infra=true; db=true; config=true
+          fi
+
+          echo "fe=$fe" >> $GITHUB_OUTPUT
+          echo "be=$be" >> $GITHUB_OUTPUT
+          echo "infra=$infra" >> $GITHUB_OUTPUT
+          echo "db=$db" >> $GITHUB_OUTPUT
+          echo "config=$config" >> $GITHUB_OUTPUT
+          echo "Changes: fe=$fe be=$be infra=$infra db=$db config=$config"
+
+  # ─── STAGE 3: DEPLOY TO VPS ─────────────────────
+  deploy:
+    name: "3. Deploy"
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Load config/env
+        run: |
+          while IFS= read -r line; do
+            [[ -z "$line" || "$line" == \#* ]] && continue
+            [[ "$line" == *=* ]] && echo "$line" >> $GITHUB_ENV
+          done < config/env
+          PASS=$(sed -n 's/^VPS_PASSWORD=//p' config/env)
+          echo "SSHPASS=${PASS}" >> $GITHUB_ENV
+
+      - name: Setup SSH
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass > /dev/null
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ env.VPS_PORT }} -H ${{ env.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      # ── INIT: Full upload ────────────────────────
+      - name: "[INIT] Upload full project"
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${APP_DIR}/{backend,frontend,nginx/conf.d,scripts,db,config}"
+
+          sshpass -e scp -P $PORT docker-compose.prod.yml $VPS:${APP_DIR}/
+
+          echo "  Uploading backend..."
+          tar czf - backend/src backend/package.json backend/package-lock.json \
+            backend/Dockerfile backend/tsconfig.json \
+            backend/tsconfig.build.json backend/nest-cli.json 2>/dev/null | \
+            sshpass -e ssh -p $PORT $VPS "tar xzf - -C ${APP_DIR}/"
+
+          echo "  Uploading frontend..."
+          tar czf - frontend/src frontend/public frontend/package.json frontend/package-lock.json \
+            frontend/Dockerfile frontend/next.config.mjs frontend/tailwind.config.ts \
+            frontend/tsconfig.json frontend/postcss.config.mjs 2>/dev/null | \
+            sshpass -e ssh -p $PORT $VPS "tar xzf - -C ${APP_DIR}/"
+
+          echo "  Uploading nginx + db + scripts..."
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${WEBPHOTO_DIR}/nginx/conf.d"
+          sshpass -e scp -P $PORT nginx/conf.d/shop.bhquan.store.conf $VPS:${WEBPHOTO_DIR}/nginx/conf.d/
+          sshpass -e scp -P $PORT -r db/changelog $VPS:${APP_DIR}/db/ 2>/dev/null || true
+          sshpass -e scp -P $PORT -r db/seed $VPS:${APP_DIR}/db/ 2>/dev/null || true
+          tar czf - scripts/ 2>/dev/null | sshpass -e ssh -p $PORT $VPS "tar xzf - -C ${APP_DIR}/"
+
+          echo "[OK] Full project uploaded"
+
+      # ── INIT: Infra + DB + SSL ───────────────────
+      - name: "[INIT] Start shared infra"
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          INFRA_DIR=/opt/infra
+
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${INFRA_DIR}"
+          sshpass -e scp -P $PORT infra/docker-compose.yml $VPS:${INFRA_DIR}/docker-compose.yml
+
+          MYSQL_ROOT_PWD=$(grep '^MYSQL_ROOT_PASSWORD=' config/env | cut -d= -f2-)
+          sshpass -e ssh -p $PORT $VPS "echo 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PWD}' > ${INFRA_DIR}/.env && chmod 600 ${INFRA_DIR}/.env"
+
+          sshpass -e ssh -p $PORT $VPS "
+            docker network create webphoto_backend 2>/dev/null || true
+            docker network create fashionecom-net 2>/dev/null || true
+            cd ${INFRA_DIR} && docker compose up -d 2>&1
+
+            echo 'Waiting for MySQL...'
+            for i in \$(seq 1 60); do
+              docker exec shared-mysql mysqladmin ping -h localhost --silent 2>/dev/null && { echo 'MySQL ready!'; break; }
+              [ \$i -eq 60 ] && { echo 'ERROR: MySQL not ready'; docker logs shared-mysql --tail 20; exit 1; }
+              sleep 1
+            done
+          "
+
+      - name: "[INIT] Create DB + user"
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          MYSQL_ROOT_PWD=$(grep '^MYSQL_ROOT_PASSWORD=' config/env | cut -d= -f2-)
+          FE_DB_PWD=$(grep '^FE_DB_PASSWORD=' config/env | cut -d= -f2-)
+
+          sshpass -e ssh -p $PORT $VPS "docker exec -i shared-mysql mysql -u root -p'${MYSQL_ROOT_PWD}' <<EOSQL
+            CREATE DATABASE IF NOT EXISTS fashionecom CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+            CREATE USER IF NOT EXISTS 'fashionecom'@'%' IDENTIFIED BY '${FE_DB_PWD}';
+            GRANT ALL PRIVILEGES ON fashionecom.* TO 'fashionecom'@'%';
+            FLUSH PRIVILEGES;
+          EOSQL"
+
+      - name: "[INIT] SSL certs"
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          HAS_WP=$(sshpass -e ssh -p $PORT $VPS "test -f ${WEBPHOTO_DIR}/docker-compose.prod.yml && echo yes || echo no")
+          [ "$HAS_WP" != "yes" ] && { echo "WebPhoto not deployed — skip SSL"; exit 0; }
+
+          sshpass -e ssh -p $PORT $VPS "
+            cd ${WEBPHOTO_DIR}
+            CERT_EXISTS=\$(docker compose -f docker-compose.prod.yml run --rm --entrypoint '' certbot \
+              test -f /etc/letsencrypt/live/shop.bhquan.store/fullchain.pem 2>/dev/null && echo yes || echo no)
+            if [ \"\$CERT_EXISTS\" = 'no' ]; then
+              echo 'Generating placeholder cert...'
+              docker compose -f docker-compose.prod.yml run --rm --entrypoint '' certbot sh -c '
+                mkdir -p /etc/letsencrypt/live/shop.bhquan.store
+                openssl req -x509 -nodes -days 1 -newkey rsa:2048 \
+                  -keyout /etc/letsencrypt/live/shop.bhquan.store/privkey.pem \
+                  -out /etc/letsencrypt/live/shop.bhquan.store/fullchain.pem \
+                  -subj /CN=shop.bhquan.store 2>/dev/null
+              '
+            fi
+          "
+
+      - name: "[INIT] Sync .env before build"
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${APP_DIR}/config"
+          sshpass -e scp -P $PORT config/env $VPS:${APP_DIR}/config/env
+          sshpass -e ssh -p $PORT $VPS "cp ${APP_DIR}/config/env ${APP_DIR}/.env && chmod 600 ${APP_DIR}/.env"
+          echo ".env synced to VPS"
+
+      - name: "[INIT] Build & Start services"
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+
+          echo "=== VPS diagnostics ==="
+          sshpass -e ssh -p $PORT $VPS "
+            echo '--- Memory ---'
+            free -h
+            echo '--- Disk ---'
+            df -h /
+            echo '--- Docker disk ---'
+            docker system df
+            echo '--- Running containers ---'
+            docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Size}}'
+          "
+
+          echo ""
+          echo "=== Building backend ==="
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose --env-file .env -f docker-compose.prod.yml build backend 2>&1"
+          if [ $? -ne 0 ]; then
+            echo "::error::Backend build failed"
+            sshpass -e ssh -p $PORT $VPS "free -h; dmesg | grep -i 'oom\|killed' | tail -5" 2>&1 || true
+            exit 1
+          fi
+
+          echo ""
+          echo "=== Building frontend ==="
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose --env-file .env -f docker-compose.prod.yml build frontend 2>&1"
+          if [ $? -ne 0 ]; then
+            echo "::error::Frontend build failed"
+            sshpass -e ssh -p $PORT $VPS "free -h; dmesg | grep -i 'oom\|killed' | tail -5" 2>&1 || true
+            exit 1
+          fi
+
+          echo ""
+          echo "=== Starting services ==="
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose --env-file .env -f docker-compose.prod.yml up -d 2>&1"
+          if [ $? -ne 0 ]; then
+            echo "::error::Docker start failed"
+            sshpass -e ssh -p $PORT $VPS "
+              docker ps -a --format 'table {{.Names}}\t{{.Status}}' | grep -E 'fashionecom|shared'
+              echo '--- Backend logs ---'
+              docker logs fashionecom-api --tail 30 2>&1
+              echo '--- Frontend logs ---'
+              docker logs fashionecom-frontend --tail 30 2>&1
+            "
+            exit 1
+          fi
+
+          sshpass -e ssh -p $PORT $VPS "
+            docker network connect fashionecom-net shared-nginx 2>/dev/null || true
+            docker exec shared-nginx nginx -s reload 2>/dev/null || true
+          "
+
+      - name: "[INIT] Get real SSL cert"
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+
+          sshpass -e ssh -p $PORT $VPS "
+            CERT_VOL=\$(docker inspect shared-nginx --format '{{range .Mounts}}{{if eq .Destination \"/etc/letsencrypt\"}}{{.Name}}{{end}}{{end}}' 2>/dev/null)
+            if [ -z \"\$CERT_VOL\" ]; then
+              echo 'WARN: No cert volume found on shared-nginx, using host path'
+              CERT_VOL='/etc/letsencrypt'
+            fi
+            echo \"Using cert volume: \$CERT_VOL\"
+
+            echo '=== Removing old/placeholder cert ==='
+            docker run --rm -v \${CERT_VOL}:/etc/letsencrypt alpine sh -c '
+              rm -rf /etc/letsencrypt/live/shop.bhquan.store*
+              rm -rf /etc/letsencrypt/archive/shop.bhquan.store*
+              rm -rf /etc/letsencrypt/renewal/shop.bhquan.store*.conf
+            '
+
+            echo '=== Stopping nginx to free port 80 ==='
+            docker stop shared-nginx 2>/dev/null || true
+
+            echo '=== Running certbot into Docker volume ==='
+            docker run --rm \
+              -v \${CERT_VOL}:/etc/letsencrypt \
+              -p 80:80 \
+              certbot/certbot certonly --standalone \
+              --non-interactive \
+              --cert-name shop.bhquan.store \
+              --email admin@bhquan.site \
+              --agree-tos --no-eff-email \
+              -d shop.bhquan.store \
+              2>&1 || {
+              echo 'Certbot failed — creating placeholder in volume'
+              docker run --rm -v \${CERT_VOL}:/etc/letsencrypt alpine sh -c '
+                mkdir -p /etc/letsencrypt/live/shop.bhquan.store
+                apk add --no-cache openssl >/dev/null 2>&1
+                openssl req -x509 -nodes -days 1 -newkey rsa:2048 \
+                  -keyout /etc/letsencrypt/live/shop.bhquan.store/privkey.pem \
+                  -out /etc/letsencrypt/live/shop.bhquan.store/fullchain.pem \
+                  -subj /CN=shop.bhquan.store 2>/dev/null
+              '
+            }
+
+            echo '=== Restarting nginx ==='
+            docker start shared-nginx
+            sleep 2
+            docker exec shared-nginx nginx -t && docker exec shared-nginx nginx -s reload
+
+            echo '=== Verify cert in nginx ==='
+            docker exec shared-nginx sh -c 'openssl x509 -in /etc/letsencrypt/live/shop.bhquan.store/fullchain.pem -noout -subject -dates' 2>&1 || true
+          "
+
+      # ── UPDATE: Upload changed files ─────────────
+      - name: "[UPDATE] Upload frontend"
+        if: needs.build.outputs.mode == 'update' && needs.build.outputs.fe == 'true'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "rm -rf ${APP_DIR}/frontend/src"
+          tar czf - frontend/src frontend/public frontend/package.json frontend/package-lock.json \
+            frontend/Dockerfile frontend/next.config.mjs frontend/tailwind.config.ts \
+            frontend/tsconfig.json frontend/postcss.config.mjs 2>/dev/null | \
+            sshpass -e ssh -p $PORT $VPS "tar xzf - -C ${APP_DIR}/"
+
+      - name: "[UPDATE] Upload backend"
+        if: needs.build.outputs.mode == 'update' && needs.build.outputs.be == 'true'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "rm -rf ${APP_DIR}/backend/src"
+          tar czf - backend/src backend/package.json backend/package-lock.json \
+            backend/Dockerfile backend/tsconfig.json \
+            backend/tsconfig.build.json backend/nest-cli.json 2>/dev/null | \
+            sshpass -e ssh -p $PORT $VPS "tar xzf - -C ${APP_DIR}/"
+
+      - name: "[UPDATE] Sync config"
+        if: needs.build.outputs.mode == 'update'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e scp -P $PORT docker-compose.prod.yml $VPS:${APP_DIR}/
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${APP_DIR}/db"
+          sshpass -e scp -P $PORT -r db/changelog $VPS:${APP_DIR}/db/ 2>/dev/null || true
+          sshpass -e scp -P $PORT -r db/seed $VPS:${APP_DIR}/db/ 2>/dev/null || true
+          tar czf - scripts/ 2>/dev/null | sshpass -e ssh -p $PORT $VPS "tar xzf - -C ${APP_DIR}/" 2>/dev/null || true
+
+      - name: "[UPDATE] Sync nginx"
+        if: needs.build.outputs.mode == 'update'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e scp -P $PORT nginx/conf.d/shop.bhquan.store.conf $VPS:${WEBPHOTO_DIR}/nginx/conf.d/ 2>/dev/null && {
+            sshpass -e ssh -p $PORT $VPS "
+              CERT_EXISTS=\$(docker exec shared-nginx test -f /etc/letsencrypt/live/shop.bhquan.store/fullchain.pem 2>/dev/null && echo yes || echo no)
+              if [ \"\$CERT_EXISTS\" = 'no' ]; then
+                echo 'No SSL cert found in volume — creating placeholder'
+                CERT_VOL=\$(docker inspect shared-nginx --format '{{range .Mounts}}{{if eq .Destination \"/etc/letsencrypt\"}}{{.Name}}{{end}}{{end}}' 2>/dev/null || echo '/etc/letsencrypt')
+                docker run --rm -v \${CERT_VOL}:/etc/letsencrypt alpine sh -c '
+                  mkdir -p /etc/letsencrypt/live/shop.bhquan.store
+                  apk add --no-cache openssl >/dev/null 2>&1
+                  openssl req -x509 -nodes -days 1 -newkey rsa:2048 \
+                    -keyout /etc/letsencrypt/live/shop.bhquan.store/privkey.pem \
+                    -out /etc/letsencrypt/live/shop.bhquan.store/fullchain.pem \
+                    -subj /CN=shop.bhquan.store 2>/dev/null
+                '
+              fi
+              docker exec shared-nginx nginx -t 2>&1 | tail -1 && docker exec shared-nginx nginx -s reload
+            "
+          } || true
+
+      - name: "[UPDATE] Sync infra"
+        if: needs.build.outputs.mode == 'update' && needs.build.outputs.infra == 'true'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          INFRA_DIR=/opt/infra
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${INFRA_DIR}"
+          sshpass -e scp -P $PORT infra/docker-compose.yml $VPS:${INFRA_DIR}/
+          MYSQL_ROOT_PWD=$(grep '^MYSQL_ROOT_PASSWORD=' config/env | cut -d= -f2-)
+          sshpass -e ssh -p $PORT $VPS "
+            echo 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PWD}' > ${INFRA_DIR}/.env && chmod 600 ${INFRA_DIR}/.env
+            docker network create webphoto_backend 2>/dev/null || true
+            cd ${INFRA_DIR} && docker compose up -d 2>&1 | tail -3
+            for i in \$(seq 1 30); do
+              docker exec shared-mysql mysqladmin ping -h localhost --silent 2>/dev/null && break
+              sleep 1
+            done
+          "
+
+      - name: "[UPDATE] Rebuild backend"
+        if: needs.build.outputs.mode == 'update' && (needs.build.outputs.be == 'true' || needs.build.outputs.infra == 'true')
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          echo "=== VPS resources before backend build ==="
+          sshpass -e ssh -p $PORT $VPS "free -h; df -h /" 2>&1
+          echo ""
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml build backend 2>&1"
+          if [ $? -ne 0 ]; then
+            echo "::error::Backend build failed"
+            sshpass -e ssh -p $PORT $VPS "free -h; dmesg | grep -i 'oom\|killed' | tail -5" 2>&1 || true
+            exit 1
+          fi
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml up -d backend 2>&1"
+
+      - name: "[UPDATE] Rebuild frontend"
+        if: needs.build.outputs.mode == 'update' && (needs.build.outputs.fe == 'true' || needs.build.outputs.infra == 'true')
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          echo "=== VPS resources before frontend build ==="
+          sshpass -e ssh -p $PORT $VPS "free -h; df -h /" 2>&1
+          echo ""
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml build frontend 2>&1"
+          if [ $? -ne 0 ]; then
+            echo "::error::Frontend build failed"
+            sshpass -e ssh -p $PORT $VPS "free -h; dmesg | grep -i 'oom\|killed' | tail -5" 2>&1 || true
+            exit 1
+          fi
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml up -d frontend 2>&1"
+
+      - name: "[UPDATE] Ensure nginx connected"
+        if: needs.build.outputs.mode == 'update'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "
+            docker network connect fashionecom-net shared-nginx 2>/dev/null || true
+            docker exec shared-nginx nginx -s reload 2>/dev/null || true
+          "
+
+      # ── SHARED: Config + DB ──────────────────────
+      - name: Sync .env
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${APP_DIR}/config"
+          sshpass -e scp -P $PORT config/env $VPS:${APP_DIR}/config/env
+          sshpass -e ssh -p $PORT $VPS "cp ${APP_DIR}/config/env ${APP_DIR}/.env && chmod 600 ${APP_DIR}/.env"
+
+      - name: Ensure DB + user
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          MYSQL_ROOT_PWD=$(grep '^MYSQL_ROOT_PASSWORD=' config/env | cut -d= -f2-)
+          FE_DB_PWD=$(grep '^FE_DB_PASSWORD=' config/env | cut -d= -f2-)
+          MYSQL_STATUS=$(sshpass -e ssh -p $PORT $VPS "docker ps --filter name=shared-mysql --format '{{.Names}}'" 2>&1)
+          [ -z "$MYSQL_STATUS" ] && { echo "::warning::shared-mysql not running — skip"; exit 0; }
+
+          sshpass -e ssh -p $PORT $VPS "docker exec -i shared-mysql mysql -u root -p'${MYSQL_ROOT_PWD}' <<EOSQL
+            CREATE DATABASE IF NOT EXISTS fashionecom CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+            CREATE USER IF NOT EXISTS 'fashionecom'@'%' IDENTIFIED BY '${FE_DB_PWD}';
+            GRANT ALL PRIVILEGES ON fashionecom.* TO 'fashionecom'@'%';
+            FLUSH PRIVILEGES;
+          EOSQL"
+
+      - name: Run DB changelog
+        id: changelog
+        run: |
+          set +e
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          [ ! -d "db/changelog" ] && exit 0
+
+          FE_DB_PWD=$(grep '^FE_DB_PASSWORD=' config/env | cut -d= -f2-)
+          MYSQL_CMD="docker exec -i shared-mysql mysql -u fashionecom -p${FE_DB_PWD} fashionecom"
+
+          # Ensure tracking table
+          sshpass -e ssh -p $PORT $VPS "$MYSQL_CMD -e \"
+            CREATE TABLE IF NOT EXISTS schema_changelog (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              version VARCHAR(50) NOT NULL,
+              filename VARCHAR(255) NOT NULL,
+              description VARCHAR(500),
+              applied_by VARCHAR(50) DEFAULT 'ci',
+              applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              checksum VARCHAR(64),
+              UNIQUE KEY uk_version_filename (version, filename)
+            ) ENGINE=InnoDB CHARACTER SET utf8mb4;
+          \"" 2>/dev/null
+
+          echo "=== Running versioned migrations ==="
+          APPLIED=$(sshpass -e ssh -p $PORT $VPS "$MYSQL_CMD -N -e \"SELECT CONCAT(version, '/', filename) FROM schema_changelog\"" 2>/dev/null || echo "")
+          PASS=0; SKIP=0; FAIL=0
+
+          for ver_dir in $(find db/changelog -mindepth 1 -maxdepth 1 -type d | sort); do
+            VER=$(basename "$ver_dir")
+            for f in $(find "$ver_dir" -name '*.sql' -type f | sort); do
+              FNAME=$(basename "$f"); KEY="${VER}/${FNAME}"
+              echo "$APPLIED" | grep -qF "$KEY" && { ((SKIP++)); continue; }
+              echo -n "  $FNAME ... "
+              OUTPUT=$(sshpass -e ssh -p $PORT $VPS "$MYSQL_CMD" < "$f" 2>&1)
+              if [ $? -eq 0 ]; then
+                DESC=$(echo "$FNAME" | sed 's/^[0-9]*__//;s/\.sql$//;s/_/ /g')
+                CHECKSUM=$(sha256sum "$f" | cut -d' ' -f1)
+                sshpass -e ssh -p $PORT $VPS "$MYSQL_CMD -e \"REPLACE INTO schema_changelog (version,filename,description,applied_by,checksum) VALUES ('$VER','$FNAME','$DESC','ci','$CHECKSUM')\"" 2>/dev/null
+                echo "OK"; ((PASS++))
+              else
+                echo "FAILED"; echo "$OUTPUT" | tail -3 | sed 's/^/    /'; ((FAIL++))
+              fi
+            done
+          done
+
+          # Loose SQL files (no version folder)
+          for f in $(find db/changelog -maxdepth 1 -name '*.sql' -type f | sort); do
+            FNAME=$(basename "$f"); KEY="root/${FNAME}"
+            echo "$APPLIED" | grep -qF "$KEY" && { ((SKIP++)); continue; }
+            echo -n "  $FNAME ... "
+            OUTPUT=$(sshpass -e ssh -p $PORT $VPS "$MYSQL_CMD" < "$f" 2>&1)
+            if [ $? -eq 0 ]; then
+              DESC=$(echo "$FNAME" | sed 's/\.sql$//;s/_/ /g')
+              CHECKSUM=$(sha256sum "$f" | cut -d' ' -f1)
+              sshpass -e ssh -p $PORT $VPS "$MYSQL_CMD -e \"REPLACE INTO schema_changelog (version,filename,description,applied_by,checksum) VALUES ('root','$FNAME','$DESC','ci','$CHECKSUM')\"" 2>/dev/null
+              echo "OK"; ((PASS++))
+            else
+              echo "FAILED"; echo "$OUTPUT" | tail -3 | sed 's/^/    /'; ((FAIL++))
+            fi
+          done
+          echo "Changelog: $PASS applied, $SKIP skipped, $FAIL failed"
+
+          if [ $PASS -gt 0 ] || [ "${{ needs.build.outputs.mode }}" = "init" ]; then
+            echo "db_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "db_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Restart after DB changes
+        if: steps.changelog.outputs.db_changed == 'true'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml restart backend frontend" 2>&1 || true
+          echo "Waiting for backend..."
+          for i in $(seq 1 30); do
+            sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-api wget -q -O - http://localhost:4000/api/health 2>/dev/null" > /dev/null 2>&1 && { echo "Backend ready!"; break; }
+            [ $i -eq 30 ] && { echo "::warning::Backend not ready after 60s"; }
+            sleep 2
+          done
+
+      - name: Seed dev data (idempotent)
+        if: needs.build.outputs.mode == 'init'
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          FE_DB_PWD=$(grep '^FE_DB_PASSWORD=' config/env | cut -d= -f2-)
+          [ -f "db/seed/seed_dev_data.sql" ] && {
+            echo "=== Seeding dev data ==="
+            sshpass -e ssh -p $PORT $VPS "docker exec -i shared-mysql mysql -u fashionecom -p${FE_DB_PWD} fashionecom" < db/seed/seed_dev_data.sql 2>&1 | tail -5 || echo "::warning::Seed failed"
+          }
+
+  # ─── STAGE 4: VERIFY ────────────────────────────
+  verify:
+    name: "4. Health Check"
+    runs-on: ubuntu-latest
+    needs: [build, deploy]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Load config/env
+        run: |
+          while IFS= read -r line; do
+            [[ -z "$line" || "$line" == \#* ]] && continue
+            [[ "$line" == *=* ]] && echo "$line" >> $GITHUB_ENV
+          done < config/env
+          PASS=$(sed -n 's/^VPS_PASSWORD=//p' config/env)
+          echo "SSHPASS=${PASS}" >> $GITHUB_ENV
+
+      - name: Setup SSH
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass > /dev/null
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ env.VPS_PORT }} -H ${{ env.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Wait for services
+        run: sleep 10
+
+      - name: Backend health
+        run: |
+          set +e
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+
+          echo "=== Container status ==="
+          sshpass -e ssh -p $PORT $VPS "docker ps -a --format 'table {{.Names}}\t{{.Status}}' | grep -E 'fashionecom|shared'" 2>&1
+
+          for i in $(seq 1 15); do
+            RESULT=$(sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-api wget -q -O - http://localhost:4000/api/health 2>/dev/null" 2>&1)
+            RC=$?
+            if [ $RC -eq 0 ] && [ -n "$RESULT" ]; then
+              echo "Backend: OK — $RESULT"
+              exit 0
+            fi
+            echo "  Attempt $i/15 — exit $RC"
+            sleep 2
+          done
+
+          echo "::error::Backend health check failed after 30s"
+          echo "=== Backend logs ==="
+          sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-api --tail 50" 2>&1
+          echo "=== Backend inspect ==="
+          sshpass -e ssh -p $PORT $VPS "docker inspect fashionecom-api --format '{{.State.Status}} ExitCode:{{.State.ExitCode}}'" 2>&1
+          exit 1
+
+      - name: Frontend health
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          for i in $(seq 1 10); do
+            sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-frontend wget -q -O /dev/null http://localhost:3000 2>/dev/null" && { echo "Frontend: OK"; exit 0; }
+            [ $i -eq 10 ] && { echo "::error::Frontend health check failed"; sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-frontend --tail 20" 2>&1; exit 1; }
+            sleep 2
+          done
+
+      - name: Container status
+        run: |
+          VPS="${{ env.VPS_USER }}@${{ env.VPS_HOST }}"
+          PORT="${{ env.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "docker ps --filter 'name=fashionecom-' --filter 'name=shared-' --format 'table {{.Names}}\t{{.Status}}'"
+
+      - name: Deploy summary
+        run: |
+          echo "=========================================="
+          echo "  FashionEcom — shop.bhquan.store"
+          echo "  Mode: ${{ needs.build.outputs.mode }}"
+          echo "  FE: ${{ needs.build.outputs.fe }} | BE: ${{ needs.build.outputs.be }}"
+          echo "  DB: ${{ needs.build.outputs.db }} | Infra: ${{ needs.build.outputs.infra }}"
+          echo "=========================================="
