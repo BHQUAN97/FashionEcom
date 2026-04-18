@@ -1,10 +1,11 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import * as Papa from 'papaparse';
-import * as XLSX from 'xlsx';
+import { Workbook } from 'exceljs';
 
 /**
  * FileParserService — parse CSV va Excel files thanh JSON rows
  * Ho tro: .csv (UTF-8 BOM), .xlsx, .xls
+ * Excel engine: exceljs (thay the xlsx@0.18.5 de fix CVE-2023-30533 + CVE-2024-22363)
  */
 @Injectable()
 export class FileParserService {
@@ -25,11 +26,11 @@ export class FileParserService {
    * Parse file buffer thanh array of objects
    * Dong dau tien la header, cac dong sau la data
    */
-  parseFile(
+  async parseFile(
     buffer: Buffer,
     originalName: string,
     mimeType: string,
-  ): { headers: string[]; rows: Record<string, string>[]; totalRows: number } {
+  ): Promise<{ headers: string[]; rows: Record<string, string>[]; totalRows: number }> {
     // Validate size
     if (buffer.length > this.MAX_SIZE) {
       throw new BadRequestException('File qua lon, toi da 10MB');
@@ -86,55 +87,129 @@ export class FileParserService {
   }
 
   /**
-   * Parse Excel — dung xlsx, doc sheet dau tien
+   * Parse Excel — dung exceljs, doc sheet dau tien
+   * Chuyen row 1 thanh header, cac row sau map theo header
    */
-  private parseExcel(buffer: Buffer): { headers: string[]; rows: Record<string, string>[]; totalRows: number } {
-    const workbook = XLSX.read(buffer, { type: 'buffer' });
-    const sheetName = workbook.SheetNames[0];
+  private async parseExcel(buffer: Buffer): Promise<{ headers: string[]; rows: Record<string, string>[]; totalRows: number }> {
+    const workbook = new Workbook();
+    // exceljs.load accept ArrayBuffer / Buffer
+    await workbook.xlsx.load(buffer as unknown as ArrayBuffer);
 
-    if (!sheetName) {
+    const worksheet = workbook.worksheets[0];
+    if (!worksheet) {
       throw new BadRequestException('File Excel khong co sheet nao');
     }
 
-    const sheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json<Record<string, string>>(sheet, { defval: '' });
-
-    if (jsonData.length === 0) {
+    // Lay header row (row dau tien khong rong)
+    const headerRow = worksheet.getRow(1);
+    if (!headerRow || !headerRow.values || (headerRow.values as unknown[]).length === 0) {
       throw new BadRequestException('Sheet khong co du lieu');
     }
 
-    const headers = Object.keys(jsonData[0]);
+    // exceljs row.values la array 1-indexed (index 0 thuong la null)
+    const rawHeaderValues = headerRow.values as unknown[];
+    const headers: string[] = [];
+    for (let col = 1; col < rawHeaderValues.length; col++) {
+      const val = rawHeaderValues[col];
+      headers.push(this.cellValueToString(val).trim());
+    }
+
+    if (headers.length === 0 || headers.every((h) => h === '')) {
+      throw new BadRequestException('Sheet khong co du lieu');
+    }
+
+    const rows: Record<string, string>[] = [];
+    const lastRow = worksheet.actualRowCount || worksheet.rowCount;
+
+    for (let r = 2; r <= lastRow; r++) {
+      const row = worksheet.getRow(r);
+      // Bo qua row rong hoan toan
+      if (!row || !row.hasValues) continue;
+
+      const rowValues = row.values as unknown[];
+      const obj: Record<string, string> = {};
+      let hasAnyValue = false;
+
+      for (let c = 0; c < headers.length; c++) {
+        const key = headers[c];
+        if (!key) continue;
+        // exceljs values 1-indexed, header[0] tuong ung row.values[1]
+        const cellVal = rowValues[c + 1];
+        const strVal = this.cellValueToString(cellVal).trim();
+        if (strVal !== '') hasAnyValue = true;
+        obj[key] = strVal;
+      }
+
+      if (hasAnyValue) rows.push(obj);
+    }
+
+    if (rows.length === 0) {
+      throw new BadRequestException('Sheet khong co du lieu');
+    }
 
     return {
       headers,
-      rows: jsonData.map((row) => {
-        // Dam bao tat ca values la string
-        const cleaned: Record<string, string> = {};
-        for (const key of headers) {
-          cleaned[key] = String(row[key] ?? '').trim();
-        }
-        return cleaned;
-      }),
-      totalRows: jsonData.length,
+      rows,
+      totalRows: rows.length,
     };
+  }
+
+  /**
+   * Convert exceljs cell value to string
+   * Handles: primitive, Date, rich text, formula result, hyperlink
+   */
+  private cellValueToString(val: unknown): string {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'string') return val;
+    if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+    if (val instanceof Date) return val.toISOString();
+
+    // exceljs object shapes
+    if (typeof val === 'object') {
+      const obj = val as Record<string, unknown>;
+      // Rich text: { richText: [{ text: '...' }] }
+      if (Array.isArray(obj.richText)) {
+        return (obj.richText as Array<{ text?: string }>).map((t) => t.text ?? '').join('');
+      }
+      // Formula cell: { formula: '...', result: <value> }
+      if ('result' in obj) {
+        return this.cellValueToString(obj.result);
+      }
+      // Hyperlink: { text: '...', hyperlink: '...' }
+      if (typeof obj.text === 'string') {
+        return obj.text;
+      }
+      // Shared string / error fallback
+      if (typeof obj.toString === 'function') {
+        const s = obj.toString();
+        if (s !== '[object Object]') return s;
+      }
+    }
+
+    return String(val);
   }
 
   /**
    * Tao template Excel mau cho tung loai import
    */
-  generateTemplate(target: string): Buffer {
+  async generateTemplate(target: string): Promise<Buffer> {
     const headers = this.getTemplateHeaders(target);
     const sampleRows = this.getSampleData(target);
 
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(sampleRows, { header: headers });
+    const wb = new Workbook();
+    const ws = wb.addWorksheet('Import Template');
 
-    // Set column widths
-    ws['!cols'] = headers.map(() => ({ wch: 20 }));
+    // Set columns va header row
+    ws.columns = headers.map((h) => ({ header: h, key: h, width: 20 }));
 
-    XLSX.utils.book_append_sheet(wb, ws, 'Import Template');
+    // Them sample data
+    for (const row of sampleRows) {
+      ws.addRow(row);
+    }
 
-    return Buffer.from(XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
+    const arrayBuffer = await wb.xlsx.writeBuffer();
+    // exceljs tra ArrayBuffer-like — convert sang Buffer
+    return Buffer.from(arrayBuffer as ArrayBuffer);
   }
 
   private getTemplateHeaders(target: string): string[] {

@@ -111,7 +111,7 @@ export class IntegrationsController {
     @Query('target') target: string = 'product',
     @Res() res: Response,
   ) {
-    const buffer = this.fileParser.generateTemplate(target);
+    const buffer = await this.fileParser.generateTemplate(target);
     const fileName = `import_template_${target}.xlsx`;
 
     res.set({

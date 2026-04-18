@@ -65,7 +65,7 @@ export class SyncEngineService {
     errors: Array<{ row: number; field: string; message: string }>;
   }> {
     // Parse file
-    const parsed = this.fileParser.parseFile(buffer, originalName, mimeType);
+    const parsed = await this.fileParser.parseFile(buffer, originalName, mimeType);
 
     // Auto-detect column mapping
     const mapping = this.dataMapper.autoDetectMapping(parsed.headers, target);
