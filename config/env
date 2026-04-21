@@ -1,44 +1,28 @@
 # ============================================
 # FashionEcom Production — shop.bhquan.store
-# File nay duoc deploy len VPS thanh .env
-# Sua truc tiep o day, commit + push de cap nhat
+# NON-SENSITIVE config only.
+# Sensitive values luu trong GitHub Actions Secrets.
 # ============================================
-
-# -- VPS (SSH connection, chung voi WebPhoto + LeQuyDon) --
-VPS_HOST=143.198.217.127
-VPS_PORT=22
-VPS_USER=root
-VPS_PASSWORD=123456789@Abc
 
 # -- Domain --
 DOMAIN=shop.bhquan.store
 
-# -- API URL (cho cron jobs goi API tu ben ngoai) --
+# -- API URL --
 API_URL=https://shop.bhquan.store
 
-# -- MySQL (shared: shared-mysql container — /opt/infra/) --
-MYSQL_ROOT_PASSWORD=8bb34f47771a83d9ab543bc0f47d5e1a
-FE_DB_PASSWORD=3420410f511e3be7758afe63ff12b04a5b5c2cdff30a0b62e7911ed24d8d7e5f
-
-# -- Backend DB connection (shared-mysql host qua docker network) --
+# -- Backend DB connection (qua docker network) --
 DB_HOST=shared-mysql
 DB_PORT=3306
 DB_USERNAME=fashionecom
-DB_PASSWORD=3420410f511e3be7758afe63ff12b04a5b5c2cdff30a0b62e7911ed24d8d7e5f
 DB_NAME=fashionecom
 
-# -- Redis (shared: shared-redis container) --
+# -- Redis (shared container) --
 REDIS_HOST=shared-redis
 REDIS_PORT=6379
 
-# -- JWT --
-JWT_SECRET=095347ed62d92e626317d60f94a08910824a071c386086fbc7307058b8e41749dfbcb99224d1a31d7e24a750719b9cf53731c3b295f21a34afeb31edb6421ba6
+# -- JWT expiration (seconds) --
 JWT_EXPIRATION=900
 REFRESH_TOKEN_EXPIRATION=604800
 
-# -- ISR Revalidation --
-REVALIDATE_SECRET=9b0f7dc0b6a239e2d0057c271b4e201d7f560ad898b35007ce49a642e5e7e760
+# -- ISR Revalidation URL (internal docker) --
 NEXT_REVALIDATE_URL=http://fashionecom-frontend:3000
-
-# -- Cron --
-CRON_SECRET=107d87671be315e5dc13321b5e12ede6
