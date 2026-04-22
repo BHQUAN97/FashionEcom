@@ -651,7 +651,7 @@ jobs:
           sshpass -e ssh -p $PORT $VPS "docker ps -a --format 'table {{.Names}}\t{{.Status}}' | grep -E 'fashionecom|shared'" 2>&1
 
           for i in $(seq 1 15); do
-            RESULT=$(sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-api wget -q -O - http://localhost:4000/api/health 2>/dev/null" 2>&1)
+            RESULT=$(sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-api curl -sf http://localhost:4000/api/health 2>/dev/null" 2>&1)
             RC=$?
             if [ $RC -eq 0 ] && [ -n "$RESULT" ]; then
               echo "Backend: OK — $RESULT"
@@ -673,7 +673,7 @@ jobs:
           VPS="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
           PORT="${{ secrets.VPS_PORT }}"
           for i in $(seq 1 10); do
-            sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-frontend wget -q -O /dev/null http://localhost:3000 2>/dev/null" && { echo "Frontend: OK"; exit 0; }
+            sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-frontend curl -sf http://localhost:3000 > /dev/null 2>&1" && { echo "Frontend: OK"; exit 0; }
             [ $i -eq 10 ] && { echo "::error::Frontend health check failed"; sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-frontend --tail 20" 2>&1; exit 1; }
             sleep 2
           done
