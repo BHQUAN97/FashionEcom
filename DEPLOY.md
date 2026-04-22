@@ -66,6 +66,16 @@ gh secret list --repo BHQUAN97/FashionEcom
 
 ---
 
+## Checklist trước khi deploy
+
+- [ ] `gh secret list --repo BHQUAN97/FashionEcom` hiện đủ 9 secrets
+- [ ] Push code lên `master` → Actions chạy tự động
+- [ ] Xem progress: `gh run watch --repo BHQUAN97/FashionEcom`
+
+> Đổi VPS password: `bash /e/DEVELOP/.claude-shared/secrets-infra/scripts/set-all-secrets.sh --shared`
+
+---
+
 ## Deploy
 
 ### Tự động (Khuyên dùng)
