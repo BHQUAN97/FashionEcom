@@ -144,7 +144,7 @@ jobs:
           # Build full .env: non-sensitive from config/env + secrets appended
           grep -v '^\s*#' config/env | grep -v '^\s*$' > /tmp/prod.env
           {
-            echo "FE_DB_PASSWORD=${{ secrets.FE_DB_PASSWORD }}"
+            echo "DB_PASSWORD=${{ secrets.FE_DB_PASSWORD }}"
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}"
             echo "REVALIDATE_SECRET=${{ secrets.REVALIDATE_SECRET }}"
             echo "CRON_SECRET=${{ secrets.CRON_SECRET }}"
