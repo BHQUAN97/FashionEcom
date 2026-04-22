@@ -130,6 +130,11 @@ export function useAnalytics() {
         const payload = JSON.stringify({ events: eventQueue.splice(0) });
         navigator.sendBeacon('/api/analytics/events', new Blob([payload], { type: 'application/json' }));
       }
+      // Clear pending flushTimer de tranh leak neu tab bi tat giua chung
+      if (flushTimer) {
+        clearTimeout(flushTimer);
+        flushTimer = null;
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

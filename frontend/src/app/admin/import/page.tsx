@@ -103,7 +103,15 @@ export default function ImportPage() {
 
   // ==================== FILE UPLOAD ====================
 
+  // Ref de luu controller upload hien tai — cancel neu user re-upload
+  const uploadAbortRef = useRef<AbortController | null>(null);
+
   const handleFileUpload = useCallback(async (file: File) => {
+    // Huy upload truoc (neu co) de tranh race khi user chon file thu 2
+    if (uploadAbortRef.current) uploadAbortRef.current.abort();
+    const controller = new AbortController();
+    uploadAbortRef.current = controller;
+
     setUploading(true);
     setMessage(null);
     setPreview(null);
@@ -120,6 +128,7 @@ export default function ImportPage() {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: formData,
+        signal: controller.signal,
       });
 
       const json = await res.json();
@@ -128,9 +137,14 @@ export default function ImportPage() {
       setPreview(json.data);
       setMessage({ type: 'success', text: json.message });
     } catch (err) {
+      // Bo qua abort error — user chu dong huy
+      if (err instanceof Error && err.name === 'AbortError') return;
       setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Loi upload file' });
     } finally {
-      setUploading(false);
+      if (uploadAbortRef.current === controller) {
+        uploadAbortRef.current = null;
+        setUploading(false);
+      }
     }
   }, [target]);
 

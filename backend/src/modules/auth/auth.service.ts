@@ -65,11 +65,9 @@ export class AuthService {
       throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
     }
 
-    // Cap nhat last_login va login_count
-    await this.userRepo.update(user.sysUserId, {
-      sysUserLastLogin: new Date(),
-      sysUserLoginCount: () => 'sys_user_login_count + 1',
-    } as unknown as Partial<UserEntity>);
+    // Cap nhat last_login va login_count — dung increment() cua TypeORM cho atomic
+    await this.userRepo.update(user.sysUserId, { sysUserLastLogin: new Date() });
+    await this.userRepo.increment({ sysUserId: user.sysUserId }, 'sysUserLoginCount', 1);
 
     this.logger.log(`[AUDIT] Login success: ${user.sysUserEmail}, role=${user.sysUserRole}`);
 

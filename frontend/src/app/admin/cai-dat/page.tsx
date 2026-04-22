@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAdminFetch } from '@/lib/hooks/use-admin-fetch';
 import { api } from '@/lib/api/client';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // API trả về dạng { shop: { key: value }, shipping: { key: value }, ... }
 type SettingsData = Record<string, Record<string, string>>;
@@ -75,7 +76,33 @@ export default function SettingsPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500">Đang tải...</div>;
+    // Skeleton match layout chinh: sidebar + content form
+    return (
+      <div>
+        <Skeleton className="h-8 w-48 mb-6" />
+        <div className="grid lg:grid-cols-4 gap-6">
+          <div className="space-y-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} className="h-10 w-full" />
+            ))}
+          </div>
+          <div className="lg:col-span-3">
+            <div className="bg-white border rounded-lg p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-6 w-40" />
+                <Skeleton className="h-9 w-28" />
+              </div>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

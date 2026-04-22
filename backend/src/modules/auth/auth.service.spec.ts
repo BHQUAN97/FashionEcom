@@ -42,6 +42,7 @@ describe('AuthService', () => {
       createQueryBuilder: jest.fn().mockReturnValue(qbMock),
       findOne: jest.fn(),
       update: jest.fn(),
+      increment: jest.fn(),
     };
 
     refreshTokenRepo = {

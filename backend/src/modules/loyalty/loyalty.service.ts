@@ -163,7 +163,8 @@ export class LoyaltyService extends BaseService<LoyaltyTransactionEntity> {
     }
 
     // Tinh gia tri giam gia: 100 diem = 10,000 VND
-    const discountAmount = (dto.points / redeemRate) * 10000;
+    // Dung integer math de tranh floating-point loi (0.1 + 0.2 != 0.3)
+    const discountAmount = Math.floor((dto.points * 10000) / redeemRate);
 
     const transaction = this.transRepo.create({
       prmLoyaltyTransactionId: randomUUID(),

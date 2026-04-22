@@ -40,29 +40,43 @@ export class SettingsService {
   }
 
   /**
-   * Cap nhat settings theo group — upsert tung key
+   * Cap nhat settings theo group — upsert batch, chi 2 query thay vi 2*N
    */
   async updateByGroup(group: string, data: Record<string, string>) {
-    for (const [key, value] of Object.entries(data)) {
-      const existing = await this.settingRepo.findOne({
-        where: { sysSettingGroup: group, sysSettingKey: key },
-      });
+    const keys = Object.keys(data);
+    if (keys.length === 0) return this.getByGroup(group);
 
-      if (existing) {
-        existing.sysSettingValue = value;
-        existing.modifiedDate = new Date();
-        await this.settingRepo.save(existing);
+    // Query batch: lay tat ca settings da ton tai trong group theo keys
+    const existing = await this.settingRepo
+      .createQueryBuilder('s')
+      .where('s.sysSettingGroup = :group', { group })
+      .andWhere('s.sysSettingKey IN (:...keys)', { keys })
+      .getMany();
+    const existingMap = new Map(existing.map((s) => [s.sysSettingKey, s]));
+
+    const now = new Date();
+    const toSave: SettingEntity[] = [];
+
+    for (const [key, value] of Object.entries(data)) {
+      const found = existingMap.get(key);
+      if (found) {
+        found.sysSettingValue = value;
+        found.modifiedDate = now;
+        toSave.push(found);
       } else {
-        const setting = this.settingRepo.create({
-          sysSettingId: randomUUID(),
-          sysSettingGroup: group,
-          sysSettingKey: key,
-          sysSettingValue: value,
-        });
-        await this.settingRepo.save(setting);
+        toSave.push(
+          this.settingRepo.create({
+            sysSettingId: randomUUID(),
+            sysSettingGroup: group,
+            sysSettingKey: key,
+            sysSettingValue: value,
+          }),
+        );
       }
     }
 
+    // 1 query save batch
+    await this.settingRepo.save(toSave);
     return this.getByGroup(group);
   }
 }

@@ -6,6 +6,17 @@ import { ValidateCartDto } from './dto/cart-validate.dto';
 import { ValidateUUIDPipe } from '@/common/pipes/uuid-validation.pipe';
 
 /**
+ * Field enrich them vao product response — service tra ProductEntity nhung
+ * controller enrich them runtime. Dung Record<string, unknown> intersection
+ * de compatible voi class ProductEntity (strict).
+ */
+type EnrichFields = {
+  price_range?: { min?: number; max?: number };
+  bestSalePrice?: BestSalePrice | null;
+  effectivePrice?: number;
+};
+
+/**
  * Public API cho storefront — khong can auth
  * Enrich response voi best_sale_price tu campaign/flash sale
  */
@@ -22,8 +33,9 @@ export class ProductsPublicController {
     const result = await this.productsService.findAll(query);
 
     // Batch fetch sale prices cho tat ca variant cua tat ca products
+    // products la ProductEntity[] + cac field runtime (price_range, bestSalePrice)
+    const products = (result.data || []) as Array<EnrichFields & { variants?: Array<{ catProductVariantId: string }> }>;
     const allVariantIds: string[] = [];
-    const products = result.data || [];
     for (const p of products) {
       if (p.variants?.length) {
         for (const v of p.variants) {
@@ -36,7 +48,7 @@ export class ProductsPublicController {
 
     // Enrich moi product: tim gia sale thap nhat, tinh effective_price
     for (const p of products) {
-      let effectiveMin = (p as any).price_range?.min ?? 0;
+      let effectiveMin = p.price_range?.min ?? 0;
       if (p.variants?.length) {
         let bestSale: BestSalePrice | null = null;
         for (const v of p.variants) {
@@ -46,17 +58,17 @@ export class ProductsPublicController {
           }
         }
         if (bestSale) {
-          (p as any).bestSalePrice = bestSale;
+          p.bestSalePrice = bestSale;
           effectiveMin = bestSale.salePrice;
         }
       }
-      (p as any).effectivePrice = effectiveMin;
+      p.effectivePrice = effectiveMin;
     }
 
     // Filter theo khoang gia (dung effective price = gia sau KM)
     let filtered = products;
     if (query.priceMin !== undefined || query.priceMax !== undefined) {
-      filtered = products.filter((p: any) => {
+      filtered = products.filter((p) => {
         const ep = p.effectivePrice ?? p.price_range?.min ?? 0;
         if (query.priceMin !== undefined && ep < query.priceMin) return false;
         if (query.priceMax !== undefined && ep > query.priceMax) return false;
@@ -68,7 +80,7 @@ export class ProductsPublicController {
         total: filtered.length,
         total_pages: Math.ceil(filtered.length / (result.pagination?.limit || 20)),
       };
-      result.data = filtered;
+      result.data = filtered as typeof result.data;
     }
 
     return result;
@@ -160,13 +172,15 @@ export class ProductsPublicController {
   /**
    * Enrich product detail — batch tinh best sale price cho moi variant
    */
-  private async enrichProductWithSalePrices(product: any) {
+  private async enrichProductWithSalePrices<T extends { variants?: Array<{ catProductVariantId: string }> } | null | undefined>(
+    product: T,
+  ): Promise<T> {
     if (!product?.variants?.length) return product;
 
-    const variantIds = product.variants.map((v: any) => v.catProductVariantId);
+    const variantIds = product.variants.map((v) => v.catProductVariantId);
     const salePriceMap = await this.saleCampaignService.getBestSalePricesBatch(variantIds);
 
-    const enrichedVariants = product.variants.map((v: any) => ({
+    const enrichedVariants = product.variants.map((v) => ({
       ...v,
       bestSalePrice: salePriceMap.get(v.catProductVariantId) || null,
     }));

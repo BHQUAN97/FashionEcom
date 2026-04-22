@@ -33,11 +33,10 @@ export class CustomersController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
   ) {
-    return this.customersService.getOrderHistory(
-      id,
-      page ? (parseInt(page) || 1) : 1,
-      limit ? Math.min(parseInt(limit) || 10, 100) : 10,
-    );
+    // Clamp [1, inf] cho page va [1, 100] cho limit — phong gia tri am/NaN
+    const pageNum = Math.max(1, parseInt(page || '1') || 1);
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit || '10') || 10));
+    return this.customersService.getOrderHistory(id, pageNum, limitNum);
   }
 
   @Get(':id/addresses')

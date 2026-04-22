@@ -121,8 +121,8 @@ export function DynamicNav() {
         return res.json();
       })
       .then((json) => {
-        // API tra ve { success, data, message }
-        const items: ApiMenuItem[] = json.data;
+        // API tra ve { success, data: { menu, items }, message }
+        const items: ApiMenuItem[] = json?.data?.items ?? [];
         if (Array.isArray(items) && items.length > 0) {
           setMenu(mapApiMenuToNav(items));
         }

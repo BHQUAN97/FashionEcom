@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { X, Check, Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -10,6 +10,15 @@ import { useUIStore } from '@/lib/stores/ui.store';
 import { ROUTES } from '@/lib/constants/routes';
 import type { ProductListItem } from '@/types/product';
 import { PriceDisplay } from './price-display';
+
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
 
 interface QuickAddPopupProps {
   product: ProductListItem;
@@ -29,6 +38,9 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [currentImg, setCurrentImg] = useState(0);
+  // Refs cho focus trap a11y
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   // Auto-select size dau tien co hang khi color thay doi hoac mount
   useEffect(() => {
@@ -45,14 +57,46 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
   // Danh sach anh
   const images = [product.image, product.image_hover].filter(Boolean) as string[];
 
-  // ESC de dong
+  // ESC dong + focus trap (Tab cycle trong dialog) — a11y
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    // Luu element dang focus truoc khi mo de tra ve sau khi dong
+    previouslyFocusedRef.current = document.activeElement as HTMLElement;
+
+    // Focus vao dialog khi mount
+    requestAnimationFrame(() => {
+      const first = dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+      (first ?? dialogRef.current)?.focus();
+    });
+
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      // Tab: khoa focus trong dialog
+      if (e.key === 'Tab' && dialogRef.current) {
+        const nodes = dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+        const focusables = Array.from(nodes).filter((el) => !el.hasAttribute('disabled') && el.offsetParent !== null);
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement as HTMLElement;
+        if (e.shiftKey && (active === first || !dialogRef.current.contains(active))) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handler);
     return () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handler);
+      // Tra focus ve element goc
+      previouslyFocusedRef.current?.focus?.();
     };
   }, [onClose]);
 
@@ -116,7 +160,12 @@ export function QuickAddPopup({ product, onClose }: QuickAddPopupProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg shadow-2xl w-full max-w-[900px] max-h-[90vh] overflow-y-auto overscroll-contain relative animate-in fade-in zoom-in-95 duration-200"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={product.name}
+        tabIndex={-1}
+        className="bg-white rounded-lg shadow-2xl w-full max-w-[900px] max-h-[90vh] overflow-y-auto overscroll-contain relative animate-in fade-in zoom-in-95 duration-200 outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Nut dong */}

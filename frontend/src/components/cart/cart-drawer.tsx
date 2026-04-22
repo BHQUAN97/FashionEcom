@@ -28,11 +28,11 @@ function DrawerCartItem({ item }: { item: CartItem }) {
       </Link>
 
       {/* Thong tin */}
-      <div className="flex-1 min-w-0 pr-6 relative">
-        {/* Nut xoa — goc phai tren */}
+      <div className="flex-1 min-w-0 pr-11 md:pr-6 relative">
+        {/* Nut xoa — goc phai tren; 44x44 mobile de dat touch target, compact desktop */}
         <button
           onClick={() => removeItem(item.variantId)}
-          className="absolute top-0 right-0 p-0.5 text-gray-400 hover:text-gray-700 transition"
+          className="absolute -top-2 -right-2 md:top-0 md:right-0 w-11 h-11 md:w-auto md:h-auto md:p-0.5 flex items-center justify-center text-gray-400 hover:text-gray-700 transition"
           aria-label="Xóa sản phẩm"
         >
           <X className="w-4 h-4" />
@@ -46,22 +46,22 @@ function DrawerCartItem({ item }: { item: CartItem }) {
           {item.color} / {item.size}
         </p>
 
-        {/* Qty stepper + Gia */}
+        {/* Qty stepper + Gia — touch target 44x44 tren mobile (constitution) */}
         <div className="flex items-center justify-between mt-2">
-          <div className="flex items-center border border-gray-300 h-7">
+          <div className="flex items-center border border-gray-300 h-11 md:h-7">
             <button
               onClick={() => updateQty(item.variantId, item.qty - 1)}
               disabled={item.qty <= 1}
-              className="w-7 h-7 flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-30"
+              className="w-11 h-11 md:w-7 md:h-7 flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-30"
               aria-label="Giảm"
             >
               <Minus className="w-3 h-3" />
             </button>
-            <span className="w-7 text-center text-xs font-medium select-none">{item.qty}</span>
+            <span className="w-10 md:w-7 text-center text-sm md:text-xs font-medium select-none">{item.qty}</span>
             <button
               onClick={() => updateQty(item.variantId, item.qty + 1)}
               disabled={item.qty >= item.max_qty}
-              className="w-7 h-7 flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-30"
+              className="w-11 h-11 md:w-7 md:h-7 flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-30"
               aria-label="Tăng"
             >
               <Plus className="w-3 h-3" />
@@ -186,7 +186,7 @@ export function CartDrawer() {
           <h2 className="text-lg font-bold">Giỏ hàng</h2>
           <button
             onClick={toggleCart}
-            className="p-1 hover:bg-gray-100 rounded-full transition"
+            className="w-11 h-11 md:w-8 md:h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition"
             aria-label="Đóng giỏ hàng"
           >
             <X className="w-5 h-5" />
