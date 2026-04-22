@@ -275,7 +275,7 @@ jobs:
 
           echo ""
           echo "=== Building backend ==="
-          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose --env-file .env -f docker-compose.prod.yml build backend 2>&1"
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml build backend 2>&1"
           if [ $? -ne 0 ]; then
             echo "::error::Backend build failed"
             sshpass -e ssh -p $PORT $VPS "free -h; dmesg | grep -i 'oom\|killed' | tail -5" 2>&1 || true
@@ -284,7 +284,7 @@ jobs:
 
           echo ""
           echo "=== Building frontend ==="
-          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose --env-file .env -f docker-compose.prod.yml build frontend 2>&1"
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml build frontend 2>&1"
           if [ $? -ne 0 ]; then
             echo "::error::Frontend build failed"
             sshpass -e ssh -p $PORT $VPS "free -h; dmesg | grep -i 'oom\|killed' | tail -5" 2>&1 || true
@@ -293,7 +293,7 @@ jobs:
 
           echo ""
           echo "=== Starting services ==="
-          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose --env-file .env -f docker-compose.prod.yml up -d 2>&1"
+          sshpass -e ssh -p $PORT $VPS "cd ${APP_DIR} && docker compose -f docker-compose.prod.yml up -d 2>&1"
           if [ $? -ne 0 ]; then
             echo "::error::Docker start failed"
             sshpass -e ssh -p $PORT $VPS "
