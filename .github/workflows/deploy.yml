@@ -673,7 +673,7 @@ jobs:
           VPS="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
           PORT="${{ secrets.VPS_PORT }}"
           for i in $(seq 1 10); do
-            sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-frontend curl -sf http://localhost:3000 > /dev/null 2>&1" && { echo "Frontend: OK"; exit 0; }
+            sshpass -e ssh -p $PORT $VPS "docker exec fashionecom-frontend curl -s --max-time 5 -o /dev/null http://localhost:3000 2>/dev/null" && { echo "Frontend: OK"; exit 0; }
             [ $i -eq 10 ] && { echo "::error::Frontend health check failed"; sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-frontend --tail 20" 2>&1; exit 1; }
             sleep 2
           done
