@@ -70,6 +70,6 @@ services:
 
 networks:
   fashionecom-net:
-    driver: bridge
   webphoto_backend:
+    name: webphoto_backend
     external: true
