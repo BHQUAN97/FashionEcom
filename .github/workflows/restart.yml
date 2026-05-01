@@ -34,14 +34,7 @@ jobs:
             docker compose -f docker-compose.prod.yml up -d backend frontend 2>&1
           "
 
-          echo ""
-          echo "=== Wait for backend ==="
-          for i in \$(seq 1 20); do
-            sshpass -e ssh -p $PORT $VPS "curl -sf http://localhost:5301/api/health" > /dev/null 2>&1 && { echo "Backend OK!"; break; }
-            echo "  Attempt $i/20..."
-            [ $i -eq 20 ] && echo "::warning::Backend not responding after 40s"
-            sleep 2
-          done
+          sleep 15
 
           echo ""
           echo "=== Container status after ==="
@@ -49,4 +42,12 @@ jobs:
 
           echo ""
           echo "=== Backend logs (last 20) ==="
-          sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-api --tail 20 2>&1 || docker logs fashion-api --tail 20 2>&1 || echo 'Container not found'"
+          sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-api --tail 20 2>&1"
+
+          echo ""
+          echo "=== Frontend logs (last 30) ==="
+          sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-frontend --tail 30 2>&1"
+
+          echo ""
+          echo "=== VPS memory ==="
+          sshpass -e ssh -p $PORT $VPS "free -h"
