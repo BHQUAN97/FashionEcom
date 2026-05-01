@@ -49,5 +49,12 @@ jobs:
           sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-frontend --tail 30 2>&1"
 
           echo ""
+          echo "=== Reconnect nginx to fashionecom-net ==="
+          sshpass -e ssh -p $PORT $VPS "
+            docker network connect fashionecom-net shared-nginx 2>/dev/null || echo 'Already connected or not found'
+            docker exec shared-nginx nginx -s reload 2>&1 || true
+          "
+
+          echo ""
           echo "=== VPS memory ==="
           sshpass -e ssh -p $PORT $VPS "free -h"
