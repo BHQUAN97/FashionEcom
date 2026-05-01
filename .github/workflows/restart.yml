@@ -27,11 +27,12 @@ jobs:
           sshpass -e ssh -p $PORT $VPS "docker ps -a --format 'table {{.Names}}\t{{.Status}}' | grep -E 'fashion|shared'"
 
           echo ""
-          echo "=== Restart fashionecom containers ==="
+          echo "=== Force-recreate fashionecom containers ==="
           sshpass -e ssh -p $PORT $VPS "
             cd ${APP_DIR}
-            docker compose -f docker-compose.prod.yml restart backend frontend 2>&1 || \
-            docker compose -f docker-compose.prod.yml up -d backend frontend 2>&1
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend 2>&1
+            sleep 15
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate frontend 2>&1
           "
 
           sleep 15
