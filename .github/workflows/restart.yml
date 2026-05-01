@@ -1,0 +1,52 @@
+name: Restart Services
+
+on:
+  workflow_dispatch:
+
+env:
+  APP_DIR: /opt/fashionecom
+
+jobs:
+  restart:
+    name: "Restart containers"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass > /dev/null
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ secrets.VPS_PORT }} -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          echo "SSHPASS=${{ secrets.VPS_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Restart + diagnose
+        run: |
+          VPS="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
+          PORT="${{ secrets.VPS_PORT }}"
+
+          echo "=== Container status before ==="
+          sshpass -e ssh -p $PORT $VPS "docker ps -a --format 'table {{.Names}}\t{{.Status}}' | grep -E 'fashion|shared'"
+
+          echo ""
+          echo "=== Restart fashionecom containers ==="
+          sshpass -e ssh -p $PORT $VPS "
+            cd ${APP_DIR}
+            docker compose -f docker-compose.prod.yml restart backend frontend 2>&1 || \
+            docker compose -f docker-compose.prod.yml up -d backend frontend 2>&1
+          "
+
+          echo ""
+          echo "=== Wait for backend ==="
+          for i in \$(seq 1 20); do
+            sshpass -e ssh -p $PORT $VPS "curl -sf http://localhost:5301/api/health" > /dev/null 2>&1 && { echo "Backend OK!"; break; }
+            echo "  Attempt $i/20..."
+            [ $i -eq 20 ] && echo "::warning::Backend not responding after 40s"
+            sleep 2
+          done
+
+          echo ""
+          echo "=== Container status after ==="
+          sshpass -e ssh -p $PORT $VPS "docker ps --format 'table {{.Names}}\t{{.Status}}' | grep -E 'fashion|shared'"
+
+          echo ""
+          echo "=== Backend logs (last 20) ==="
+          sshpass -e ssh -p $PORT $VPS "docker logs fashionecom-api --tail 20 2>&1 || docker logs fashion-api --tail 20 2>&1 || echo 'Container not found'"
