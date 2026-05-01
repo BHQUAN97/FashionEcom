@@ -55,6 +55,21 @@ jobs:
             docker exec shared-nginx nginx -s reload 2>&1 || true
           "
 
+          sleep 10
+
+          echo ""
+          echo "=== Test nginx -> frontend connectivity ==="
+          sshpass -e ssh -p $PORT $VPS "
+            echo '--- nginx can reach fashionecom-frontend? ---'
+            docker exec shared-nginx wget -qO- --timeout=5 http://fashionecom-frontend:3000 > /dev/null 2>&1 && echo 'REACHABLE' || echo 'NOT REACHABLE'
+            echo '--- fashionecom-frontend container inspect networks ---'
+            docker inspect fashionecom-frontend --format '{{range \$k, \$v := .NetworkSettings.Networks}}{{\$k}} {{end}}' 2>&1
+            echo '--- shared-nginx networks ---'
+            docker inspect shared-nginx --format '{{range \$k, \$v := .NetworkSettings.Networks}}{{\$k}} {{end}}' 2>&1
+            echo '--- fashionecom-frontend port binding ---'
+            docker inspect fashionecom-frontend --format '{{.NetworkSettings.Ports}}' 2>&1
+          "
+
           echo ""
           echo "=== VPS memory ==="
           sshpass -e ssh -p $PORT $VPS "free -h"
