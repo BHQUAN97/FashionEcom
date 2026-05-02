@@ -432,8 +432,22 @@ jobs:
                   -subj /CN=shop.bhquan.store 2>/dev/null
               ' || true
             fi
-            docker exec shared-nginx nginx -t 2>&1 | tail -1 && docker exec shared-nginx nginx -s reload
-          " || true
+            echo '--- nginx config test ---'
+            docker exec shared-nginx nginx -t 2>&1 || true
+            if docker inspect shared-nginx --format '{{.State.Running}}' 2>/dev/null | grep -q true; then
+              docker exec shared-nginx nginx -s reload 2>/dev/null && echo 'Nginx reloaded OK' || echo '::warning::nginx reload failed'
+              sleep 3
+              NGINX_STATUS=\$(docker inspect shared-nginx --format '{{.State.Status}}' 2>/dev/null || echo missing)
+              if [ \"\$NGINX_STATUS\" != 'running' ]; then
+                echo '::error::shared-nginx not running after config update (status='\$NGINX_STATUS')'
+                docker logs shared-nginx --tail 20 2>&1 || true
+                exit 1
+              fi
+              echo 'nginx: OK'
+            else
+              echo '::warning::shared-nginx not running — skip reload'
+            fi
+          "
 
       - name: "[UPDATE] Sync infra"
         if: needs.build.outputs.mode == 'update' && needs.build.outputs.infra == 'true'
@@ -502,7 +516,31 @@ jobs:
             docker exec shared-nginx nginx -s reload 2>/dev/null || true
           "
 
-      # ── SHARED: Config + DB ──────────────────────
+      # ── SHARED: Crontab + DB ─────────────────────
+      - name: Install crontab (idempotent)
+        run: |
+          VPS="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
+          PORT="${{ secrets.VPS_PORT }}"
+          sshpass -e ssh -p $PORT $VPS "mkdir -p ${APP_DIR}/scripts"
+          sshpass -e scp -P $PORT scripts/crontab.example $VPS:${APP_DIR}/scripts/crontab.example
+          sshpass -e ssh -p $PORT $VPS "
+            mkdir -p /var/log/fashionecom
+            if [ ! -f /etc/cron.d/fashionecom ]; then
+              if cp ${APP_DIR}/scripts/crontab.example /etc/cron.d/fashionecom 2>/dev/null; then
+                chmod 644 /etc/cron.d/fashionecom
+                chown root:root /etc/cron.d/fashionecom 2>/dev/null || true
+                echo 'Crontab installed: /etc/cron.d/fashionecom'
+                ls -la /etc/cron.d/fashionecom
+              else
+                echo '::warning::Cannot write /etc/cron.d/fashionecom — manual install needed:'
+                echo '  sudo cp ${APP_DIR}/scripts/crontab.example /etc/cron.d/fashionecom && sudo chmod 644 /etc/cron.d/fashionecom'
+              fi
+            else
+              echo 'Crontab already exists — skip (/etc/cron.d/fashionecom)'
+              ls -la /etc/cron.d/fashionecom
+            fi
+          "
+
       - name: Ensure DB + user
         env:
           FE_DB_PASSWORD: ${{ secrets.FE_DB_PASSWORD }}
