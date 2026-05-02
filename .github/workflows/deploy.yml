@@ -180,7 +180,6 @@ jobs:
 
           echo "  Uploading nginx + infra + db + scripts..."
           sshpass -e scp -P $PORT nginx/conf.d/shop.bhquan.store.conf $VPS:${INFRA_DIR}/nginx/conf.d/shop.bhquan.store.conf
-          sshpass -e scp -P $PORT infra/nginx/nginx.conf $VPS:${INFRA_DIR}/nginx/nginx.conf
           sshpass -e scp -P $PORT -r db/changelog $VPS:${APP_DIR}/db/ 2>/dev/null || true
           sshpass -e scp -P $PORT -r db/seed $VPS:${APP_DIR}/db/ 2>/dev/null || true
           tar czf - scripts/ 2>/dev/null | sshpass -e ssh -p $PORT $VPS "tar xzf - -C ${APP_DIR}/"
@@ -458,7 +457,6 @@ jobs:
           PORT="${{ secrets.VPS_PORT }}"
           sshpass -e ssh -p $PORT $VPS "mkdir -p ${INFRA_DIR}/nginx/conf.d"
           sshpass -e scp -P $PORT infra/docker-compose.yml $VPS:${INFRA_DIR}/
-          sshpass -e scp -P $PORT infra/nginx/nginx.conf $VPS:${INFRA_DIR}/nginx/nginx.conf
           printf "MYSQL_ROOT_PASSWORD='%s'\n" "$MYSQL_ROOT_PASSWORD" > /tmp/infra_update.env
           sshpass -e scp -P $PORT /tmp/infra_update.env $VPS:${INFRA_DIR}/.env
           sshpass -e ssh -p $PORT $VPS "chmod 600 ${INFRA_DIR}/.env"
