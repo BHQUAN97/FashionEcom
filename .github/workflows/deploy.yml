@@ -9,6 +9,7 @@ on:
       - 'Design/**'
       - '.sdd/**'
       - '.github/workflows/ci.yml'
+  workflow_dispatch:
 
 concurrency:
   group: deploy
