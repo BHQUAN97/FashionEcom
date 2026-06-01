@@ -204,7 +204,7 @@ jobs:
           sshpass -e ssh -p $PORT $VPS "
             export PATH=\$PATH:/usr/local/bin
             docker network create webphoto_backend 2>/dev/null || true
-            docker network create fashionecom_fashionecom-net 2>/dev/null || true
+            docker network rm fashionecom_fashionecom-net 2>/dev/null || true
             mkdir -p /opt/webphoto/photo-storage/dist
 
             MYSQL_OK=\$(docker ps --filter name=shared-mysql --filter status=running --format '{{.Names}}' | grep -c shared-mysql || echo 0)
@@ -465,7 +465,7 @@ jobs:
           sshpass -e ssh -p $PORT $VPS "
             export PATH=\$PATH:/usr/local/bin
             docker network create webphoto_backend 2>/dev/null || true
-            docker network create fashionecom_fashionecom-net 2>/dev/null || true
+            docker network rm fashionecom_fashionecom-net 2>/dev/null || true
             docker pull nginx:1.27-alpine 2>&1 | tail -1
             cd ${INFRA_DIR} && docker compose up -d --force-recreate 2>&1 | tail -5
             for i in \$(seq 1 30); do
