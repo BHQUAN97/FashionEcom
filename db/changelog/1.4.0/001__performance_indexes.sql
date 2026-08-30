@@ -45,22 +45,20 @@ SET @stmt := (SELECT IF(
 PREPARE stmt FROM @stmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ---------------------------------------------------------------
--- 3. Composite index: sal_order_status + sal_order_shipping_status
---    Dung cho: dashboard.service.ts — filter don hang theo trang thai
---              + trang thai giao hang (bao cao/pipeline).
---    Cot sal_order_shipping_status duoc them boi
---    20260415_order_shipping_status.sql.
--- ---------------------------------------------------------------
-CREATE INDEX IF NOT EXISTS ix_sal_order_status_shipping
-  ON sal_order (sal_order_status, sal_order_shipping_status);
-
--- ---------------------------------------------------------------
--- 4. Composite index: sal_order_status + created_date
+-- 3. Composite index: sal_order_status + created_date
 --    Dung cho: orders.service stats, dashboard revenue/top queries
 --    (where salOrderStatus = 4 AND createdDate >= :since).
+--    (Bo qua ix_sal_order_status_shipping — cot sal_order_shipping_status
+--     chua ton tai tai version 1.4.0; index tao o 20260415_order_shipping_status.sql)
 -- ---------------------------------------------------------------
-CREATE INDEX IF NOT EXISTS ix_sal_order_status_created
-  ON sal_order (sal_order_status, created_date);
+SET @stmt := (SELECT IF(
+  (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE()
+       AND table_name   = 'sal_order'
+       AND index_name   = 'ix_sal_order_status_created') = 0,
+  'ALTER TABLE sal_order ADD INDEX ix_sal_order_status_created (sal_order_status, created_date)',
+  'SELECT 1'));
+PREPARE stmt FROM @stmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ---------------------------------------------------------------
 -- 5. (Bo qua) Index cat_product_variant_sku

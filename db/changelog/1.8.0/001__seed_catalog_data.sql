@@ -3,6 +3,7 @@
 -- Create date: 2026-04-15
 -- Description: Seed du lieu san pham thuc tu Torano.vn (48 products, 8 categories)
 --              Chuyen tu frontend mock data sang DB thuc
+SET FOREIGN_KEY_CHECKS=0;
 -- =============================================
 
 USE fashion_ecom;
@@ -653,45 +654,45 @@ CALL proc_seed_product('PHU-KIEN', 'GAAL012',
 -- 5. HERO BANNER SLIDES — seed vao cms_banner
 -- ==============================================================================
 
-INSERT IGNORE INTO cms_banner (cms_banner_id, cms_banner_title, cms_banner_subtitle, cms_banner_image, cms_banner_image_mobile, cms_banner_link, cms_banner_cta_text, cms_banner_position, cms_banner_sort, cms_banner_status) VALUES
-(UUID(), 'Back In Form',       'Not just back to work — back with presence', '/images/theme/slide_1_img.jpg', '/images/theme/slide_1_mb.jpg', '/san-pham',           'KHÁM PHÁ NGAY', 'hero', 1, 1),
-(UUID(), 'Embrace Holiday',    'FW Collection 2026',                         '/images/theme/slide_2_img.jpg', '/images/theme/slide_2_mb.jpg', '/danh-muc/ao-khoac',  'XEM BST',        'hero', 2, 1),
-(UUID(), 'Sale Lên Đến 50%',   'Ưu đãi có hạn — chỉ trong tuần này',       '/images/theme/slide_3_img.jpg', '/images/theme/slide_3_mb.jpg', '/danh-muc/ao-polo',   'MUA NGAY',       'hero', 3, 1),
-(UUID(), 'Lookbook For Men',   'Phong cách — Lịch lãm — Đẳng cấp',        '/images/theme/slide_4_img.jpg', '/images/theme/slide_4_mb.jpg', '/san-pham',           'KHÁM PHÁ',      'hero', 4, 1);
+INSERT IGNORE INTO cms_banner (cms_banner_id, cms_banner_title, cms_banner_image_desktop, cms_banner_image_mobile, cms_banner_alt, cms_banner_link, cms_banner_cta_text, cms_banner_sort, cms_banner_status) VALUES
+(UUID(), 'Back In Form',       '/images/theme/slide_1_img.jpg', '/images/theme/slide_1_mb.jpg', 'Back In Form',    '/san-pham',           'KHÁM PHÁ NGAY', 1, 1),
+(UUID(), 'Embrace Holiday',    '/images/theme/slide_2_img.jpg', '/images/theme/slide_2_mb.jpg', 'FW Collection 2026','/danh-muc/ao-khoac',  'XEM BST',        2, 1),
+(UUID(), 'Sale Lên Đến 50%',   '/images/theme/slide_3_img.jpg', '/images/theme/slide_3_mb.jpg', 'Sale 50%',        '/danh-muc/ao-polo',   'MUA NGAY',       3, 1),
+(UUID(), 'Lookbook For Men',   '/images/theme/slide_4_img.jpg', '/images/theme/slide_4_mb.jpg', 'Lookbook For Men', '/san-pham',           'KHÁM PHÁ',       4, 1);
 
 -- ==============================================================================
 -- 6. REVIEWS — seed vao sal_review
 -- ==============================================================================
 
 -- Tim product GSTP068 de gan review
-INSERT INTO sal_review (sal_review_id, cat_product_id, sal_review_customer_name, sal_review_rating, sal_review_content, sal_review_is_verified, created_date)
-SELECT UUID(), cp.cat_product_id, 'Nguyễn Văn Minh', 5,
+INSERT INTO sal_review (sal_review_id, sal_order_item_id, cat_product_id, sal_review_rating, sal_review_content, created_date)
+SELECT UUID(), UUID(), cp.cat_product_id, 5,
     'Chất vải rất đẹp, mặc thoáng mát. Form đúng size, không cần đổi. Rất hài lòng!',
-    1, '2026-04-10 08:00:00'
+    '2026-04-10 08:00:00'
 FROM cat_product cp WHERE cp.cat_product_code = 'GSTP068';
 
-INSERT INTO sal_review (sal_review_id, cat_product_id, sal_review_customer_name, sal_review_rating, sal_review_content, sal_review_is_verified, created_date)
-SELECT UUID(), cp.cat_product_id, 'Trần Thị Hồng', 4,
+INSERT INTO sal_review (sal_review_id, sal_order_item_id, cat_product_id, sal_review_rating, sal_review_content, created_date)
+SELECT UUID(), UUID(), cp.cat_product_id, 4,
     'Mua tặng chồng, anh ấy rất thích. Trừ 1 sao vì giao hàng hơi chậm.',
-    1, '2026-04-05 12:00:00'
+    '2026-04-05 12:00:00'
 FROM cat_product cp WHERE cp.cat_product_code = 'GSTP068';
 
-INSERT INTO sal_review (sal_review_id, cat_product_id, sal_review_customer_name, sal_review_rating, sal_review_content, sal_review_is_verified, created_date)
-SELECT UUID(), cp.cat_product_id, 'Lê Quốc Anh', 5,
+INSERT INTO sal_review (sal_review_id, sal_order_item_id, cat_product_id, sal_review_rating, sal_review_content, created_date)
+SELECT UUID(), UUID(), cp.cat_product_id, 5,
     'Mua lần 2 rồi. Cổ áo cứng cáp, giặt nhiều lần vẫn giữ form. Đáng tiền!',
-    1, '2026-03-28 15:00:00'
+    '2026-03-28 15:00:00'
 FROM cat_product cp WHERE cp.cat_product_code = 'GSTP068';
 
-INSERT INTO sal_review (sal_review_id, cat_product_id, sal_review_customer_name, sal_review_rating, sal_review_content, sal_review_is_verified, created_date)
-SELECT UUID(), cp.cat_product_id, 'Phạm Đức Huy', 4,
+INSERT INTO sal_review (sal_review_id, sal_order_item_id, cat_product_id, sal_review_rating, sal_review_content, created_date)
+SELECT UUID(), UUID(), cp.cat_product_id, 4,
     'Áo đẹp, đường may tỉ mỉ. Màu navy rất sang. Sẽ mua thêm màu đen.',
-    0, '2026-03-20 09:30:00'
+    '2026-03-20 09:30:00'
 FROM cat_product cp WHERE cp.cat_product_code = 'GSTP068';
 
-INSERT INTO sal_review (sal_review_id, cat_product_id, sal_review_customer_name, sal_review_rating, sal_review_content, sal_review_is_verified, created_date)
-SELECT UUID(), cp.cat_product_id, 'Hoàng Thế Vinh', 5,
+INSERT INTO sal_review (sal_review_id, sal_order_item_id, cat_product_id, sal_review_rating, sal_review_content, created_date)
+SELECT UUID(), UUID(), cp.cat_product_id, 5,
     'Torano chất lượng ổn định. Mua 3 cái cho 3 anh em, ai cũng khen.',
-    1, '2026-03-15 16:00:00'
+    '2026-03-15 16:00:00'
 FROM cat_product cp WHERE cp.cat_product_code = 'GSTP068';
 
 -- ==============================================================================
@@ -710,3 +711,4 @@ UNION ALL
 SELECT 'Media', COUNT(*) FROM cat_product_media
 UNION ALL
 SELECT 'Reviews', COUNT(*) FROM sal_review;
+SET FOREIGN_KEY_CHECKS=1;

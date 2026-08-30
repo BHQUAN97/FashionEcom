@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS sal_shipping_incident (
 -- 2. Them cot tong hop su co vao order de query nhanh
 ALTER TABLE sal_order
   ADD COLUMN sal_order_delivery_attempts INT NOT NULL DEFAULT 1
-    COMMENT 'So lan giao hang (1=binh thuong, 2+=giao lai)' AFTER sal_order_free_ship,
+    COMMENT 'So lan giao hang (1=binh thuong, 2+=giao lai)' AFTER sal_order_shipping_status,
   ADD COLUMN sal_order_shipping_extra_cost DECIMAL(22,4) NOT NULL DEFAULT 0
     COMMENT 'Tong phu phi ship phat sinh (giao lai, ...)' AFTER sal_order_delivery_attempts,
   ADD COLUMN sal_order_has_incident TINYINT NOT NULL DEFAULT 0

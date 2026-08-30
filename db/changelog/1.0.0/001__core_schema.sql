@@ -1,9 +1,9 @@
 -- Thiết lập Database với Charset và Collation chuẩn
-CREATE DATABASE IF NOT EXISTS fashion_ecom_distribution
+CREATE DATABASE IF NOT EXISTS fashion_ecom
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_0900_ai_ci;
 
-USE fashion_ecom_distribution;
+USE fashion_ecom;
 
 -- ==============================================================================
 -- PHÂN HỆ 1: SYSTEM (sys_) - Quản trị Hệ thống & Người dùng

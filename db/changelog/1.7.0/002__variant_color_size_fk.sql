@@ -16,11 +16,24 @@ SET @has_color_col = (
     AND COLUMN_NAME = 'cat_color_id'
 );
 
--- Neu da co cot, chi can MODIFY collation. Neu chua co thi bo qua (da co tu lan truoc)
+-- Them cot neu chua co
+SET @stmt := (SELECT IF(@has_color_col = 0,
+  'ALTER TABLE cat_product_variant ADD COLUMN cat_color_id CHAR(36) COLLATE utf8mb4_0900_ai_ci NULL COMMENT ''FK mau sac'' AFTER cat_product_variant_status',
+  'SELECT 1'));
+PREPARE stmt FROM @stmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @stmt := (SELECT IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE TABLE_SCHEMA = 'fashion_ecom' AND TABLE_NAME = 'cat_product_variant'
+       AND COLUMN_NAME = 'cat_size_id') = 0,
+  'ALTER TABLE cat_product_variant ADD COLUMN cat_size_id CHAR(36) COLLATE utf8mb4_0900_ai_ci NULL COMMENT ''FK kich thuoc'' AFTER cat_color_id',
+  'SELECT 1'));
+PREPARE stmt FROM @stmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
 -- Fix collation cho cot FK khop voi bang tham chieu (as_ci)
 ALTER TABLE cat_product_variant
-    MODIFY COLUMN cat_color_id CHAR(36) COLLATE utf8mb4_0900_as_ci NULL COMMENT 'FK mau sac',
-    MODIFY COLUMN cat_size_id CHAR(36) COLLATE utf8mb4_0900_as_ci NULL COMMENT 'FK kich thuoc';
+    MODIFY COLUMN cat_color_id CHAR(36) COLLATE utf8mb4_0900_ai_ci NULL COMMENT 'FK mau sac',
+    MODIFY COLUMN cat_size_id CHAR(36) COLLATE utf8mb4_0900_ai_ci NULL COMMENT 'FK kich thuoc';
 
 -- Tao FK constraints
 ALTER TABLE cat_product_variant

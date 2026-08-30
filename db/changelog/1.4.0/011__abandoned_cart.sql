@@ -16,6 +16,29 @@ CREATE TABLE IF NOT EXISTS sal_cart (
     updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Ngay cap nhat'
 ) COMMENT 'Gio hang (theo doi abandoned cart recovery)';
 
-CREATE INDEX IF NOT EXISTS ix_salcart_syscustomerid ON sal_cart(sys_customer_id);
-CREATE INDEX IF NOT EXISTS ix_salcart_status ON sal_cart(sal_cart_status);
-CREATE INDEX IF NOT EXISTS ix_salcart_lastactivity ON sal_cart(sal_cart_last_activity);
+SET @stmt := (SELECT IF(
+  (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE()
+       AND table_name   = 'sal_cart'
+       AND index_name   = 'ix_salcart_syscustomerid') = 0,
+  'ALTER TABLE sal_cart ADD INDEX ix_salcart_syscustomerid (sys_customer_id)',
+  'SELECT 1'));
+PREPARE stmt FROM @stmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @stmt := (SELECT IF(
+  (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE()
+       AND table_name   = 'sal_cart'
+       AND index_name   = 'ix_salcart_status') = 0,
+  'ALTER TABLE sal_cart ADD INDEX ix_salcart_status (sal_cart_status)',
+  'SELECT 1'));
+PREPARE stmt FROM @stmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @stmt := (SELECT IF(
+  (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE()
+       AND table_name   = 'sal_cart'
+       AND index_name   = 'ix_salcart_lastactivity') = 0,
+  'ALTER TABLE sal_cart ADD INDEX ix_salcart_lastactivity (sal_cart_last_activity)',
+  'SELECT 1'));
+PREPARE stmt FROM @stmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
