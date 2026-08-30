@@ -18,6 +18,8 @@ services:
     environment:
       NODE_ENV: production
       PORT: 4000
+    volumes:
+      - fashionecom_uploads:/app/uploads
     depends_on: []
     healthcheck:
       test: ['CMD-SHELL', 'wget -qO- http://localhost:4000/api/health || exit 1']
@@ -47,6 +49,7 @@ services:
     container_name: fashionecom-frontend
     restart: unless-stopped
     environment:
+      HOSTNAME: 0.0.0.0
       NEXT_PUBLIC_API_URL: /api
       NEXT_PUBLIC_SITE_URL: https://${DOMAIN:-shop.bhquan.store}
       INTERNAL_API_URL: http://fashionecom-api:4000/api
@@ -67,6 +70,9 @@ services:
     networks:
       - fashionecom-net
       - webphoto_backend
+
+volumes:
+  fashionecom_uploads:
 
 networks:
   fashionecom-net:
