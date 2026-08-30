@@ -1,130 +1,122 @@
-#!/usr/bin/env bash
-# =============================================
-# Author:      FashionEcom
-# Create date: 2026-04-11
-# Description: Chay SQL changelog theo thu tu version/filename.
-#              Theo doi trang thai qua bang schema_changelog.
-# Usage:
-#   bash scripts/db-changelog.sh [host] [--status]
-# =============================================
+#!/bin/bash
+# scripts/db-changelog.sh — Flyway-style versioned SQL migration runner (CHUẨN thống nhất)
+#
+# Chuẩn hóa 2026-08-30: dùng docker exec shared-mysql (KHÔNG mysql -h localhost),
+# bảng schema_changelog với UNIQUE(version, filename), skip-if-applied, checksum sha256.
+# Áp dụng cho FashionEcom.
+#
+# Convention: db/changelog/{version}/{NNN__mo_ta}.sql
+# Cấu hình qua env: DB_CONTAINER, DB_NAME, DB_USER, DB_PASSWORD, ENV_FILE, CHANGELOG_DIR
+#
+# QUAN TRONG: day la nguon migration DUY NHAT cua FashionEcom (khong co ORM).
+# scripts/deploy.sh coi script nay la FATAL — fail thi KHONG duoc deploy tiep.
 
 set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# ── Config tu env hoac default ──────────────
-DB_HOST="${DB_HOST:-${1:-localhost}}"
-DB_PORT="${DB_PORT:-3309}"
-DB_USERNAME="${DB_USERNAME:-fashionecom}"
-DB_PASSWORD="${DB_PASSWORD:-fashionecom_dev}"
+log()   { echo "[INFO] $*"; }
+log_warn() { echo "[WARN] $*"; }
+log_error() { echo "[ERROR] $*"; }
+
+DB_CONTAINER="${DB_CONTAINER:-shared-mysql}"
 DB_NAME="${DB_NAME:-fashion_ecom}"
+DB_USER="${DB_USER:-fashionecom}"
+ENV_FILE="${ENV_FILE:-/opt/fashionecom/.env}"
+CHANGELOG_DIR="${CHANGELOG_DIR:-${PROJECT_ROOT}/db/changelog}"
+APPLIED_BY="${APPLIED_BY:-$(whoami 2>/dev/null || echo ci)}"
 
-CHANGELOG_DIR="$(cd "$(dirname "$0")/../db/changelog" && pwd)"
-STATUS_ONLY=false
-
-# ── Parse args ──────────────────────────────
-for arg in "$@"; do
-  case "$arg" in
-    --status) STATUS_ONLY=true ;;
-    -*) echo "Unknown flag: $arg"; exit 1 ;;
-    *)
-      # Arg dau tien khong phai flag la host
-      if [ "$arg" != "$DB_HOST" ]; then
-        DB_HOST="$arg"
-      fi
-      ;;
-  esac
-done
-
-# ── MySQL command helper ────────────────────
-run_sql() {
-  mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -p"$DB_PASSWORD" "$DB_NAME" -N -e "$1"
-}
-
-run_sql_batch() {
-  mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -p"$DB_PASSWORD" "$DB_NAME" < "$1"
-}
-
-# ── Tao bang schema_changelog neu chua co ───
-run_sql "
-CREATE TABLE IF NOT EXISTS schema_changelog (
-    schema_changelog_id CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY COMMENT 'UUID PK — MISA convention',
-    filename            VARCHAR(255) NOT NULL,
-    applied_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    checksum            VARCHAR(64) NULL,
-    UNIQUE KEY uix_schema_changelog_filename (filename)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-    COMMENT='Theo doi cac file SQL changelog da chay';
-"
-
-# ── Lay danh sach file da apply ─────────────
-APPLIED=$(run_sql "SELECT filename FROM schema_changelog ORDER BY applied_at;")
-
-# ── Lay danh sach SQL files (sorted) ────────
-if [ ! -d "$CHANGELOG_DIR" ]; then
-  echo "ERROR: Changelog directory not found: $CHANGELOG_DIR"
+if [[ -n "${DB_PASSWORD:-}" ]]; then
+  : # da co san
+elif [[ -f "$ENV_FILE" ]]; then
+  DB_PASSWORD="$(grep -E '^DB_PASSWORD=' "$ENV_FILE" | head -1 | cut -d= -f2-)"
+fi
+if [[ -z "${DB_PASSWORD:-}" ]]; then
+  log_error "Khong tim thay DB_PASSWORD"
   exit 1
 fi
 
-# Sort theo ten file (version prefix dam bao thu tu)
-SQL_FILES=$(find "$CHANGELOG_DIR" -name "*.sql" -type f | sort)
+mysql_exec() {
+  docker exec -e MYSQL_PWD="$DB_PASSWORD" "$DB_CONTAINER" \
+    mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" --default-character-set=utf8mb4 "$DB_NAME" "$@"
+}
 
-if [ -z "$SQL_FILES" ]; then
-  echo "Khong co file SQL nao trong $CHANGELOG_DIR"
+mysql_exec_file() {
+  docker exec -i -e MYSQL_PWD="$DB_PASSWORD" "$DB_CONTAINER" \
+    mysql --protocol=tcp -h 127.0.0.1 -u"$DB_USER" --default-character-set=utf8mb4 "$DB_NAME" < "$1"
+}
+
+# 1. Dam bao bang tracking ton tai
+mysql_exec -e "
+CREATE TABLE IF NOT EXISTS schema_changelog (
+  version      VARCHAR(50)  NOT NULL,
+  filename     VARCHAR(255) NOT NULL,
+  description  VARCHAR(255) NOT NULL DEFAULT '',
+  checksum     VARCHAR(64)  NOT NULL,
+  applied_by   VARCHAR(100) NOT NULL DEFAULT 'ci',
+  applied_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  execution_ms INT          NULL,
+  PRIMARY KEY (version, filename)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+"
+
+if [[ ! -d "$CHANGELOG_DIR" ]]; then
+  log_warn "Khong co thu muc ${CHANGELOG_DIR} — bo qua"
   exit 0
 fi
 
-# ── Mode: --status ──────────────────────────
-if [ "$STATUS_ONLY" = true ]; then
-  echo "=== Schema Changelog Status ==="
-  echo "Host: $DB_HOST:$DB_PORT / $DB_NAME"
-  echo ""
-  while IFS= read -r file; do
-    fname=$(basename "$file")
-    if echo "$APPLIED" | grep -qF "$fname"; then
-      echo "  [OK] $fname"
+PASS_COUNT=0
+SKIP_COUNT=0
+FAIL_COUNT=0
+
+# 2. Chay _init/*.sql truoc (idempotent), bo qua 001__schema_changelog.sql (da ensure)
+if [[ -d "$CHANGELOG_DIR/_init" ]]; then
+  while IFS= read -r sql_file; do
+    filename="$(basename "$sql_file")"
+    [[ "$filename" == "001__schema_changelog.sql" ]] && continue
+    log "INIT  _init/${filename} ..."
+    if mysql_exec_file "$sql_file"; then
+      log "PASS  _init/${filename}"
+      PASS_COUNT=$((PASS_COUNT + 1))
     else
-      echo "  [--] $fname (pending)"
+      log_error "FAIL  _init/${filename}"
+      exit 1
     fi
-  done <<< "$SQL_FILES"
-  echo ""
-  PENDING_COUNT=$(while IFS= read -r file; do
-    fname=$(basename "$file")
-    echo "$APPLIED" | grep -qF "$fname" || echo "x"
-  done <<< "$SQL_FILES" | wc -l)
-  echo "Pending: $PENDING_COUNT file(s)"
-  exit 0
+  done < <(find "$CHANGELOG_DIR/_init" -maxdepth 1 -name '*.sql' | sort)
 fi
 
-# ── Chay pending files ──────────────────────
-echo "=== FashionEcom DB Changelog ==="
-echo "Host: $DB_HOST:$DB_PORT / $DB_NAME"
-echo ""
+# 3. Scan cac version dir (bo _*), skip-if-applied
+while IFS= read -r version_dir; do
+  version="$(basename "$version_dir")"
+  [[ "$version" == _* ]] && continue
 
-APPLIED_COUNT=0
-SKIPPED_COUNT=0
+  while IFS= read -r sql_file; do
+    filename="$(basename "$sql_file")"
 
-while IFS= read -r file; do
-  fname=$(basename "$file")
+    already=$(mysql_exec -N -B -e \
+      "SELECT COUNT(*) FROM schema_changelog WHERE version='${version}' AND filename='${filename}';" 2>/dev/null || echo "0")
 
-  # Kiem tra da apply chua
-  if echo "$APPLIED" | grep -qF "$fname"; then
-    SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
-    continue
-  fi
+    if [[ "$already" == "1" ]]; then
+      log "SKIP  ${version}/${filename} (da applied)"
+      SKIP_COUNT=$((SKIP_COUNT + 1))
+      continue
+    fi
 
-  echo "Applying: $fname ..."
+    log "APPLY ${version}/${filename} ..."
+    if mysql_exec_file "$sql_file"; then
+      checksum=$(sha256sum "$sql_file" | awk '{print $1}')
+      description=$(echo "$filename" | sed -E 's/^[0-9]+_?//; s/\.sql$//; s/_/ /g')
+      mysql_exec -e "INSERT INTO schema_changelog (version, filename, description, checksum, applied_by) \
+        VALUES ('${version}', '${filename}', '${description}', '${checksum}', '${APPLIED_BY}');"
+      log "PASS  ${version}/${filename}"
+      PASS_COUNT=$((PASS_COUNT + 1))
+    else
+      log_error "FAIL  ${version}/${filename} — dung changelog ngay"
+      FAIL_COUNT=$((FAIL_COUNT + 1))
+      log "Summary: PASS=${PASS_COUNT} SKIP=${SKIP_COUNT} FAIL=${FAIL_COUNT}"
+      exit 1
+    fi
+  done < <(find "$version_dir" -maxdepth 1 -name '*.sql' | sort)
+done < <(find "$CHANGELOG_DIR" -mindepth 1 -maxdepth 1 -type d | sort)
 
-  # Chay SQL file
-  if run_sql_batch "$file"; then
-    # Ghi nhan vao schema_changelog
-    CHECKSUM=$(sha256sum "$file" | awk '{print $1}')
-    run_sql "INSERT INTO schema_changelog (filename, checksum) VALUES ('$fname', '$CHECKSUM');"
-    echo "  -> OK"
-    APPLIED_COUNT=$((APPLIED_COUNT + 1))
-  else
-    echo "  -> FAILED! Dung lai."
-    exit 1
-  fi
-done <<< "$SQL_FILES"
-
-echo ""
-echo "Xong: $APPLIED_COUNT applied, $SKIPPED_COUNT skipped."
+log "Summary: PASS=${PASS_COUNT} SKIP=${SKIP_COUNT} FAIL=${FAIL_COUNT}"
